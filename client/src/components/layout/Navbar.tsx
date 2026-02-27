@@ -1,99 +1,131 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Baby } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { SiFacebook, SiInstagram } from "react-icons/si";
+
+const navLinks = [
+  { name: "Accueil", href: "#" },
+  { name: "Notre Maison", href: "#gallery" },
+  { name: "L'Equipe", href: "#team" },
+  { name: "Notre pedagogie", href: "#project" },
+  { name: "Contact", href: "#contact" },
+];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: "La Structure", href: "#gallery" },
-    { name: "Notre Équipe", href: "#team" },
-    { name: "Projet Pédagogique", href: "#project" },
-  ];
-
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/90 backdrop-blur-md shadow-md py-3"
-          : "bg-transparent py-5"
-      }`}
-    >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-            <Baby size={24} />
-          </div>
-          <span className={`font-display font-bold text-xl md:text-2xl transition-colors ${
-            isScrolled ? "text-primary" : "text-white"
-          }`}>
-            La chouette violette
-          </span>
-        </a>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`font-semibold transition-colors hover:text-secondary ${
-                isScrolled ? "text-foreground" : "text-white/90"
-              }`}
-            >
-              {link.name}
-            </a>
-          ))}
-          <Button
-            asChild
-            className="rounded-full bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-lg hover:-translate-y-0.5 transition-all font-bold px-6"
-          >
-            <a href="#contact">Nous contacter</a>
-          </Button>
-        </nav>
-
-        {/* Mobile Menu Toggle */}
-        <button
-          className="md:hidden text-primary p-2 bg-white/80 rounded-full backdrop-blur-sm"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Nav */}
-      {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-border animate-in slide-in-from-top-4">
-          <nav className="flex flex-col py-4 px-6 gap-4">
-            {navLinks.map((link) => (
+    <>
+      <header
+        data-testid="navbar"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-md shadow-sm py-2"
+            : "bg-transparent py-4"
+        }`}
+      >
+        <div className="container mx-auto px-6 flex items-center justify-center relative">
+          <nav className="hidden lg:flex items-center gap-1">
+            {navLinks.slice(0, 2).map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="font-semibold text-lg text-foreground py-2 border-b border-muted hover:text-primary transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
+                data-testid={`nav-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                className={`px-4 py-2 text-sm font-medium tracking-wide uppercase transition-colors ${
+                  isScrolled
+                    ? "text-foreground/70 hover:text-primary"
+                    : "text-white/80 hover:text-white"
+                }`}
               >
                 {link.name}
               </a>
             ))}
-            <Button
-              asChild
-              className="mt-2 rounded-full w-full bg-secondary text-secondary-foreground text-lg h-12"
-              onClick={() => setMobileMenuOpen(false)}
+
+            <a
+              href="#"
+              data-testid="nav-logo"
+              className="mx-8 flex flex-col items-center group"
             >
-              <a href="#contact">Nous contacter</a>
-            </Button>
+              <span className={`font-display text-2xl font-bold tracking-tight transition-colors ${
+                isScrolled ? "text-foreground" : "text-white"
+              }`}>
+                La chouette violette
+              </span>
+            </a>
+
+            {navLinks.slice(2).map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                data-testid={`nav-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                className={`px-4 py-2 text-sm font-medium tracking-wide uppercase transition-colors ${
+                  isScrolled
+                    ? "text-foreground/70 hover:text-primary"
+                    : "text-white/80 hover:text-white"
+                }`}
+              >
+                {link.name}
+              </a>
+            ))}
           </nav>
+
+          <div className="lg:hidden flex items-center justify-between w-full">
+            <a href="#" className="font-display text-xl font-bold text-white">
+              La chouette violette
+            </a>
+            <button
+              data-testid="button-mobile-menu"
+              className={`p-2 rounded-md transition-colors ${
+                isScrolled ? "text-foreground" : "text-white"
+              }`}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
-      )}
-    </header>
+
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-white border-t border-border">
+            <nav className="flex flex-col py-4 px-6">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  data-testid={`mobile-nav-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="py-3 text-sm font-medium tracking-wide uppercase text-foreground/70 border-b border-border/50 last:border-0"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
+      </header>
+
+      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3 hidden md:flex">
+        <a
+          href="#"
+          data-testid="link-facebook"
+          className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+        >
+          <SiFacebook size={18} />
+        </a>
+        <a
+          href="#"
+          data-testid="link-instagram"
+          className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+        >
+          <SiInstagram size={18} />
+        </a>
+      </div>
+    </>
   );
 }

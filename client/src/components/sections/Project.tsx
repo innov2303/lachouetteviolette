@@ -4,80 +4,108 @@ import { Sprout, BookOpen, Music, Users } from "lucide-react";
 const pillars = [
   {
     icon: Sprout,
-    title: "Motricité libre",
-    description: "Laisser l'enfant découvrir son corps et ses capacités à son propre rythme, dans un environnement sécurisé."
+    title: "Motricite libre",
+    description:
+      "Laisser l'enfant decouvrir son corps et ses capacites a son propre rythme, dans un environnement securise.",
   },
   {
     icon: Users,
     title: "Socialisation",
-    description: "Apprendre à vivre ensemble, partager et interagir avec les autres enfants en petit comité."
+    description:
+      "Apprendre a vivre ensemble, partager et interagir avec les autres enfants en petit comite.",
   },
   {
     icon: BookOpen,
-    title: "Éveil autonome",
-    description: "Des jouets et des activités à disposition pour encourager l'autonomie et les choix personnels."
+    title: "Eveil autonome",
+    description:
+      "Des jouets et des activites a disposition pour encourager l'autonomie et les choix personnels.",
   },
   {
     icon: Music,
-    title: "Créativité",
-    description: "Comptines, peinture, manipulation... La créativité au cœur de notre accompagnement quotidien."
-  }
+    title: "Creativite",
+    description:
+      "Comptines, peinture, manipulation... La creativite au coeur de notre accompagnement quotidien.",
+  },
 ];
 
 export default function Project() {
   return (
-    <section id="project" className="py-20 md:py-32 relative">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+    <section id="project" data-testid="section-project" className="py-20 md:py-28">
+      <div className="container mx-auto px-6">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex-1 space-y-6"
           >
-            <span className="text-secondary font-bold tracking-wider uppercase text-sm">
-              Nos Valeurs
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary leading-tight">
-              Un projet pédagogique bienveillant
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              À La chouette violette, nous mettons l'accent sur le respect du rythme de chaque enfant. 
-              Notre MAM est un pont idéal entre la garde à domicile et la crèche, offrant un 
-              cadre familial tout en favorisant la socialisation.
+            <p className="text-xs tracking-[0.3em] uppercase text-primary font-semibold mb-4">
+              Notre pedagogie
             </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Nous nous inspirons des pédagogies actives (Montessori, Pikler-Lóczy) pour aménager 
-              notre espace et proposer nos activités, afin que l'enfant soit pleinement acteur 
-              de son développement.
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
+              Un projet pedagogique bienveillant
+            </h2>
+            <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              A La chouette violette, nous mettons l'accent sur le respect du rythme
+              de chaque enfant. Nous nous inspirons des pedagogies actives pour
+              accompagner leur developpement en douceur.
             </p>
           </motion.div>
-
-          <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {pillars.map((pillar, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-3xl p-6 shadow-lg shadow-black/5 border border-border/50 hover:bg-muted/50 transition-colors"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4">
-                  <pillar.icon size={24} />
-                </div>
-                <h3 className="font-display font-semibold text-xl mb-2 text-foreground">
-                  {pillar.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {pillar.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
         </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+          {pillars.map((pillar, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              data-testid={`pillar-card-${index}`}
+              className="text-center group"
+            >
+              <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-accent flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                <pillar.icon size={28} />
+              </div>
+              <h3 className="font-display text-xl font-bold text-foreground mb-3">
+                {pillar.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {pillar.description}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="mt-20 bg-muted rounded-md p-10 md:p-16 max-w-4xl mx-auto"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div>
+              <h3 className="font-display text-2xl font-bold text-foreground mb-4">
+                Notre approche
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Notre MAM est un pont ideal entre la garde a domicile et la creche,
+                offrant un cadre familial tout en favorisant la socialisation.
+                Nous accueillons les enfants dans un climat de confiance et de respect.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-display text-2xl font-bold text-foreground mb-4">
+                Nos inspirations
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Nous nous inspirons des pedagogies Montessori et Pikler-Loczy pour
+                amenager notre espace et proposer nos activites, afin que l'enfant
+                soit pleinement acteur de son developpement.
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

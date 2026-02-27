@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Send, Loader2 } from "lucide-react";
+import { Loader2, Send, MapPin, Phone, Mail } from "lucide-react";
 
 export default function Contact() {
   const { toast } = useToast();
@@ -35,8 +35,8 @@ export default function Contact() {
     createMessage.mutate(data, {
       onSuccess: () => {
         toast({
-          title: "Message envoyé ! 🦉",
-          description: "Nous vous répondrons dans les plus brefs délais.",
+          title: "Message envoye !",
+          description: "Nous vous repondrons dans les plus brefs delais.",
         });
         form.reset();
       },
@@ -51,107 +51,166 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20 md:py-32 bg-primary/5 relative">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-xl border border-primary/10 overflow-hidden flex flex-col md:flex-row">
-          
-          {/* Left Side - Info */}
-          <div className="md:w-5/12 bg-primary text-primary-foreground p-10 md:p-12 flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-40 h-40 bg-secondary/20 rounded-full -translate-x-1/2 translate-y-1/2 pointer-events-none" />
-            
-            <div className="relative z-10">
-              <h2 className="font-display text-4xl font-bold mb-4">
-                Rencontrons-nous
-              </h2>
-              <p className="text-primary-foreground/80 leading-relaxed mb-8">
-                Vous cherchez une place pour votre enfant ? Vous avez des questions sur notre fonctionnement ? N'hésitez pas à nous écrire.
-              </p>
-            </div>
-            
-            <div className="relative z-10 mt-auto">
-              <div className="inline-flex items-center justify-center p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                <span className="font-display text-xl font-medium italic">
-                  "Un cocon pour bien grandir"
-                </span>
+    <section id="contact" data-testid="section-contact" className="py-20 md:py-28 bg-muted">
+      <div className="container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center max-w-2xl mx-auto mb-16"
+        >
+          <p className="text-xs tracking-[0.3em] uppercase text-primary font-semibold mb-4">
+            Contactez-nous
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
+            Rencontrons-nous
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Vous cherchez une place pour votre enfant ? N'hesitez pas a nous contacter
+            pour organiser une visite de notre structure.
+          </p>
+        </motion.div>
+
+        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-2 space-y-8"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                <MapPin size={18} />
+              </div>
+              <div>
+                <h4 className="font-semibold text-foreground mb-1">Adresse</h4>
+                <p className="text-muted-foreground text-sm">
+                  123 Rue des Petits Pas<br />75000 Paris, France
+                </p>
               </div>
             </div>
-          </div>
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                <Phone size={18} />
+              </div>
+              <div>
+                <h4 className="font-semibold text-foreground mb-1">Telephone</h4>
+                <p className="text-muted-foreground text-sm">01 23 45 67 89</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                <Mail size={18} />
+              </div>
+              <div>
+                <h4 className="font-semibold text-foreground mb-1">Email</h4>
+                <p className="text-muted-foreground text-sm">contact@lachouetteviolette.fr</p>
+              </div>
+            </div>
 
-          {/* Right Side - Form */}
-          <div className="md:w-7/12 p-10 md:p-12">
+            <div className="pt-4 border-t border-border">
+              <h4 className="font-semibold text-foreground mb-3">Horaires d'accueil</h4>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <div className="flex justify-between gap-2">
+                  <span>Lundi - Vendredi</span>
+                  <span className="font-medium text-foreground">08:00 - 18:30</span>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <span>Samedi - Dimanche</span>
+                  <span>Ferme</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-3 bg-card p-8 md:p-10 rounded-md border border-border"
+          >
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground font-semibold">Nom complet</FormLabel>
+                      <FormLabel className="text-foreground text-sm font-medium">
+                        Nom complet
+                      </FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="Marie Dupont" 
-                          {...field} 
-                          className="rounded-xl bg-muted/50 border-border py-6 px-4 focus-visible:ring-primary focus-visible:border-primary"
+                        <Input
+                          data-testid="input-name"
+                          placeholder="Marie Dupont"
+                          {...field}
+                          className="rounded-md border-border bg-background"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground font-semibold">Adresse email</FormLabel>
+                      <FormLabel className="text-foreground text-sm font-medium">
+                        Adresse email
+                      </FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="marie@exemple.fr" 
+                        <Input
+                          data-testid="input-email"
+                          placeholder="marie@exemple.fr"
                           type="email"
-                          {...field} 
-                          className="rounded-xl bg-muted/50 border-border py-6 px-4 focus-visible:ring-primary focus-visible:border-primary"
+                          {...field}
+                          className="rounded-md border-border bg-background"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
                 <FormField
                   control={form.control}
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground font-semibold">Votre message</FormLabel>
+                      <FormLabel className="text-foreground text-sm font-medium">
+                        Votre message
+                      </FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Bonjour, je souhaiterais me renseigner pour une place..." 
-                          className="rounded-xl bg-muted/50 border-border p-4 min-h-[150px] resize-none focus-visible:ring-primary focus-visible:border-primary"
-                          {...field} 
+                        <Textarea
+                          data-testid="input-message"
+                          placeholder="Bonjour, je souhaiterais me renseigner pour une place..."
+                          className="rounded-md border-border bg-background min-h-[130px] resize-none"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
+                  data-testid="button-submit-contact"
                   disabled={createMessage.isPending}
-                  className="w-full rounded-xl py-6 text-lg font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                  className="w-full rounded-none bg-primary text-primary-foreground tracking-wider uppercase text-sm py-3"
                 >
                   {createMessage.isPending ? (
-                    <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Envoi en cours...</>
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Envoi en cours...
+                    </>
                   ) : (
-                    <><Send className="mr-2 h-5 w-5" /> Envoyer le message</>
+                    <>
+                      <Send className="mr-2 h-4 w-4" /> Envoyer le message
+                    </>
                   )}
                 </Button>
               </form>
             </Form>
-          </div>
-          
+          </motion.div>
         </div>
       </div>
     </section>
