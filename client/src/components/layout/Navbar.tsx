@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
-import logoImg from "@assets/logo-chouette.png";
+import logoImg from "@assets/logo-chouette-watercolor.png";
 
 const navLinks = [
   { name: "Accueil", href: "#" },
