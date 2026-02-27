@@ -159,6 +159,7 @@ function HeroEditor({ data }: { data: HeroContent }) {
 
 function GalleryEditor({ data }: { data: GalleryContent }) {
   const [form, setForm] = useState(data);
+  const [uploading, setUploading] = useState(false);
   const update = useUpdateContent("gallery");
   const { toast } = useToast();
 
@@ -169,31 +170,45 @@ function GalleryEditor({ data }: { data: GalleryContent }) {
     });
   };
 
-  const updateImage = (index: number, field: "src" | "alt", value: string) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData, credentials: "include" });
+      if (!res.ok) throw new Error("Upload echoue");
+      const { url } = await res.json();
+      setForm((prev) => ({ ...prev, images: [...prev.images, { src: url, alt: file.name.replace(/\.[^/.]+$/, "") }] }));
+      toast({ title: "Image ajoutee" });
+    } catch {
+      toast({ title: "Erreur lors de l'upload", variant: "destructive" });
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const removeImage = (index: number) => {
+    const img = form.images[index];
+    if (img.src.startsWith("/uploads/")) {
+      const filename = img.src.split("/").pop();
+      fetch(`/api/upload/${filename}`, { method: "DELETE", credentials: "include" });
+    }
+    setForm({ ...form, images: form.images.filter((_, i) => i !== index) });
+  };
+
+  const updateImageAlt = (index: number, alt: string) => {
     const images = [...form.images];
-    images[index] = { ...images[index], [field]: value };
+    images[index] = { ...images[index], alt };
     setForm({ ...form, images });
   };
 
-  const addImage = () => setForm({ ...form, images: [...form.images, { src: "", alt: "" }] });
-  const removeImage = (index: number) => setForm({ ...form, images: form.images.filter((_, i) => i !== index) });
-
   return (
     <div>
-      <SectionHeader title="Section Notre Maison" description="Modifiez les textes et images du carrousel" />
-      <div className="space-y-4">
-        <div>
-          <FieldLabel>Label de section</FieldLabel>
-          <Input data-testid="input-gallery-label" value={form.sectionLabel} onChange={(e) => setForm({ ...form, sectionLabel: e.target.value })} />
-        </div>
-        <div>
-          <FieldLabel>Titre</FieldLabel>
-          <Input data-testid="input-gallery-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-        </div>
-        <div>
-          <FieldLabel>Titre en violet</FieldLabel>
-          <Input data-testid="input-gallery-highlight" value={form.titleHighlight} onChange={(e) => setForm({ ...form, titleHighlight: e.target.value })} />
-        </div>
+      <SectionHeader title="Section Notre Maison" description="Modifiez les textes et les images du carrousel" />
+      <div className="space-y-6">
         <div>
           <FieldLabel>Description</FieldLabel>
           <Textarea data-testid="input-gallery-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="min-h-[80px]" />
@@ -206,19 +221,35 @@ function GalleryEditor({ data }: { data: GalleryContent }) {
         <div>
           <div className="flex items-center justify-between mb-3">
             <FieldLabel>Images du carrousel</FieldLabel>
-            <Button variant="outline" size="sm" onClick={addImage} data-testid="button-add-image">
-              <Plus className="h-4 w-4 mr-1" /> Ajouter
-            </Button>
+            <label className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium border rounded-md hover:bg-muted transition-colors">
+              <Plus className="h-4 w-4" />
+              {uploading ? "Upload..." : "Ajouter une image"}
+              <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} data-testid="input-upload-image" />
+            </label>
           </div>
-          <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-4">
             {form.images.map((img, i) => (
-              <div key={i} className="flex gap-2 items-start p-3 border rounded-md bg-muted/50">
-                <div className="flex-1 space-y-2">
-                  <Input placeholder="URL de l'image" value={img.src} onChange={(e) => updateImage(i, "src", e.target.value)} data-testid={`input-gallery-img-src-${i}`} />
-                  <Input placeholder="Description" value={img.alt} onChange={(e) => updateImage(i, "alt", e.target.value)} data-testid={`input-gallery-img-alt-${i}`} />
+              <div key={i} className="relative border rounded-md overflow-hidden bg-muted/50 group" data-testid={`gallery-admin-image-${i}`}>
+                <div className="aspect-[4/3]">
+                  <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => removeImage(i)} className="text-destructive" data-testid={`button-remove-image-${i}`}>
-                  <Trash2 className="h-4 w-4" />
+                <div className="p-2 space-y-1">
+                  <Input
+                    placeholder="Description de l'image"
+                    value={img.alt}
+                    onChange={(e) => updateImageAlt(i, e.target.value)}
+                    className="text-xs h-8"
+                    data-testid={`input-gallery-img-alt-${i}`}
+                  />
+                </div>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => removeImage(i)}
+                  className="absolute top-2 right-2 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  data-testid={`button-remove-image-${i}`}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </div>
             ))}

@@ -5,6 +5,36 @@ import { api } from "@shared/routes";
 import { z } from "zod";
 import { setupAuth, requireAuth } from "./auth";
 import { seedDefaultContent } from "./seed-content";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const uploadsDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const uploadStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, uploadsDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const name = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
+    cb(null, name);
+  },
+});
+
+const upload = multer({
+  storage: uploadStorage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = /\.(jpg|jpeg|png|gif|webp)$/i;
+    if (allowed.test(path.extname(file.originalname))) {
+      cb(null, true);
+    } else {
+      cb(new Error("Format non supporte"));
+    }
+  },
+});
 
 export async function registerRoutes(
   httpServer: Server,
@@ -12,6 +42,14 @@ export async function registerRoutes(
 ): Promise<Server> {
   setupAuth(app);
   await seedDefaultContent();
+
+  app.use("/uploads", (req, res, next) => {
+    const filePath = path.join(uploadsDir, path.basename(req.path));
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    next();
+  });
 
   app.post(api.messages.create.path, async (req, res) => {
     try {
@@ -68,6 +106,22 @@ export async function registerRoutes(
     } catch {
       res.status(500).json({ message: "Internal server error" });
     }
+  });
+
+  app.post("/api/upload", requireAuth, upload.single("image"), (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "Aucun fichier envoye" });
+    }
+    const url = `/uploads/${req.file.filename}`;
+    res.json({ url });
+  });
+
+  app.delete("/api/upload/:filename", requireAuth, (req, res) => {
+    const filePath = path.join(uploadsDir, path.basename(req.params.filename));
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    res.json({ message: "Fichier supprime" });
   });
 
   return httpServer;
