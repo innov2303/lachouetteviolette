@@ -12,21 +12,24 @@ export default function Hero() {
         <div className="absolute inset-0 bg-black/45" />
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 text-center text-white flex flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-between py-8">
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="max-w-4xl"
+          transition={{ duration: 0.8 }}
+          className="text-sm md:text-base tracking-[0.3em] uppercase font-light text-white/90 mt-4"
         >
-          <p className="text-sm md:text-base tracking-[0.3em] uppercase font-light mb-6 text-white/90">
-            Maison d'Assistantes Maternelles
-          </p>
+          Maison d'Assistantes Maternelles
+        </motion.p>
 
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] text-balance text-[#c9a0dc]">
-            La chouette violette
-          </h1>
-        </motion.div>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] text-balance text-[#c9a0dc] mb-6"
+        >
+          La chouette violette
+        </motion.h1>
       </div>
     </section>
   );
