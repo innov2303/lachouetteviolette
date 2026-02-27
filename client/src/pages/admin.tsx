@@ -349,14 +349,13 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
     setForm({ ...form, pillars });
   };
 
+  const addPillar = () => setForm({ ...form, pillars: [...form.pillars, { icon: "Sprout", title: "", description: "" }] });
+  const removePillar = (index: number) => setForm({ ...form, pillars: form.pillars.filter((_, i) => i !== index) });
+
   return (
     <div>
       <SectionHeader title="Section Pedagogie" description="Modifiez le projet pedagogique" />
       <div className="space-y-4">
-        <div>
-          <FieldLabel>Label de section</FieldLabel>
-          <Input data-testid="input-project-label" value={form.sectionLabel} onChange={(e) => setForm({ ...form, sectionLabel: e.target.value })} />
-        </div>
         <div>
           <FieldLabel>Titre</FieldLabel>
           <Input data-testid="input-project-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
@@ -367,10 +366,21 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
         </div>
 
         <div>
-          <FieldLabel>Piliers pedagogiques</FieldLabel>
+          <div className="flex items-center justify-between mb-3">
+            <FieldLabel>Piliers pedagogiques</FieldLabel>
+            <Button variant="outline" size="sm" onClick={addPillar} data-testid="button-add-pillar">
+              <Plus className="h-4 w-4 mr-1" /> Ajouter
+            </Button>
+          </div>
           <div className="space-y-3">
             {form.pillars.map((pillar, i) => (
-              <div key={i} className="p-3 border rounded-md bg-muted/50 space-y-2">
+              <div key={i} className="p-4 border rounded-md bg-muted/50 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-foreground">Pilier {i + 1}</span>
+                  <Button variant="ghost" size="sm" onClick={() => removePillar(i)} className="text-destructive" data-testid={`button-remove-pillar-${i}`}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
                 <Input placeholder="Titre" value={pillar.title} onChange={(e) => updatePillar(i, "title", e.target.value)} data-testid={`input-pillar-title-${i}`} />
                 <Textarea placeholder="Description" value={pillar.description} onChange={(e) => updatePillar(i, "description", e.target.value)} data-testid={`input-pillar-desc-${i}`} />
               </div>
