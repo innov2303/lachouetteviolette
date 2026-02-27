@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { SiFacebook, SiInstagram } from "react-icons/si";
 import logoImg from "@assets/La_chouette_violette_1772195969012.png";
 
 const navLinks = [
@@ -68,23 +67,6 @@ export default function Navbar() {
           </div>
         )}
       </header>
-
-      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3 hidden md:flex">
-        <a
-          href="#"
-          data-testid="link-facebook"
-          className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg transition-transform hover:scale-110"
-        >
-          <SiFacebook size={18} />
-        </a>
-        <a
-          href="#"
-          data-testid="link-instagram"
-          className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg transition-transform hover:scale-110"
-        >
-          <SiInstagram size={18} />
-        </a>
-      </div>
     </>
   );
 }
