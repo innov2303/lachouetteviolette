@@ -52,10 +52,10 @@ export default function Gallery() {
                 {title}<br />
                 <span className="text-[#c9a0dc]">{titleHighlight}</span>
               </h2>
-              <div className="flex items-end gap-2 pb-1">
-                <motion.img src={owlBlue} alt="Chouette bleue" className="w-12 h-12 md:w-14 md:h-14 object-contain" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} />
-                <motion.img src={owlOrange} alt="Chouette orange" className="w-14 h-14 md:w-16 md:h-16 object-contain" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} />
-                <motion.img src={owlPink} alt="Chouette rose" className="w-12 h-12 md:w-14 md:h-14 object-contain" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.7 }} />
+              <div className="flex items-end gap-3 pb-1">
+                <motion.img src={owlBlue} alt="Chouette bleue" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} />
+                <motion.img src={owlOrange} alt="Chouette orange" className="w-22 h-22 md:w-28 md:h-28 object-contain" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} />
+                <motion.img src={owlPink} alt="Chouette rose" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.7 }} />
               </div>
             </div>
             <p className="text-muted-foreground leading-relaxed mb-6">
