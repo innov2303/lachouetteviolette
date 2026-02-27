@@ -4,7 +4,7 @@ import heroBg from "@assets/hero-chouette-violette.png";
 
 export default function Hero() {
   return (
-    <section data-testid="section-hero" className="relative h-screen flex items-center justify-center">
+    <section data-testid="section-hero" className="relative h-[calc(100vh-53px)] flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-[center_40%] bg-no-repeat"
