@@ -10,7 +10,6 @@ import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2
 import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, Message } from "@shared/schema";
 
 const sectionTabs = [
-  { id: "hero", label: "Accueil", icon: Home },
   { id: "gallery", label: "Notre Maison", icon: Image },
   { id: "team", label: "Equipe", icon: Users },
   { id: "project", label: "Pedagogie", icon: BookOpen },
@@ -22,7 +21,7 @@ export default function Admin() {
   const auth = useAuth();
   const logout = useLogout();
   const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState("hero");
+  const [activeTab, setActiveTab] = useState("gallery");
   const content = useAllContent();
 
   if (auth.isLoading) {
@@ -95,7 +94,6 @@ export default function Admin() {
             </div>
           ) : content.data ? (
             <>
-              {activeTab === "hero" && <HeroEditor data={(content.data as Record<string, unknown>).hero as HeroContent} />}
               {activeTab === "gallery" && <GalleryEditor data={(content.data as Record<string, unknown>).gallery as GalleryContent} />}
               {activeTab === "team" && <TeamEditor data={(content.data as Record<string, unknown>).team as TeamContent} />}
               {activeTab === "project" && <ProjectEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
