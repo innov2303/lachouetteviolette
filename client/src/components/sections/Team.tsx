@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useSectionContent } from "@/hooks/use-content";
+import type { TeamContent } from "@shared/schema";
 
-const teamMembers = [
+const defaultMembers = [
   {
     name: "Sophie Laurent",
     role: "Assistante Maternelle agreee",
@@ -22,6 +24,13 @@ const teamMembers = [
 ];
 
 export default function Team() {
+  const { data } = useSectionContent<TeamContent>("team");
+
+  const sectionLabel = data?.sectionLabel || "Qui sommes-nous";
+  const title = data?.title || "Notre Equipe";
+  const description = data?.description || "Trois professionnelles de la petite enfance unies par la meme passion et les memes valeurs educatives.";
+  const members = data?.members || defaultMembers;
+
   return (
     <section id="team" data-testid="section-team" className="min-h-[calc(100vh-53px)] flex items-center py-16 bg-muted">
       <div className="container mx-auto px-6">
@@ -32,19 +41,18 @@ export default function Team() {
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
-            Qui sommes-nous
+            {sectionLabel}
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Notre Equipe
+            {title}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Trois professionnelles de la petite enfance unies par la meme passion
-            et les memes valeurs educatives.
+            {description}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
-          {teamMembers.map((member, index) => (
+        <div className={`grid grid-cols-1 ${members.length === 2 ? 'md:grid-cols-2 max-w-4xl' : 'md:grid-cols-3 max-w-5xl'} gap-10 mx-auto`}>
+          {members.map((member, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}

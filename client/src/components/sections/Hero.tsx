@@ -1,8 +1,16 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import heroBg from "@assets/hero-chouette-violette.png";
+import { useSectionContent } from "@/hooks/use-content";
+import type { HeroContent } from "@shared/schema";
 
 export default function Hero() {
+  const { data } = useSectionContent<HeroContent>("hero");
+
+  const subtitle = data?.subtitle || "Maison d'Assistantes Maternelles";
+  const title = data?.title || "La chouette violette";
+  const buttonText = data?.buttonText || "Decouvrir la MAM";
+
   return (
     <section data-testid="section-hero" className="relative h-[calc(100vh-53px)] flex items-center justify-center">
       <div className="absolute inset-0 z-0">
@@ -20,7 +28,7 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="text-sm md:text-base tracking-[0.3em] uppercase font-light text-white/90 mb-4"
         >
-          Maison d'Assistantes Maternelles
+          {subtitle}
         </motion.p>
 
         <motion.h1
@@ -29,7 +37,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.3 }}
           className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-balance text-[#c9a0dc]"
         >
-          La chouette violette
+          {title}
         </motion.h1>
       </div>
 
@@ -42,7 +50,7 @@ export default function Hero() {
         className="absolute bottom-10 z-10 flex flex-col items-center gap-2 text-white/80 hover:text-white transition-colors cursor-pointer"
       >
         <span className="text-sm tracking-[0.2em] uppercase font-light">
-          Decouvrir la MAM
+          {buttonText}
         </span>
         <ChevronDown className="w-6 h-6 animate-bounce" />
       </motion.a>

@@ -8,30 +8,28 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
+import { useSectionContent } from "@/hooks/use-content";
+import type { GalleryContent } from "@shared/schema";
 
-const images = [
-  {
-    src: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=1200&auto=format&fit=crop",
-    alt: "Espace de jeux lumineux",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=1200&auto=format&fit=crop",
-    alt: "Activites sensorielles",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1200&auto=format&fit=crop",
-    alt: "Jeux d'eveil en bois",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1566004100631-35d015d6a491?q=80&w=1200&auto=format&fit=crop",
-    alt: "Espace creativite et dessin",
-  },
+const defaultImages = [
+  { src: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=1200&auto=format&fit=crop", alt: "Espace de jeux lumineux" },
+  { src: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=1200&auto=format&fit=crop", alt: "Activites sensorielles" },
+  { src: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1200&auto=format&fit=crop", alt: "Jeux d'eveil en bois" },
+  { src: "https://images.unsplash.com/photo-1566004100631-35d015d6a491?q=80&w=1200&auto=format&fit=crop", alt: "Espace creativite et dessin" },
 ];
 
 export default function Gallery() {
   const plugin = useRef(
     Autoplay({ delay: 4000, stopOnInteraction: true })
   );
+  const { data } = useSectionContent<GalleryContent>("gallery");
+
+  const sectionLabel = data?.sectionLabel || "Decouvrez nos espaces";
+  const title = data?.title || "Bienvenue a la MAM";
+  const titleHighlight = data?.titleHighlight || "La chouette violette";
+  const description = data?.description || "";
+  const description2 = data?.description2 || "";
+  const images = data?.images || defaultImages;
 
   return (
     <section id="gallery" data-testid="section-gallery" className="min-h-[calc(100vh-53px)] flex items-center py-16">
@@ -44,21 +42,17 @@ export default function Gallery() {
             transition={{ duration: 0.7 }}
           >
             <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
-              Decouvrez nos espaces
+              {sectionLabel}
             </p>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Bienvenue a la MAM<br />
-              <span className="text-[#c9a0dc]">La chouette violette</span>
+              {title}<br />
+              <span className="text-[#c9a0dc]">{titleHighlight}</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
-              Notre Maison d'Assistantes Maternelles offre un cadre chaleureux et securise,
-              specialement amenage pour l'eveil et l'epanouissement de vos tout-petits.
-              Chaque espace est pense pour stimuler leur curiosite tout en respectant leur rythme.
+              {description}
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              Situee dans un environnement calme, notre structure dispose de plusieurs
-              pieces dediees aux activites, au repos et aux repas, dans une ambiance
-              familiale et bienveillante.
+              {description2}
             </p>
           </motion.div>
 

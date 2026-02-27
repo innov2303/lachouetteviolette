@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertMessageSchema, type InsertMessage } from "@shared/schema";
 import { useCreateMessage } from "@/hooks/use-messages";
 import { useToast } from "@/hooks/use-toast";
+import { useSectionContent } from "@/hooks/use-content";
+import type { ContactContent } from "@shared/schema";
 
 import {
   Form,
@@ -21,6 +23,16 @@ import { Loader2, Send, MapPin, Phone, Mail, ArrowUp } from "lucide-react";
 export default function Contact() {
   const { toast } = useToast();
   const createMessage = useCreateMessage();
+  const { data } = useSectionContent<ContactContent>("contact");
+
+  const sectionLabel = data?.sectionLabel || "Contactez-nous";
+  const title = data?.title || "Rencontrons-nous";
+  const description = data?.description || "";
+  const address = data?.address || "123 Rue des Petits Pas\n75000 Paris, France";
+  const phone = data?.phone || "01 23 45 67 89";
+  const email = data?.email || "contact@lachouetteviolette.fr";
+  const hours = data?.hours || "08:00 - 18:30";
+  const closedDays = data?.closedDays || "Samedi - Dimanche";
 
   const form = useForm<InsertMessage>({
     resolver: zodResolver(insertMessageSchema),
@@ -31,8 +43,8 @@ export default function Contact() {
     },
   });
 
-  const onSubmit = (data: InsertMessage) => {
-    createMessage.mutate(data, {
+  const onSubmit = (formData: InsertMessage) => {
+    createMessage.mutate(formData, {
       onSuccess: () => {
         toast({
           title: "Message envoye !",
@@ -60,14 +72,13 @@ export default function Contact() {
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
-            Contactez-nous
+            {sectionLabel}
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Rencontrons-nous
+            {title}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Vous cherchez une place pour votre enfant ? N'hesitez pas a nous contacter
-            pour organiser une visite de notre structure.
+            {description}
           </p>
         </motion.div>
 
@@ -84,8 +95,8 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-semibold text-foreground mb-1">Adresse</h4>
-                <p className="text-muted-foreground text-sm">
-                  123 Rue des Petits Pas<br />75000 Paris, France
+                <p className="text-muted-foreground text-sm whitespace-pre-line">
+                  {address}
                 </p>
               </div>
             </div>
@@ -95,7 +106,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-semibold text-foreground mb-1">Telephone</h4>
-                <p className="text-muted-foreground text-sm">01 23 45 67 89</p>
+                <p className="text-muted-foreground text-sm">{phone}</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
@@ -104,7 +115,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-semibold text-foreground mb-1">Email</h4>
-                <p className="text-muted-foreground text-sm">contact@lachouetteviolette.fr</p>
+                <p className="text-muted-foreground text-sm">{email}</p>
               </div>
             </div>
 
@@ -113,10 +124,10 @@ export default function Contact() {
               <div className="space-y-2 text-sm text-muted-foreground">
                 <div className="flex justify-between gap-2">
                   <span>Lundi - Vendredi</span>
-                  <span className="font-medium text-foreground">08:00 - 18:30</span>
+                  <span className="font-medium text-foreground">{hours}</span>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <span>Samedi - Dimanche</span>
+                  <span>{closedDays}</span>
                   <span>Ferme</span>
                 </div>
               </div>
