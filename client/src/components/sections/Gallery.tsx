@@ -37,7 +37,7 @@ export default function Gallery() {
   return (
     <section id="gallery" data-testid="section-gallery" className="min-h-[calc(100vh-53px)] flex items-center py-16">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-end">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
