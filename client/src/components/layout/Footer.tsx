@@ -1,6 +1,17 @@
 import { SiFacebook, SiInstagram } from "react-icons/si";
+import { useSectionContent } from "@/hooks/use-content";
+import type { SocialLinksContent, ContactContent } from "@shared/schema";
 
 export default function Footer() {
+  const { data: socialLinks } = useSectionContent<SocialLinksContent>("socialLinks");
+  const { data: contactData } = useSectionContent<ContactContent>("contact");
+
+  const facebook = socialLinks?.facebook || "";
+  const instagram = socialLinks?.instagram || "";
+  const address = contactData?.address || "123 Rue des Petits Pas\n75000 Paris, France";
+  const phone = contactData?.phone || "01 23 45 67 89";
+  const email = contactData?.email || "contact@lachouetteviolette.fr";
+
   return (
     <footer data-testid="footer" className="bg-foreground text-background py-16">
       <div className="container mx-auto px-6">
@@ -44,26 +55,35 @@ export default function Footer() {
               Coordonnees
             </h4>
             <div className="space-y-2 text-background/60 text-sm">
-              <p>123 Rue des Petits Pas</p>
-              <p>75000 Paris, France</p>
-              <p>01 23 45 67 89</p>
-              <p>contact@lachouetteviolette.fr</p>
+              {address.split("\n").map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+              <p>{phone}</p>
+              <p>{email}</p>
             </div>
             <div className="flex gap-3 mt-6">
-              <a
-                href="#"
-                data-testid="footer-link-facebook"
-                className="w-9 h-9 rounded-full border border-background/20 flex items-center justify-center text-background/60 hover:text-background hover:border-background/50 transition-colors"
-              >
-                <SiFacebook size={14} />
-              </a>
-              <a
-                href="#"
-                data-testid="footer-link-instagram"
-                className="w-9 h-9 rounded-full border border-background/20 flex items-center justify-center text-background/60 hover:text-background hover:border-background/50 transition-colors"
-              >
-                <SiInstagram size={14} />
-              </a>
+              {facebook && (
+                <a
+                  href={facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="footer-link-facebook"
+                  className="w-9 h-9 rounded-full border border-background/20 flex items-center justify-center text-background/60 hover:text-background hover:border-background/50 transition-colors"
+                >
+                  <SiFacebook size={14} />
+                </a>
+              )}
+              {instagram && (
+                <a
+                  href={instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="footer-link-instagram"
+                  className="w-9 h-9 rounded-full border border-background/20 flex items-center justify-center text-background/60 hover:text-background hover:border-background/50 transition-colors"
+                >
+                  <SiInstagram size={14} />
+                </a>
+              )}
             </div>
           </div>
         </div>

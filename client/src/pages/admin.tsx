@@ -6,8 +6,9 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight } from "lucide-react";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, Message } from "@shared/schema";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2 } from "lucide-react";
+import { SiFacebook, SiInstagram } from "react-icons/si";
+import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, Message } from "@shared/schema";
 
 const sectionTabs = [
   { id: "availability", label: "Place disponible", icon: CalendarCheck },
@@ -15,6 +16,7 @@ const sectionTabs = [
   { id: "team", label: "Equipe", icon: Users },
   { id: "project", label: "Pedagogie", icon: BookOpen },
   { id: "contact", label: "Contact", icon: Mail },
+  { id: "socialLinks", label: "Reseaux sociaux", icon: Share2 },
   { id: "messages", label: "Messages", icon: Mail },
 ];
 
@@ -100,6 +102,7 @@ export default function Admin() {
               {activeTab === "team" && <TeamEditor data={(content.data as Record<string, unknown>).team as TeamContent} />}
               {activeTab === "project" && <ProjectEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
               {activeTab === "contact" && <ContactEditor data={(content.data as Record<string, unknown>).contact as ContactContent} />}
+              {activeTab === "socialLinks" && <SocialLinksEditor data={(content.data as Record<string, unknown>).socialLinks as SocialLinksContent} />}
               {activeTab === "messages" && <MessagesViewer />}
             </>
           ) : null}
@@ -612,6 +615,57 @@ function ContactEditor({ data }: { data: ContactContent }) {
         </div>
 
         <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-contact" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
+          {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+          Enregistrer
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function SocialLinksEditor({ data }: { data: SocialLinksContent }) {
+  const safeData = data || { facebook: "", instagram: "" };
+  const [form, setForm] = useState(safeData);
+  const update = useUpdateContent("socialLinks");
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    update.mutate(form, {
+      onSuccess: () => toast({ title: "Reseaux sociaux mis a jour" }),
+      onError: () => toast({ title: "Erreur", variant: "destructive" }),
+    });
+  };
+
+  return (
+    <div>
+      <SectionHeader title="Reseaux sociaux" description="Modifiez les liens vers vos reseaux sociaux" />
+      <div className="space-y-4">
+        <div className="flex items-center gap-3 p-4 border rounded-md bg-muted/50">
+          <SiFacebook className="h-5 w-5 text-[#1877F2] shrink-0" />
+          <div className="flex-1">
+            <FieldLabel>Facebook</FieldLabel>
+            <Input
+              data-testid="input-social-facebook"
+              value={form.facebook}
+              onChange={(e) => setForm({ ...form, facebook: e.target.value })}
+              placeholder="https://facebook.com/votrepage"
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-3 p-4 border rounded-md bg-muted/50">
+          <SiInstagram className="h-5 w-5 text-[#E4405F] shrink-0" />
+          <div className="flex-1">
+            <FieldLabel>Instagram</FieldLabel>
+            <Input
+              data-testid="input-social-instagram"
+              value={form.instagram}
+              onChange={(e) => setForm({ ...form, instagram: e.target.value })}
+              placeholder="https://instagram.com/votrecompte"
+            />
+          </div>
+        </div>
+
+        <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-social" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
           {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
           Enregistrer
         </Button>

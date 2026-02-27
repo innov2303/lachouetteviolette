@@ -1,5 +1,5 @@
 import { storage } from "./storage";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent } from "@shared/schema";
+import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent } from "@shared/schema";
 
 const defaultHero: HeroContent = {
   subtitle: "Maison d'Assistantes Maternelles",
@@ -85,6 +85,11 @@ const defaultAvailability: AvailabilityContent = {
   dates: [""],
 };
 
+const defaultSocialLinks: SocialLinksContent = {
+  facebook: "",
+  instagram: "",
+};
+
 export async function seedDefaultContent() {
   const sections: Record<string, unknown> = {
     hero: defaultHero,
@@ -93,6 +98,7 @@ export async function seedDefaultContent() {
     project: defaultProject,
     contact: defaultContact,
     availability: defaultAvailability,
+    socialLinks: defaultSocialLinks,
   };
 
   for (const [section, content] of Object.entries(sections)) {

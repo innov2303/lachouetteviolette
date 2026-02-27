@@ -105,7 +105,13 @@ export const availabilityContentSchema = z.object({
   dates: z.array(z.string()),
 });
 
+export const socialLinksContentSchema = z.object({
+  facebook: z.string(),
+  instagram: z.string(),
+});
+
 export type AvailabilityContent = z.infer<typeof availabilityContentSchema>;
+export type SocialLinksContent = z.infer<typeof socialLinksContentSchema>;
 export type HeroContent = z.infer<typeof heroContentSchema>;
 export type GalleryContent = z.infer<typeof galleryContentSchema>;
 export type TeamContent = z.infer<typeof teamContentSchema>;
