@@ -99,6 +99,13 @@ export const contactContentSchema = z.object({
   schedule: z.array(dayHoursSchema),
 });
 
+export const availabilityContentSchema = z.object({
+  enabled: z.boolean(),
+  date: z.string(),
+  message: z.string(),
+});
+
+export type AvailabilityContent = z.infer<typeof availabilityContentSchema>;
 export type HeroContent = z.infer<typeof heroContentSchema>;
 export type GalleryContent = z.infer<typeof galleryContentSchema>;
 export type TeamContent = z.infer<typeof teamContentSchema>;

@@ -1,5 +1,5 @@
 import { storage } from "./storage";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent } from "@shared/schema";
+import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent } from "@shared/schema";
 
 const defaultHero: HeroContent = {
   subtitle: "Maison d'Assistantes Maternelles",
@@ -79,6 +79,12 @@ const defaultContact: ContactContent = {
   ],
 };
 
+const defaultAvailability: AvailabilityContent = {
+  enabled: false,
+  date: "",
+  message: "Une place se libere !",
+};
+
 export async function seedDefaultContent() {
   const sections: Record<string, unknown> = {
     hero: defaultHero,
@@ -86,6 +92,7 @@ export async function seedDefaultContent() {
     team: defaultTeam,
     project: defaultProject,
     contact: defaultContact,
+    availability: defaultAvailability,
   };
 
   for (const [section, content] of Object.entries(sections)) {

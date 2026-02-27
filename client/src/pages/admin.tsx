@@ -6,10 +6,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2 } from "lucide-react";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, Message } from "@shared/schema";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight } from "lucide-react";
+import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, Message } from "@shared/schema";
 
 const sectionTabs = [
+  { id: "availability", label: "Place disponible", icon: CalendarCheck },
   { id: "gallery", label: "Notre Maison", icon: Image },
   { id: "team", label: "Equipe", icon: Users },
   { id: "project", label: "Pedagogie", icon: BookOpen },
@@ -21,7 +22,7 @@ export default function Admin() {
   const auth = useAuth();
   const logout = useLogout();
   const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState("gallery");
+  const [activeTab, setActiveTab] = useState("availability");
   const content = useAllContent();
 
   if (auth.isLoading) {
@@ -94,6 +95,7 @@ export default function Admin() {
             </div>
           ) : content.data ? (
             <>
+              {activeTab === "availability" && <AvailabilityEditor data={(content.data as Record<string, unknown>).availability as AvailabilityContent} />}
               {activeTab === "gallery" && <GalleryEditor data={(content.data as Record<string, unknown>).gallery as GalleryContent} />}
               {activeTab === "team" && <TeamEditor data={(content.data as Record<string, unknown>).team as TeamContent} />}
               {activeTab === "project" && <ProjectEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
@@ -118,6 +120,70 @@ function SectionHeader({ title, description }: { title: string; description: str
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return <label className="block text-sm font-medium text-foreground mb-1.5">{children}</label>;
+}
+
+function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
+  const safeData = data || { enabled: false, date: "", message: "Une place se libere !" };
+  const [form, setForm] = useState(safeData);
+  const update = useUpdateContent("availability");
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    update.mutate(form, {
+      onSuccess: () => toast({ title: "Place disponible mise a jour" }),
+      onError: () => toast({ title: "Erreur", variant: "destructive" }),
+    });
+  };
+
+  return (
+    <div>
+      <SectionHeader title="Place disponible" description="Affichez un bandeau sur le site pour signaler une place disponible" />
+      <div className="space-y-6">
+        <div className="flex items-center gap-4 p-4 border rounded-md bg-muted/50">
+          <button
+            type="button"
+            onClick={() => setForm({ ...form, enabled: !form.enabled })}
+            className="flex items-center gap-2 text-sm font-medium"
+            data-testid="button-toggle-availability"
+          >
+            {form.enabled ? (
+              <ToggleRight className="h-8 w-8 text-[#c9a0dc]" />
+            ) : (
+              <ToggleLeft className="h-8 w-8 text-muted-foreground" />
+            )}
+            <span className={form.enabled ? "text-[#c9a0dc] font-semibold" : "text-muted-foreground"}>
+              {form.enabled ? "Bandeau actif" : "Bandeau desactive"}
+            </span>
+          </button>
+        </div>
+
+        <div>
+          <FieldLabel>Message du bandeau</FieldLabel>
+          <Input
+            data-testid="input-availability-message"
+            value={form.message}
+            onChange={(e) => setForm({ ...form, message: e.target.value })}
+            placeholder="ex: Une place se libere !"
+          />
+        </div>
+
+        <div>
+          <FieldLabel>Date de disponibilite</FieldLabel>
+          <Input
+            type="date"
+            data-testid="input-availability-date"
+            value={form.date}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+          />
+        </div>
+
+        <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-availability" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
+          {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+          Enregistrer
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 function HeroEditor({ data }: { data: HeroContent }) {
