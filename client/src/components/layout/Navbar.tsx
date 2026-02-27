@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
+import logoImg from "@assets/La_chouette_violette_1772195969012.png";
 
 const navLinks = [
   { name: "Accueil", href: "#" },
@@ -17,22 +18,15 @@ export default function Navbar() {
     <>
       <header
         data-testid="navbar"
-        className="sticky top-0 z-50 bg-white border-b border-border py-3"
+        className="sticky top-0 z-50 bg-white border-b border-border py-2"
       >
-        <div className="container mx-auto px-6 flex items-center justify-center relative">
-          <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.slice(0, 2).map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                data-testid={`nav-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className="px-4 py-2 text-sm font-medium tracking-wide uppercase text-foreground hover:text-foreground/60 transition-colors"
-              >
-                {link.name}
-              </a>
-            ))}
+        <div className="container mx-auto px-6 flex items-center">
+          <a href="#" data-testid="nav-logo" className="flex-shrink-0 mr-8">
+            <img src={logoImg} alt="La chouette violette" className="h-12 w-auto" />
+          </a>
 
-            {navLinks.slice(2).map((link) => (
+          <nav className="hidden lg:flex items-center gap-1 ml-auto">
+            {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
@@ -45,7 +39,7 @@ export default function Navbar() {
           </nav>
 
           <div className="lg:hidden flex items-center justify-between w-full">
-            <span className="font-display text-xl font-bold text-[#c9a0dc]">La chouette violette</span>
+            <div></div>
             <button
               data-testid="button-mobile-menu"
               className="p-2 rounded-md text-foreground transition-colors"
