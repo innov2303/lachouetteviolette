@@ -242,15 +242,13 @@ function GalleryEditor({ data }: { data: GalleryContent }) {
                     data-testid={`input-gallery-img-alt-${i}`}
                   />
                 </div>
-                <Button
-                  variant="destructive"
-                  size="sm"
+                <button
                   onClick={() => removeImage(i)}
-                  className="absolute top-2 right-2 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 h-7 w-7 flex items-center justify-center rounded-md bg-destructive text-white opacity-0 group-hover:opacity-100 transition-opacity"
                   data-testid={`button-remove-image-${i}`}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                </Button>
+                </button>
               </div>
             ))}
           </div>
