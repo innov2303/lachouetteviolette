@@ -343,9 +343,50 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
     });
   };
 
+  const guessIcon = (title: string): string => {
+    const t = title.toLowerCase();
+    const keywords: Record<string, string[]> = {
+      Sprout: ["motricite", "grandir", "croissance", "developpe", "nature", "pousse"],
+      Users: ["social", "ensemble", "groupe", "partage", "collectif", "equipe"],
+      BookOpen: ["lecture", "lire", "livre", "histoire", "conte", "apprendre"],
+      Music: ["musique", "comptine", "chanson", "son", "rythme", "melodie"],
+      Heart: ["amour", "bienveillance", "affection", "emotion", "doux", "tendresse", "coeur"],
+      Star: ["reussite", "progres", "succes", "bravo", "etoile"],
+      Palette: ["art", "peinture", "dessin", "couleur", "creat"],
+      Baby: ["bebe", "nourrisson", "tout-petit", "enfant"],
+      HandHeart: ["soin", "accompagne", "aide", "soutien", "confiance"],
+      Brain: ["reflexion", "penser", "intelligence", "cognitif", "cerveau"],
+      Eye: ["observation", "regard", "voir", "decouvr", "eveil"],
+      Footprints: ["marche", "pas", "autonomie", "independ", "moteur"],
+      Smile: ["joie", "sourire", "bonheur", "plaisir", "rire", "heureux"],
+      Sun: ["soleil", "exterieur", "dehors", "lumiere", "jardin"],
+      TreePine: ["foret", "arbre", "plein air", "sortie"],
+      Puzzle: ["jeu", "jouet", "logique", "construction", "manipul"],
+      Apple: ["repas", "manger", "aliment", "nutrition", "cuisine", "gout"],
+      Flower2: ["fleur", "jardin", "plante", "botanique"],
+      Bird: ["oiseau", "chouette", "animal", "animaux"],
+      Shield: ["securite", "proteg", "cadre", "regle", "confiance"],
+      Clock: ["rythme", "temps", "routine", "horaire", "patience"],
+      Lightbulb: ["idee", "curiosite", "decouverte", "imagination", "inspir"],
+      MessageCircle: ["parole", "langage", "communic", "mot", "parler", "echange"],
+      Globe: ["monde", "culture", "divers", "ouverture"],
+      Leaf: ["eco", "vert", "environnement", "durable"],
+      Sparkles: ["magie", "merveille", "fete", "special"],
+      GraduationCap: ["education", "pedagogie", "formation", "savoir"],
+      Home: ["maison", "accueil", "foyer", "interieur", "cocon"],
+    };
+    for (const [icon, words] of Object.entries(keywords)) {
+      if (words.some((w) => t.includes(w))) return icon;
+    }
+    return "Sprout";
+  };
+
   const updatePillar = (index: number, field: string, value: string) => {
     const pillars = [...form.pillars];
     pillars[index] = { ...pillars[index], [field]: value };
+    if (field === "title") {
+      pillars[index].icon = guessIcon(value);
+    }
     setForm({ ...form, pillars });
   };
 
