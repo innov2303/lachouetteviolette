@@ -87,7 +87,7 @@ export default function Gallery() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <div className="flex gap-2 mt-4">
+              <div className="flex justify-center gap-2 mt-4">
                 <CarouselPrevious className="static transform-none rounded-none border-foreground/20 text-foreground" />
                 <CarouselNext className="static transform-none rounded-none border-foreground/20 text-foreground" />
               </div>
