@@ -293,14 +293,6 @@ function TeamEditor({ data }: { data: TeamContent }) {
       <SectionHeader title="Section Equipe" description="Modifiez les informations de l'equipe" />
       <div className="space-y-4">
         <div>
-          <FieldLabel>Label de section</FieldLabel>
-          <Input data-testid="input-team-label" value={form.sectionLabel} onChange={(e) => setForm({ ...form, sectionLabel: e.target.value })} />
-        </div>
-        <div>
-          <FieldLabel>Titre</FieldLabel>
-          <Input data-testid="input-team-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-        </div>
-        <div>
           <FieldLabel>Description</FieldLabel>
           <Textarea data-testid="input-team-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         </div>
