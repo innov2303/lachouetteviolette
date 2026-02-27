@@ -25,7 +25,7 @@ export default function Team() {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <p className="text-xs tracking-[0.3em] uppercase text-primary font-semibold mb-4">
+          <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
             Qui sommes-nous
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">

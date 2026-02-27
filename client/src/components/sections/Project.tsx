@@ -38,7 +38,7 @@ export default function Project() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-primary font-semibold mb-4">
+            <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
               Notre pedagogie
             </p>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">

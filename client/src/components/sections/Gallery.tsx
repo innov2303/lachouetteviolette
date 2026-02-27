@@ -43,7 +43,7 @@ export default function Gallery() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-primary font-semibold mb-4">
+            <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
               Decouvrez nos espaces
             </p>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
