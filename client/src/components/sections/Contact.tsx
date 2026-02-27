@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2, Send, MapPin, Phone, Mail } from "lucide-react";
+import { Loader2, Send, MapPin, Phone, Mail, ArrowUp } from "lucide-react";
 
 export default function Contact() {
   const { toast } = useToast();
@@ -211,6 +211,19 @@ export default function Contact() {
               </form>
             </Form>
           </motion.div>
+        </div>
+
+        <div className="flex justify-center mt-12">
+          <a
+            href="#"
+            data-testid="button-back-to-top"
+            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+          >
+            <ArrowUp className="w-5 h-5" />
+            <span className="text-sm tracking-[0.2em] uppercase font-light">
+              Retour en haut
+            </span>
+          </a>
         </div>
       </div>
     </section>
