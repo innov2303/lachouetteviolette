@@ -27,7 +27,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 data-testid={`nav-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className="px-4 py-2 text-sm font-medium tracking-wide uppercase text-[#c9a0dc] hover:text-[#c9a0dc]/70 transition-colors"
+                className="px-4 py-2 text-sm font-medium tracking-wide uppercase text-foreground hover:text-foreground/60 transition-colors"
               >
                 {link.name}
               </a>
@@ -46,7 +46,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 data-testid={`nav-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className="px-4 py-2 text-sm font-medium tracking-wide uppercase text-[#c9a0dc] hover:text-[#c9a0dc]/70 transition-colors"
+                className="px-4 py-2 text-sm font-medium tracking-wide uppercase text-foreground hover:text-foreground/60 transition-colors"
               >
                 {link.name}
               </a>
@@ -75,7 +75,7 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href}
                   data-testid={`mobile-nav-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="py-3 text-sm font-medium tracking-wide uppercase text-[#c9a0dc] border-b border-border/50 last:border-0"
+                  className="py-3 text-sm font-medium tracking-wide uppercase text-foreground border-b border-border/50 last:border-0"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.name}
