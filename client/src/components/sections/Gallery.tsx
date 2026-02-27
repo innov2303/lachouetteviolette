@@ -47,17 +47,15 @@ export default function Gallery() {
             <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
               {sectionLabel}
             </p>
-            <div className="flex items-end gap-4 mb-6">
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground leading-tight">
-                {title}<br />
-                <span className="text-[#c9a0dc]">{titleHighlight}</span>
-              </h2>
-              <div className="flex items-end gap-3 pb-1">
-                <motion.img src={owlBlue} alt="Chouette bleue" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} />
-                <motion.img src={owlOrange} alt="Chouette orange" className="w-22 h-22 md:w-28 md:h-28 object-contain" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} />
-                <motion.img src={owlPink} alt="Chouette rose" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.7 }} />
-              </div>
+            <div className="flex items-end gap-3 mb-4">
+              <motion.img src={owlBlue} alt="Chouette bleue" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} />
+              <motion.img src={owlOrange} alt="Chouette orange" className="w-22 h-22 md:w-28 md:h-28 object-contain" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} />
+              <motion.img src={owlPink} alt="Chouette rose" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.7 }} />
             </div>
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+              {title}<br />
+              <span className="text-[#c9a0dc]">{titleHighlight}</span>
+            </h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
               {description}
             </p>
