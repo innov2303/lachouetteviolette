@@ -70,8 +70,13 @@ const defaultContact: ContactContent = {
   address: "123 Rue des Petits Pas\n75000 Paris, France",
   phone: "01 23 45 67 89",
   email: "contact@lachouetteviolette.fr",
-  hours: "08:00 - 18:30",
-  closedDays: "Samedi - Dimanche",
+  schedule: [
+    { day: "Lundi", hours: "08:00 - 18:30" },
+    { day: "Mardi", hours: "08:00 - 18:30" },
+    { day: "Mercredi", hours: "08:00 - 18:30" },
+    { day: "Jeudi", hours: "08:00 - 18:30" },
+    { day: "Vendredi", hours: "08:00 - 18:30" },
+  ],
 };
 
 export async function seedDefaultContent() {
@@ -88,6 +93,25 @@ export async function seedDefaultContent() {
     if (!existing) {
       await storage.upsertSiteContent(section, content);
       console.log(`Seeded default content for section: ${section}`);
+    }
+  }
+
+  const contactData = await storage.getSiteContent("contact");
+  if (contactData) {
+    const c = contactData.content as Record<string, unknown>;
+    if (!c.schedule && c.hours) {
+      const h = (c.hours as string) || "08:00 - 18:30";
+      c.schedule = [
+        { day: "Lundi", hours: h },
+        { day: "Mardi", hours: h },
+        { day: "Mercredi", hours: h },
+        { day: "Jeudi", hours: h },
+        { day: "Vendredi", hours: h },
+      ];
+      delete c.hours;
+      delete c.closedDays;
+      await storage.upsertSiteContent("contact", c);
+      console.log("Migrated contact content to schedule format");
     }
   }
 }

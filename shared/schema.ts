@@ -84,6 +84,11 @@ export const projectContentSchema = z.object({
   inspirationText: z.string(),
 });
 
+export const dayHoursSchema = z.object({
+  day: z.string(),
+  hours: z.string(),
+});
+
 export const contactContentSchema = z.object({
   sectionLabel: z.string(),
   title: z.string(),
@@ -91,8 +96,7 @@ export const contactContentSchema = z.object({
   address: z.string(),
   phone: z.string(),
   email: z.string(),
-  hours: z.string(),
-  closedDays: z.string(),
+  schedule: z.array(dayHoursSchema),
 });
 
 export type HeroContent = z.infer<typeof heroContentSchema>;

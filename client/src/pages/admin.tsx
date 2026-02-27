@@ -456,7 +456,17 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
 }
 
 function ContactEditor({ data }: { data: ContactContent }) {
-  const [form, setForm] = useState(data);
+  const safeData = {
+    ...data,
+    schedule: data.schedule || [
+      { day: "Lundi", hours: "08:00 - 18:30" },
+      { day: "Mardi", hours: "08:00 - 18:30" },
+      { day: "Mercredi", hours: "08:00 - 18:30" },
+      { day: "Jeudi", hours: "08:00 - 18:30" },
+      { day: "Vendredi", hours: "08:00 - 18:30" },
+    ],
+  };
+  const [form, setForm] = useState(safeData);
   const update = useUpdateContent("contact");
   const { toast } = useToast();
 
@@ -467,18 +477,16 @@ function ContactEditor({ data }: { data: ContactContent }) {
     });
   };
 
+  const updateSchedule = (index: number, value: string) => {
+    const schedule = [...form.schedule];
+    schedule[index] = { ...schedule[index], hours: value };
+    setForm({ ...form, schedule });
+  };
+
   return (
     <div>
       <SectionHeader title="Section Contact" description="Modifiez les informations de contact" />
       <div className="space-y-4">
-        <div>
-          <FieldLabel>Label de section</FieldLabel>
-          <Input data-testid="input-contact-label" value={form.sectionLabel} onChange={(e) => setForm({ ...form, sectionLabel: e.target.value })} />
-        </div>
-        <div>
-          <FieldLabel>Titre</FieldLabel>
-          <Input data-testid="input-contact-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-        </div>
         <div>
           <FieldLabel>Description</FieldLabel>
           <Textarea data-testid="input-contact-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
@@ -496,12 +504,15 @@ function ContactEditor({ data }: { data: ContactContent }) {
           <Input data-testid="input-contact-email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
         </div>
         <div>
-          <FieldLabel>Horaires (Lundi-Vendredi)</FieldLabel>
-          <Input data-testid="input-contact-hours" value={form.hours} onChange={(e) => setForm({ ...form, hours: e.target.value })} />
-        </div>
-        <div>
-          <FieldLabel>Jours fermes</FieldLabel>
-          <Input data-testid="input-contact-closed" value={form.closedDays} onChange={(e) => setForm({ ...form, closedDays: e.target.value })} />
+          <FieldLabel>Horaires d'accueil</FieldLabel>
+          <div className="space-y-3 mt-2">
+            {form.schedule.map((s, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 border rounded-md bg-muted/50">
+                <span className="text-sm font-medium text-foreground w-24 shrink-0">{s.day}</span>
+                <Input value={s.hours} onChange={(e) => updateSchedule(i, e.target.value)} data-testid={`input-schedule-${i}`} placeholder="ex: 08:00 - 18:30" />
+              </div>
+            ))}
+          </div>
         </div>
 
         <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-contact" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">

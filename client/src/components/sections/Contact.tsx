@@ -31,8 +31,13 @@ export default function Contact() {
   const address = data?.address || "123 Rue des Petits Pas\n75000 Paris, France";
   const phone = data?.phone || "01 23 45 67 89";
   const email = data?.email || "contact@lachouetteviolette.fr";
-  const hours = data?.hours || "08:00 - 18:30";
-  const closedDays = data?.closedDays || "Samedi - Dimanche";
+  const schedule = data?.schedule || [
+    { day: "Lundi", hours: "08:00 - 18:30" },
+    { day: "Mardi", hours: "08:00 - 18:30" },
+    { day: "Mercredi", hours: "08:00 - 18:30" },
+    { day: "Jeudi", hours: "08:00 - 18:30" },
+    { day: "Vendredi", hours: "08:00 - 18:30" },
+  ];
 
   const form = useForm<InsertMessage>({
     resolver: zodResolver(insertMessageSchema),
@@ -122,14 +127,12 @@ export default function Contact() {
             <div className="pt-4 border-t border-border">
               <h4 className="font-semibold text-foreground mb-3">Horaires d'accueil</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex justify-between gap-2">
-                  <span>Lundi - Vendredi</span>
-                  <span className="font-medium text-foreground">{hours}</span>
-                </div>
-                <div className="flex justify-between gap-2">
-                  <span>{closedDays}</span>
-                  <span>Ferme</span>
-                </div>
+                {schedule.map((s, i) => (
+                  <div key={i} className="flex justify-between gap-2">
+                    <span>{s.day}</span>
+                    <span className="font-medium text-foreground">{s.hours}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </motion.div>
