@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
-import logoImg from "@assets/logo-chouette-watercolor.png";
 
 const navLinks = [
   { name: "Accueil", href: "#" },
@@ -33,14 +32,6 @@ export default function Navbar() {
               </a>
             ))}
 
-            <a
-              href="#"
-              data-testid="nav-logo"
-              className="mx-8 flex items-center group"
-            >
-              <img src={logoImg} alt="La chouette violette" className="h-10 w-auto" />
-            </a>
-
             {navLinks.slice(2).map((link) => (
               <a
                 key={link.name}
@@ -54,9 +45,7 @@ export default function Navbar() {
           </nav>
 
           <div className="lg:hidden flex items-center justify-between w-full">
-            <a href="#" className="flex items-center">
-              <img src={logoImg} alt="La chouette violette" className="h-8 w-auto" />
-            </a>
+            <span className="font-display text-xl font-bold text-[#c9a0dc]">La chouette violette</span>
             <button
               data-testid="button-mobile-menu"
               className="p-2 rounded-md text-foreground transition-colors"
