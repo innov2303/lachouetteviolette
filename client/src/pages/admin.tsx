@@ -123,7 +123,13 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 }
 
 function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
-  const safeData = data || { enabled: false, date: "", message: "Une place se libere !" };
+  const safeData = {
+    enabled: data?.enabled ?? false,
+    slots: data?.slots || (data as any)?.date
+      ? [{ date: (data as any).date || "", message: (data as any).message || "Une place se libere !" }]
+      : data?.slots || [{ date: "", message: "Une place se libere !" }],
+  };
+  if (data?.slots) safeData.slots = data.slots;
   const [form, setForm] = useState(safeData);
   const update = useUpdateContent("availability");
   const { toast } = useToast();
@@ -135,9 +141,18 @@ function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
     });
   };
 
+  const updateSlot = (index: number, field: string, value: string) => {
+    const slots = [...form.slots];
+    slots[index] = { ...slots[index], [field]: value };
+    setForm({ ...form, slots });
+  };
+
+  const addSlot = () => setForm({ ...form, slots: [...form.slots, { date: "", message: "Une place se libere !" }] });
+  const removeSlot = (index: number) => setForm({ ...form, slots: form.slots.filter((_, i) => i !== index) });
+
   return (
     <div>
-      <SectionHeader title="Place disponible" description="Affichez un bandeau sur le site pour signaler une place disponible" />
+      <SectionHeader title="Place disponible" description="Affichez un bandeau sur le site pour signaler des places disponibles" />
       <div className="space-y-6">
         <div className="flex items-center gap-4 p-4 border rounded-md bg-muted/50">
           <button
@@ -158,23 +173,44 @@ function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
         </div>
 
         <div>
-          <FieldLabel>Message du bandeau</FieldLabel>
-          <Input
-            data-testid="input-availability-message"
-            value={form.message}
-            onChange={(e) => setForm({ ...form, message: e.target.value })}
-            placeholder="ex: Une place se libere !"
-          />
-        </div>
-
-        <div>
-          <FieldLabel>Date de disponibilite</FieldLabel>
-          <Input
-            type="date"
-            data-testid="input-availability-date"
-            value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-          />
+          <div className="flex items-center justify-between mb-3">
+            <FieldLabel>Places disponibles</FieldLabel>
+            <Button variant="outline" size="sm" onClick={addSlot} data-testid="button-add-slot">
+              <Plus className="h-4 w-4 mr-1" /> Ajouter une place
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {form.slots.map((slot, i) => (
+              <div key={i} className="p-4 border rounded-md bg-muted/50 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-foreground">Place {i + 1}</span>
+                  {form.slots.length > 1 && (
+                    <Button variant="ghost" size="sm" onClick={() => removeSlot(i)} className="text-destructive" data-testid={`button-remove-slot-${i}`}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Message</label>
+                  <Input
+                    value={slot.message}
+                    onChange={(e) => updateSlot(i, "message", e.target.value)}
+                    placeholder="ex: Une place se libere !"
+                    data-testid={`input-slot-message-${i}`}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Date de disponibilite</label>
+                  <Input
+                    type="date"
+                    value={slot.date}
+                    onChange={(e) => updateSlot(i, "date", e.target.value)}
+                    data-testid={`input-slot-date-${i}`}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-availability" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">

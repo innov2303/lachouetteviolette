@@ -99,10 +99,14 @@ export const contactContentSchema = z.object({
   schedule: z.array(dayHoursSchema),
 });
 
-export const availabilityContentSchema = z.object({
-  enabled: z.boolean(),
+export const availabilitySlotSchema = z.object({
   date: z.string(),
   message: z.string(),
+});
+
+export const availabilityContentSchema = z.object({
+  enabled: z.boolean(),
+  slots: z.array(availabilitySlotSchema),
 });
 
 export type AvailabilityContent = z.infer<typeof availabilityContentSchema>;

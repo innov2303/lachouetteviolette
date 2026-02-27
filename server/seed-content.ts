@@ -81,8 +81,7 @@ const defaultContact: ContactContent = {
 
 const defaultAvailability: AvailabilityContent = {
   enabled: false,
-  date: "",
-  message: "Une place se libere !",
+  slots: [{ date: "", message: "Une place se libere !" }],
 };
 
 export async function seedDefaultContent() {
@@ -119,6 +118,18 @@ export async function seedDefaultContent() {
       delete c.closedDays;
       await storage.upsertSiteContent("contact", c);
       console.log("Migrated contact content to schedule format");
+    }
+  }
+
+  const availData = await storage.getSiteContent("availability");
+  if (availData) {
+    const a = availData.content as Record<string, unknown>;
+    if (!a.slots && (a.date !== undefined || a.message !== undefined)) {
+      a.slots = [{ date: (a.date as string) || "", message: (a.message as string) || "Une place se libere !" }];
+      delete a.date;
+      delete a.message;
+      await storage.upsertSiteContent("availability", a);
+      console.log("Migrated availability content to slots format");
     }
   }
 }
