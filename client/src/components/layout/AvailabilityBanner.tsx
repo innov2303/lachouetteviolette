@@ -33,7 +33,7 @@ export default function AvailabilityBanner() {
             {validDates.map((d, i) => (
               <span key={i} className="flex items-center gap-1.5 text-sm bg-white/20 rounded-full px-3 py-0.5">
                 <CalendarCheck className="h-3.5 w-3.5" />
-                {formatDate(d)}
+                A partir du {formatDate(d)}
               </span>
             ))}
           </div>
