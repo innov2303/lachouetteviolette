@@ -10,6 +10,9 @@ import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
 import { useSectionContent } from "@/hooks/use-content";
 import type { GalleryContent } from "@shared/schema";
+import owlBlue from "@assets/owl_blue.png";
+import owlOrange from "@assets/owl_orange.png";
+import owlPink from "@assets/owl_pink.png";
 
 const defaultImages = [
   { src: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=1200&auto=format&fit=crop", alt: "Espace de jeux lumineux" },
@@ -44,10 +47,17 @@ export default function Gallery() {
             <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
               {sectionLabel}
             </p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              {title}<br />
-              <span className="text-[#c9a0dc]">{titleHighlight}</span>
-            </h2>
+            <div className="flex items-end gap-4 mb-6">
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground leading-tight">
+                {title}<br />
+                <span className="text-[#c9a0dc]">{titleHighlight}</span>
+              </h2>
+              <div className="flex items-end gap-2 pb-1">
+                <motion.img src={owlBlue} alt="Chouette bleue" className="w-12 h-12 md:w-14 md:h-14 object-contain" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} />
+                <motion.img src={owlOrange} alt="Chouette orange" className="w-14 h-14 md:w-16 md:h-16 object-contain" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} />
+                <motion.img src={owlPink} alt="Chouette rose" className="w-12 h-12 md:w-14 md:h-14 object-contain" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.7 }} />
+              </div>
+            </div>
             <p className="text-muted-foreground leading-relaxed mb-6">
               {description}
             </p>
