@@ -227,9 +227,13 @@ function GalleryEditor({ data }: { data: GalleryContent }) {
               <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} data-testid="input-upload-image" />
             </label>
           </div>
+          <p className="text-xs text-muted-foreground mb-3">
+            Resolution recommandee : 1200 x 900 px (format 4:3). Formats acceptes : JPG, PNG, WebP. Taille max : 10 Mo.
+          </p>
           <div className="grid grid-cols-2 gap-4">
             {form.images.map((img, i) => (
               <div key={i} className="relative border rounded-md overflow-hidden bg-muted/50 group" data-testid={`gallery-admin-image-${i}`}>
+
                 <div className="aspect-[4/3]">
                   <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
                 </div>
