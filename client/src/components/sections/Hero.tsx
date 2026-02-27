@@ -7,7 +7,7 @@ export default function Hero() {
     <section data-testid="section-hero" className="relative h-screen flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <div
-          className="absolute inset-0 bg-cover bg-[center_30%] bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-[center_40%] bg-no-repeat"
           style={{ backgroundImage: `url('${heroBg}')` }}
         />
         <div className="absolute inset-0 bg-black/45" />
