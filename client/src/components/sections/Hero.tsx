@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import heroBg from "@assets/hero-chouette-violette.png";
 
 export default function Hero() {
@@ -31,6 +32,20 @@ export default function Hero() {
           La chouette violette
         </motion.h1>
       </div>
+
+      <motion.a
+        href="#gallery"
+        data-testid="button-discover"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1 }}
+        className="absolute bottom-10 z-10 flex flex-col items-center gap-2 text-white/80 hover:text-white transition-colors cursor-pointer"
+      >
+        <span className="text-sm tracking-[0.2em] uppercase font-light">
+          Decouvrir la MAM
+        </span>
+        <ChevronDown className="w-6 h-6 animate-bounce" />
+      </motion.a>
     </section>
   );
 }
