@@ -19,11 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Loader2, Send, MapPin, Phone, Mail, ArrowUp } from "lucide-react";
+import { SiFacebook, SiInstagram } from "react-icons/si";
+import type { SocialLinksContent } from "@shared/schema";
 
 export default function Contact() {
   const { toast } = useToast();
   const createMessage = useCreateMessage();
   const { data } = useSectionContent<ContactContent>("contact");
+  const { data: socialLinks } = useSectionContent<SocialLinksContent>("socialLinks");
 
   const sectionLabel = data?.sectionLabel || "Contactez-nous";
   const title = data?.title || "Rencontrons-nous";
@@ -135,6 +138,36 @@ export default function Contact() {
                 ))}
               </div>
             </div>
+
+            {(socialLinks?.facebook || socialLinks?.instagram) && (
+              <div className="pt-4 border-t border-border">
+                <h4 className="font-semibold text-foreground mb-3">Retrouvez-nous</h4>
+                <div className="flex gap-3">
+                  {socialLinks.facebook && (
+                    <a
+                      href={socialLinks.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-testid="contact-link-facebook"
+                      className="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:opacity-80 transition-opacity"
+                    >
+                      <SiFacebook size={18} />
+                    </a>
+                  )}
+                  {socialLinks.instagram && (
+                    <a
+                      href={socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-testid="contact-link-instagram"
+                      className="w-10 h-10 rounded-full bg-[#E4405F] text-white flex items-center justify-center hover:opacity-80 transition-opacity"
+                    >
+                      <SiInstagram size={18} />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </motion.div>
 
           <motion.div
