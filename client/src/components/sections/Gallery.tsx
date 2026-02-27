@@ -48,7 +48,7 @@ export default function Gallery() {
             </p>
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
               Bienvenue a la MAM<br />
-              <span className="text-primary">La chouette violette</span>
+              <span className="text-[#c9a0dc]">La chouette violette</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
               Notre Maison d'Assistantes Maternelles offre un cadre chaleureux et securise,

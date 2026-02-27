@@ -37,7 +37,7 @@ export default function Navbar() {
               data-testid="nav-logo"
               className="mx-8 flex flex-col items-center group"
             >
-              <span className="font-display text-2xl font-bold tracking-tight text-foreground">
+              <span className="font-display text-2xl font-bold tracking-tight text-[#c9a0dc]">
                 La chouette violette
               </span>
             </a>
@@ -55,7 +55,7 @@ export default function Navbar() {
           </nav>
 
           <div className="lg:hidden flex items-center justify-between w-full">
-            <a href="#" className="font-display text-xl font-bold text-foreground">
+            <a href="#" className="font-display text-xl font-bold text-[#c9a0dc]">
               La chouette violette
             </a>
             <button

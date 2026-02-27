@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div>
-            <h3 className="font-display text-2xl font-bold mb-4">
+            <h3 className="font-display text-2xl font-bold mb-4 text-[#c9a0dc]">
               La chouette violette
             </h3>
             <p className="text-background/60 text-sm leading-relaxed">
