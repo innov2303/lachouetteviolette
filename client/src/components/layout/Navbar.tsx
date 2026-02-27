@@ -25,7 +25,7 @@ export default function Navbar() {
             <img src={logoImg} alt="La chouette violette" className="h-12 w-auto" />
           </a>
 
-          <nav className="hidden lg:flex items-center gap-1 ml-auto">
+          <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
             {navLinks.map((link) => (
               <a
                 key={link.name}
