@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 
@@ -11,24 +11,13 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <>
       <header
         data-testid="navbar"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-white/95 backdrop-blur-md shadow-sm py-2"
-            : "bg-transparent py-4"
-        }`}
+        className="sticky top-0 z-50 bg-white border-b border-border py-3"
       >
         <div className="container mx-auto px-6 flex items-center justify-center relative">
           <nav className="hidden lg:flex items-center gap-1">
@@ -37,11 +26,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 data-testid={`nav-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className={`px-4 py-2 text-sm font-medium tracking-wide uppercase transition-colors ${
-                  isScrolled
-                    ? "text-foreground/70 hover:text-primary"
-                    : "text-white/80 hover:text-white"
-                }`}
+                className="px-4 py-2 text-sm font-medium tracking-wide uppercase text-foreground/70 hover:text-primary transition-colors"
               >
                 {link.name}
               </a>
@@ -52,9 +37,7 @@ export default function Navbar() {
               data-testid="nav-logo"
               className="mx-8 flex flex-col items-center group"
             >
-              <span className={`font-display text-2xl font-bold tracking-tight transition-colors ${
-                isScrolled ? "text-foreground" : "text-white"
-              }`}>
+              <span className="font-display text-2xl font-bold tracking-tight text-foreground">
                 La chouette violette
               </span>
             </a>
@@ -64,11 +47,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 data-testid={`nav-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                className={`px-4 py-2 text-sm font-medium tracking-wide uppercase transition-colors ${
-                  isScrolled
-                    ? "text-foreground/70 hover:text-primary"
-                    : "text-white/80 hover:text-white"
-                }`}
+                className="px-4 py-2 text-sm font-medium tracking-wide uppercase text-foreground/70 hover:text-primary transition-colors"
               >
                 {link.name}
               </a>
@@ -76,14 +55,12 @@ export default function Navbar() {
           </nav>
 
           <div className="lg:hidden flex items-center justify-between w-full">
-            <a href="#" className="font-display text-xl font-bold text-white">
+            <a href="#" className="font-display text-xl font-bold text-foreground">
               La chouette violette
             </a>
             <button
               data-testid="button-mobile-menu"
-              className={`p-2 rounded-md transition-colors ${
-                isScrolled ? "text-foreground" : "text-white"
-              }`}
+              className="p-2 rounded-md text-foreground transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
