@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <section data-testid="section-hero" className="relative h-screen min-h-[650px] flex items-center justify-center">
+    <section data-testid="section-hero" className="relative h-[50vh] min-h-[350px] flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
