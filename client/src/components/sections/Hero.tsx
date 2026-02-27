@@ -23,7 +23,7 @@ export default function Hero() {
             Maison d'Assistantes Maternelles
           </p>
 
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] text-balance">
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] text-balance text-[#c9a0dc]">
             La chouette violette
           </h1>
         </motion.div>
