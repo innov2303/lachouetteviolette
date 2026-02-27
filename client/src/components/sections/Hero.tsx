@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import heroBg from "@assets/hero-chouette-violette.png";
 
 export default function Hero() {
   return (
@@ -7,11 +8,9 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=2070&auto=format&fit=crop')`,
-          }}
+          style={{ backgroundImage: `url('${heroBg}')` }}
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/45" />
       </div>
 
       <div className="container relative z-10 mx-auto px-6 text-center text-white flex flex-col items-center">
