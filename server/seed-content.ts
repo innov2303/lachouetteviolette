@@ -81,7 +81,8 @@ const defaultContact: ContactContent = {
 
 const defaultAvailability: AvailabilityContent = {
   enabled: false,
-  slots: [{ date: "", message: "Une place se libere !" }],
+  message: "Une place se libere !",
+  dates: [""],
 };
 
 export async function seedDefaultContent() {
@@ -124,12 +125,16 @@ export async function seedDefaultContent() {
   const availData = await storage.getSiteContent("availability");
   if (availData) {
     const a = availData.content as Record<string, unknown>;
-    if (!a.slots && (a.date !== undefined || a.message !== undefined)) {
-      a.slots = [{ date: (a.date as string) || "", message: (a.message as string) || "Une place se libere !" }];
+    if (!a.dates) {
+      const slots = a.slots as Array<{ date: string; message: string }> | undefined;
+      const oldDate = a.date as string | undefined;
+      const oldMessage = a.message as string | undefined;
+      a.message = slots?.[0]?.message || oldMessage || "Une place se libere !";
+      a.dates = slots ? slots.map((s) => s.date) : [oldDate || ""];
+      delete a.slots;
       delete a.date;
-      delete a.message;
       await storage.upsertSiteContent("availability", a);
-      console.log("Migrated availability content to slots format");
+      console.log("Migrated availability content to dates format");
     }
   }
 }
