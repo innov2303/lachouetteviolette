@@ -12,7 +12,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-black/45" />
       </div>
 
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-between py-8">
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-between py-8 text-center">
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -26,7 +26,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-balance text-[#c9a0dc] mb-6"
+          className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-balance text-[#c9a0dc]"
         >
           La chouette violette
         </motion.h1>
