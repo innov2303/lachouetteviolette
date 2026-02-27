@@ -67,7 +67,7 @@ export default function Admin() {
       </header>
 
       <div className="flex">
-        <aside className="w-56 border-r border-border min-h-[calc(100vh-53px)] p-4">
+        <aside className="w-56 border-r border-border min-h-[calc(100vh-53px)] p-4 sticky top-[53px] self-start">
           <nav className="space-y-1">
             {sectionTabs.map((tab) => (
               <button
