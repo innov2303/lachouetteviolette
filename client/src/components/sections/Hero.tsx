@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import heroBg from "@assets/hero-chouette-violette.png";
 
 export default function Hero() {
@@ -24,23 +23,9 @@ export default function Hero() {
             Maison d'Assistantes Maternelles
           </p>
 
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-10 leading-[1.1] text-balance">
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] text-balance">
             La chouette violette
           </h1>
-
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <Button
-              asChild
-              data-testid="button-hero-cta"
-              className="bg-primary text-primary-foreground px-10 py-3 text-sm tracking-[0.2em] uppercase font-medium rounded-none"
-            >
-              <a href="#contact">Nos places disponibles</a>
-            </Button>
-          </motion.div>
         </motion.div>
       </div>
     </section>
