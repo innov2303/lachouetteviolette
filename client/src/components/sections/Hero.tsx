@@ -12,12 +12,12 @@ export default function Hero() {
         <div className="absolute inset-0 bg-black/45" />
       </div>
 
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-between py-8 text-center">
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center">
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-sm md:text-base tracking-[0.3em] uppercase font-light text-white/90 mt-4"
+          className="text-sm md:text-base tracking-[0.3em] uppercase font-light text-white/90 mb-4"
         >
           Maison d'Assistantes Maternelles
         </motion.p>
