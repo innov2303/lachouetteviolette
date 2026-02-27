@@ -13,6 +13,12 @@ const teamMembers = [
     bio: "Creative et douce, Claire anime des ateliers artistiques et sensoriels pour eveiller la curiosite des tout-petits.",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=600&auto=format&fit=crop",
   },
+  {
+    name: "Marie Martin",
+    role: "Assistante Maternelle agreee",
+    bio: "Attentive et bienveillante, Marie veille au bien-etre de chaque enfant et les accompagne dans leurs premiers pas vers l'autonomie.",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop",
+  },
 ];
 
 export default function Team() {
@@ -32,12 +38,12 @@ export default function Team() {
             Notre Equipe
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Deux professionnelles de la petite enfance unies par la meme passion
+            Trois professionnelles de la petite enfance unies par la meme passion
             et les memes valeurs educatives.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
           {teamMembers.map((member, index) => (
             <motion.div
               key={index}
