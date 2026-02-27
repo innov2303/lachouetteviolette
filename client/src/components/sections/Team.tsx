@@ -17,7 +17,7 @@ const teamMembers = [
 
 export default function Team() {
   return (
-    <section id="team" data-testid="section-team" className="py-20 md:py-28 bg-muted">
+    <section id="team" data-testid="section-team" className="min-h-[calc(100vh-53px)] flex items-center py-16 bg-muted">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

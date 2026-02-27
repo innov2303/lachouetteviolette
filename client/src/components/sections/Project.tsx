@@ -30,7 +30,7 @@ const pillars = [
 
 export default function Project() {
   return (
-    <section id="project" data-testid="section-project" className="py-20 md:py-28">
+    <section id="project" data-testid="section-project" className="min-h-[calc(100vh-53px)] flex items-center py-16">
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <motion.div

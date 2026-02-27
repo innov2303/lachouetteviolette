@@ -51,7 +51,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" data-testid="section-contact" className="py-20 md:py-28 bg-muted">
+    <section id="contact" data-testid="section-contact" className="min-h-[calc(100vh-53px)] flex items-center py-16 bg-muted">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
