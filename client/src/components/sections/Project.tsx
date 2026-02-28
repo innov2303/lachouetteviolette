@@ -61,9 +61,9 @@ export default function Project() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 data-testid={`pillar-card-${index}`}
-                className="group relative bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-300"
+                className="group relative bg-card border border-card-border rounded-xl p-6 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-300"
               >
-                <div className="w-12 h-12 mb-4 rounded-xl bg-[#c9a0dc]/10 flex items-center justify-center text-[#c9a0dc] group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300 group-hover:scale-110">
+                <div className="w-12 h-12 mb-4 mx-auto rounded-xl bg-[#c9a0dc]/10 flex items-center justify-center text-[#c9a0dc] group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300 group-hover:scale-110">
                   <IconComp size={22} />
                 </div>
                 <h3 className="font-display text-lg font-bold text-foreground mb-1.5">
