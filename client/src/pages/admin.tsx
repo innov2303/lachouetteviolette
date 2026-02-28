@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useAuth, useLogout } from "@/hooks/use-auth";
-import { useAllContent, useUpdateContent, useMessages, usePreinscriptions } from "@/hooks/use-content";
+import { useAllContent, useUpdateContent } from "@/hooks/use-content";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, ClipboardList } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2 } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, Message, Preinscription } from "@shared/schema";
+import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent } from "@shared/schema";
 
 const sectionTabs = [
   { id: "availability", label: "Place disponible", icon: CalendarCheck },
@@ -17,8 +17,6 @@ const sectionTabs = [
   { id: "project", label: "Pedagogie", icon: BookOpen },
   { id: "contact", label: "Contact", icon: Mail },
   { id: "socialLinks", label: "Reseaux sociaux", icon: Share2 },
-  { id: "messages", label: "Messages", icon: Mail },
-  { id: "preinscriptions", label: "Preinscriptions", icon: ClipboardList },
 ];
 
 export default function Admin() {
@@ -104,8 +102,6 @@ export default function Admin() {
               {activeTab === "project" && <ProjectEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
               {activeTab === "contact" && <ContactEditor data={(content.data as Record<string, unknown>).contact as ContactContent} />}
               {activeTab === "socialLinks" && <SocialLinksEditor data={(content.data as Record<string, unknown>).socialLinks as SocialLinksContent} />}
-              {activeTab === "messages" && <MessagesViewer />}
-              {activeTab === "preinscriptions" && <PreinscriptionsViewer />}
             </>
           ) : null}
         </main>
@@ -729,89 +725,3 @@ function SocialLinksEditor({ data }: { data: SocialLinksContent }) {
   );
 }
 
-function MessagesViewer() {
-  const messages = useMessages();
-
-  return (
-    <div>
-      <SectionHeader title="Messages recus" description="Les messages envoyes depuis le formulaire de contact" />
-      {messages.isLoading ? (
-        <div className="flex items-center justify-center py-10">
-          <Loader2 className="h-6 w-6 animate-spin text-[#c9a0dc]" />
-        </div>
-      ) : (messages.data as Message[])?.length === 0 ? (
-        <p className="text-muted-foreground text-sm" data-testid="text-no-messages">Aucun message pour le moment.</p>
-      ) : (
-        <div className="space-y-4">
-          {(messages.data as Message[])?.map((msg) => (
-            <div key={msg.id} className="p-4 border rounded-md bg-card" data-testid={`message-card-${msg.id}`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-foreground" data-testid={`text-msg-name-${msg.id}`}>{msg.name}</span>
-                <span className="text-xs text-muted-foreground">
-                  {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) : ""}
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground mb-1" data-testid={`text-msg-email-${msg.id}`}>{msg.email}</p>
-              <p className="text-sm text-foreground whitespace-pre-wrap" data-testid={`text-msg-content-${msg.id}`}>{msg.message}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function PreinscriptionsViewer() {
-  const preinscriptions = usePreinscriptions();
-
-  return (
-    <div>
-      <SectionHeader title="Preinscriptions" description="Les demandes de preinscription recues" />
-      {preinscriptions.isLoading ? (
-        <div className="flex items-center justify-center py-10">
-          <Loader2 className="h-6 w-6 animate-spin text-[#c9a0dc]" />
-        </div>
-      ) : (preinscriptions.data as Preinscription[])?.length === 0 ? (
-        <p className="text-muted-foreground text-sm" data-testid="text-no-preinscriptions">Aucune preinscription pour le moment.</p>
-      ) : (
-        <div className="space-y-4">
-          {(preinscriptions.data as Preinscription[])?.map((p) => (
-            <div key={p.id} className="p-4 border rounded-md bg-card" data-testid={`preinscription-card-${p.id}`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-foreground" data-testid={`text-pre-parent-${p.id}`}>{p.parentName}</span>
-                <span className="text-xs text-muted-foreground">
-                  {p.createdAt ? new Date(p.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) : ""}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-sm mb-2">
-                <div>
-                  <span className="text-muted-foreground">Email : </span>
-                  <span className="text-foreground" data-testid={`text-pre-email-${p.id}`}>{p.email}</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Tel : </span>
-                  <span className="text-foreground" data-testid={`text-pre-phone-${p.id}`}>{p.phone}</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Enfant : </span>
-                  <span className="text-foreground" data-testid={`text-pre-child-${p.id}`}>{p.childName}</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Ne(e) le : </span>
-                  <span className="text-foreground" data-testid={`text-pre-birthdate-${p.id}`}>{p.childBirthdate}</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Debut souhaite : </span>
-                  <span className="text-foreground" data-testid={`text-pre-start-${p.id}`}>{p.startDate}</span>
-                </div>
-              </div>
-              {p.message && (
-                <p className="text-sm text-foreground whitespace-pre-wrap border-t pt-2 mt-2" data-testid={`text-pre-message-${p.id}`}>{p.message}</p>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
