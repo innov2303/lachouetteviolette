@@ -402,60 +402,61 @@ export default function Contact() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col gap-6 justify-center"
           >
-            <button
-              type="button"
-              onClick={() => setContactOpen(true)}
-              data-testid="button-open-contact"
-              className="group bg-card border border-card-border rounded-xl p-8 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer"
-            >
-              <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
-                <MessageCircle size={24} />
+            <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500 h-full flex flex-col">
+              <div className="p-4 flex items-center gap-3 border-b border-border/50">
+                <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                  <Map size={18} />
+                </div>
+                <h4 className="font-semibold text-foreground" data-testid="text-map-title">Nous trouver</h4>
               </div>
-              <h3 className="font-display text-lg font-bold text-foreground mb-2">Nous contacter</h3>
-              <p className="text-sm text-muted-foreground">Posez-nous vos questions</p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setPreinscriptionOpen(true)}
-              data-testid="button-open-preinscription"
-              className="group bg-card border border-card-border rounded-xl p-8 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer"
-            >
-              <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
-                <ClipboardList size={24} />
-              </div>
-              <h3 className="font-display text-lg font-bold text-foreground mb-2">Preinscription</h3>
-              <p className="text-sm text-muted-foreground">Inscrivez votre enfant</p>
-            </button>
+              <iframe
+                data-testid="map-embed"
+                title="Localisation de La chouette violette"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(address.replace(/\n/g, ", "))}&output=embed`}
+                className="w-full flex-1 min-h-[250px] border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-10 px-4"
-        >
-          <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
-            <div className="p-4 flex items-center gap-3 border-b border-border/50">
-              <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
-                <Map size={18} />
-              </div>
-              <h4 className="font-semibold text-foreground" data-testid="text-map-title">Nous trouver</h4>
+        <div className="flex justify-center gap-6 mt-10 px-4">
+          <motion.button
+            type="button"
+            onClick={() => setContactOpen(true)}
+            data-testid="button-open-contact"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="group bg-card border border-card-border rounded-xl px-8 py-6 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer flex-1 max-w-xs"
+          >
+            <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
+              <MessageCircle size={22} />
             </div>
-            <iframe
-              data-testid="map-embed"
-              title="Localisation de La chouette violette"
-              src={`https://www.google.com/maps?q=${encodeURIComponent(address.replace(/\n/g, ", "))}&output=embed`}
-              className="w-full h-[300px] md:h-[400px] border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-            />
-          </div>
-        </motion.div>
+            <h3 className="font-display text-lg font-bold text-foreground mb-1">Nous contacter</h3>
+            <p className="text-sm text-muted-foreground">Posez-nous vos questions</p>
+          </motion.button>
+
+          <motion.button
+            type="button"
+            onClick={() => setPreinscriptionOpen(true)}
+            data-testid="button-open-preinscription"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="group bg-card border border-card-border rounded-xl px-8 py-6 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer flex-1 max-w-xs"
+          >
+            <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
+              <ClipboardList size={22} />
+            </div>
+            <h3 className="font-display text-lg font-bold text-foreground mb-1">Preinscription</h3>
+            <p className="text-sm text-muted-foreground">Inscrivez votre enfant</p>
+          </motion.button>
+        </div>
 
         <div className="flex justify-center mt-14">
           <a
