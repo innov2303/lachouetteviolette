@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Bird } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -59,7 +60,11 @@ export default function Gallery() {
               <span className="text-[#c9a0dc]">{titleHighlight}</span>
             </h2>
 
-            <div className="w-16 h-0.5 bg-[#c9a0dc]/40 mb-6 mx-auto" />
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
+              <Bird className="w-4 h-4 text-[#c9a0dc] fill-[#c9a0dc]/30" />
+              <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
+            </div>
 
             <p className="text-muted-foreground leading-relaxed text-lg mb-4 text-center">
               {description}
