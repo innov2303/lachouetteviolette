@@ -99,10 +99,15 @@ export const contactContentSchema = z.object({
   schedule: z.array(dayHoursSchema),
 });
 
+export const availabilitySlotSchema = z.object({
+  date: z.string(),
+  days: z.array(z.string()),
+});
+
 export const availabilityContentSchema = z.object({
   enabled: z.boolean(),
   message: z.string(),
-  dates: z.array(z.string()),
+  slots: z.array(availabilitySlotSchema),
 });
 
 export const socialLinksContentSchema = z.object({

@@ -143,14 +143,55 @@ export default function Contact() {
                 Horaires d'accueil
               </h4>
               <div className="space-y-2.5 text-sm">
-                {schedule.map((s, i) => (
-                  <div key={i} className="flex justify-between gap-2 py-1 border-b border-border/50 last:border-0">
-                    <span className="text-muted-foreground">{s.day}</span>
-                    <span className="font-medium text-foreground">{s.hours}</span>
-                  </div>
-                ))}
+                {schedule.filter((s) => s.day.toLowerCase() !== "mercredi").map((s, i) => {
+                  const hasRange = s.hours.includes("-");
+                  const displayHours = hasRange ? s.hours : "Fermé";
+                  const parts = hasRange ? displayHours.split(/\s*-\s*/) : null;
+                  return (
+                    <div key={i} className="flex justify-between gap-2 py-1 border-b border-border/50 last:border-0">
+                      <span className="text-muted-foreground">{s.day}</span>
+                      {parts ? (
+                        <span className="font-medium text-foreground text-right leading-relaxed">
+                          {parts[0]}<br />- {parts[1]}
+                        </span>
+                      ) : (
+                        <span className="font-medium text-muted-foreground italic">{displayHours}</span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
+
+            {(() => {
+              const mercredi = schedule.find((s) => s.day.toLowerCase() === "mercredi");
+              if (!mercredi) return null;
+              const hasRange = mercredi.hours.includes("-");
+              const displayHours = hasRange ? mercredi.hours : "Fermé";
+              const parts = hasRange ? displayHours.split(/\s*-\s*/) : null;
+              return (
+                <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+                  <h4 className="font-semibold text-foreground mb-4 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                      <Clock size={18} />
+                    </div>
+                    Horaires du mercredi
+                  </h4>
+                  <div className="text-sm">
+                    <div className="flex justify-between gap-2 py-1">
+                      <span className="text-muted-foreground">Mercredi</span>
+                      {parts ? (
+                        <span className="font-medium text-foreground text-right leading-relaxed">
+                          {parts[0]}<br />- {parts[1]}
+                        </span>
+                      ) : (
+                        <span className="font-medium text-muted-foreground italic">{displayHours}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {(socialLinks?.facebook || socialLinks?.instagram) && (
               <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">

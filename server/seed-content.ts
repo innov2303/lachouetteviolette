@@ -82,7 +82,7 @@ const defaultContact: ContactContent = {
 const defaultAvailability: AvailabilityContent = {
   enabled: false,
   message: "Une place se libere !",
-  dates: [""],
+  slots: [{ date: "", days: [] }],
 };
 
 const defaultSocialLinks: SocialLinksContent = {
@@ -131,16 +131,12 @@ export async function seedDefaultContent() {
   const availData = await storage.getSiteContent("availability");
   if (availData) {
     const a = availData.content as Record<string, unknown>;
-    if (!a.dates) {
-      const slots = a.slots as Array<{ date: string; message: string }> | undefined;
-      const oldDate = a.date as string | undefined;
-      const oldMessage = a.message as string | undefined;
-      a.message = slots?.[0]?.message || oldMessage || "Une place se libere !";
-      a.dates = slots ? slots.map((s) => s.date) : [oldDate || ""];
-      delete a.slots;
-      delete a.date;
+    if (a.dates && !a.slots) {
+      const oldDates = a.dates as string[];
+      a.slots = oldDates.map((d) => ({ date: d, days: [] }));
+      delete a.dates;
       await storage.upsertSiteContent("availability", a);
-      console.log("Migrated availability content to dates format");
+      console.log("Migrated availability content from dates to slots format");
     }
   }
 }

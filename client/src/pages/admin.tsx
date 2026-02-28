@@ -125,11 +125,13 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   return <label className="block text-sm font-medium text-foreground mb-1.5">{children}</label>;
 }
 
+const ALL_DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+
 function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
   const buildForm = () => ({
     enabled: data?.enabled ?? false,
     message: data?.message || "Une place se libere !",
-    dates: data?.dates?.length ? data.dates : [""],
+    slots: data?.slots?.length ? data.slots : [{ date: "", days: [] as string[] }],
   });
   const [form, setForm] = useState(buildForm);
   const update = useUpdateContent("availability");
@@ -146,14 +148,24 @@ function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
     });
   };
 
-  const updateDate = (index: number, value: string) => {
-    const dates = [...form.dates];
-    dates[index] = value;
-    setForm({ ...form, dates });
+  const updateSlotDate = (index: number, value: string) => {
+    const slots = [...form.slots];
+    slots[index] = { ...slots[index], date: value };
+    setForm({ ...form, slots });
   };
 
-  const addDate = () => setForm({ ...form, dates: [...form.dates, ""] });
-  const removeDate = (index: number) => setForm({ ...form, dates: form.dates.filter((_, i) => i !== index) });
+  const toggleSlotDay = (index: number, day: string) => {
+    const slots = [...form.slots];
+    const current = slots[index].days || [];
+    slots[index] = {
+      ...slots[index],
+      days: current.includes(day) ? current.filter((d) => d !== day) : [...current, day],
+    };
+    setForm({ ...form, slots });
+  };
+
+  const addSlot = () => setForm({ ...form, slots: [...form.slots, { date: "", days: [] }] });
+  const removeSlot = (index: number) => setForm({ ...form, slots: form.slots.filter((_, i) => i !== index) });
 
   return (
     <div>
@@ -189,26 +201,48 @@ function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
 
         <div>
           <div className="flex items-center justify-between mb-3">
-            <FieldLabel>Dates de disponibilite</FieldLabel>
-            <Button variant="outline" size="sm" onClick={addDate} data-testid="button-add-date">
-              <Plus className="h-4 w-4 mr-1" /> Ajouter une date
+            <FieldLabel>Places disponibles</FieldLabel>
+            <Button variant="outline" size="sm" onClick={addSlot} data-testid="button-add-date">
+              <Plus className="h-4 w-4 mr-1" /> Ajouter une place
             </Button>
           </div>
-          <div className="space-y-3">
-            {form.dates.map((date, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 border rounded-md bg-muted/50">
-                <span className="text-sm font-medium text-foreground w-20 shrink-0">Place {i + 1}</span>
-                <Input
-                  type="date"
-                  value={date}
-                  onChange={(e) => updateDate(i, e.target.value)}
-                  data-testid={`input-date-${i}`}
-                />
-                {form.dates.length > 1 && (
-                  <Button variant="ghost" size="sm" onClick={() => removeDate(i)} className="text-destructive shrink-0" data-testid={`button-remove-date-${i}`}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
+          <div className="space-y-4">
+            {form.slots.map((slot, i) => (
+              <div key={i} className="p-4 border rounded-md bg-muted/50 space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-foreground w-20 shrink-0">Place {i + 1}</span>
+                  <Input
+                    type="date"
+                    value={slot.date}
+                    onChange={(e) => updateSlotDate(i, e.target.value)}
+                    data-testid={`input-date-${i}`}
+                  />
+                  {form.slots.length > 1 && (
+                    <Button variant="ghost" size="sm" onClick={() => removeSlot(i)} className="text-destructive shrink-0" data-testid={`button-remove-date-${i}`}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                <div>
+                  <span className="text-xs text-muted-foreground mb-2 block">Jours d'accueil</span>
+                  <div className="flex flex-wrap gap-2">
+                    {ALL_DAYS.map((day) => (
+                      <button
+                        key={day}
+                        type="button"
+                        onClick={() => toggleSlotDay(i, day)}
+                        data-testid={`button-day-${i}-${day}`}
+                        className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                          slot.days?.includes(day)
+                            ? "bg-[#c9a0dc] text-white border-[#c9a0dc]"
+                            : "bg-background text-muted-foreground border-border hover:border-[#c9a0dc]/50"
+                        }`}
+                      >
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
