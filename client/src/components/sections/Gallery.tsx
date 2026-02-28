@@ -85,7 +85,7 @@ export default function Gallery() {
               <Carousel
                 plugins={[plugin.current]}
                 opts={{ align: "start", loop: true }}
-                className="w-full relative"
+                className="w-full relative group/carousel"
               >
                 <CarouselContent>
                   {images.map((img, index) => (
@@ -101,10 +101,8 @@ export default function Gallery() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <div className="flex justify-center gap-3 mt-6">
-                  <CarouselPrevious className="static transform-none rounded-xl border-[#c9a0dc]/30 text-[#c9a0dc] hover:bg-[#c9a0dc]/10 hover:text-[#c9a0dc] hover:border-[#c9a0dc]/50 transition-all" />
-                  <CarouselNext className="static transform-none rounded-xl border-[#c9a0dc]/30 text-[#c9a0dc] hover:bg-[#c9a0dc]/10 hover:text-[#c9a0dc] hover:border-[#c9a0dc]/50 transition-all" />
-                </div>
+                <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 disabled:opacity-0" />
+                <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 disabled:opacity-0" />
               </Carousel>
             </div>
           </motion.div>
