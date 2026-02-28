@@ -12,7 +12,7 @@ export default function Hero() {
   const buttonText = data?.buttonText || "Decouvrir la MAM";
 
   return (
-    <section data-testid="section-hero" className="relative h-[calc(100vh-53px)] flex items-center justify-center">
+    <section data-testid="section-hero" className="relative flex-1 flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-[center_40%] bg-no-repeat"

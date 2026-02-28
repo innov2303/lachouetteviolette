@@ -11,9 +11,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <AvailabilityBanner />
-      <main>
+      <div className="flex flex-col h-[calc(100vh-53px)]">
+        <AvailabilityBanner />
         <Hero />
+      </div>
+      <main>
         <Gallery />
         <Team />
         <Project />
