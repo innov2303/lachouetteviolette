@@ -4,6 +4,7 @@ import {
   HandHeart, Brain, Eye, Footprints, Smile, Sun, TreePine,
   Puzzle, Gamepad2, Apple, Flower2, Bird, Shield, Clock, Lightbulb,
   MessageCircle, Globe, Leaf, Sparkles, GraduationCap, Home,
+  Quote,
 } from "lucide-react";
 import { useSectionContent } from "@/hooks/use-content";
 import type { ProjectContent } from "@shared/schema";
@@ -28,7 +29,7 @@ export default function Project() {
   const inspirationText = data?.inspirationText || "";
 
   return (
-    <section id="project" data-testid="section-project" className="min-h-[calc(100vh-53px)] flex items-center py-16">
+    <section id="project" data-testid="section-project" className="min-h-[calc(100vh-53px)] flex items-center py-20">
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <motion.div
@@ -42,13 +43,14 @@ export default function Project() {
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
               {title}
             </h2>
-            <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            <div className="w-16 h-0.5 bg-[#c9a0dc]/40 mx-auto mb-6" />
+            <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto text-lg">
               {description}
             </p>
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {pillars.map((pillar, index) => {
             const IconComp = iconMap[pillar.icon] || Sprout;
             return (
@@ -59,18 +61,20 @@ export default function Project() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 data-testid={`pillar-card-${index}`}
-                className="flex items-start gap-5 group"
+                className="group relative bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-300"
               >
-                <div className="w-14 h-14 shrink-0 rounded-full bg-accent flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                  <IconComp size={24} />
-                </div>
-                <div>
-                  <h3 className="font-display text-xl font-bold text-foreground mb-2">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {pillar.description}
-                  </p>
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 shrink-0 rounded-xl bg-[#c9a0dc]/10 flex items-center justify-center text-[#c9a0dc] group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300 group-hover:scale-110">
+                    <IconComp size={22} />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-foreground mb-1.5">
+                      {pillar.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {pillar.description}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             );
@@ -82,19 +86,23 @@ export default function Project() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="mt-20 bg-muted rounded-md p-10 md:p-16 max-w-4xl mx-auto"
+          className="mt-16 max-w-4xl mx-auto"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div>
-              <h3 className="font-display text-2xl font-bold text-foreground mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="relative bg-gradient-to-br from-[#c9a0dc]/8 to-[#c9a0dc]/3 border border-[#c9a0dc]/15 rounded-xl p-8">
+              <Quote className="absolute top-4 right-4 h-8 w-8 text-[#c9a0dc]/15" />
+              <h3 className="font-display text-xl font-bold text-foreground mb-4 flex items-center gap-3">
+                <span className="w-1 h-6 bg-[#c9a0dc] rounded-full" />
                 {approachTitle}
               </h3>
               <p className="text-muted-foreground leading-relaxed">
                 {approachText}
               </p>
             </div>
-            <div>
-              <h3 className="font-display text-2xl font-bold text-foreground mb-4">
+            <div className="relative bg-gradient-to-br from-[#c9a0dc]/8 to-[#c9a0dc]/3 border border-[#c9a0dc]/15 rounded-xl p-8">
+              <Quote className="absolute top-4 right-4 h-8 w-8 text-[#c9a0dc]/15" />
+              <h3 className="font-display text-xl font-bold text-foreground mb-4 flex items-center gap-3">
+                <span className="w-1 h-6 bg-[#c9a0dc] rounded-full" />
                 {inspirationTitle}
               </h3>
               <p className="text-muted-foreground leading-relaxed">
