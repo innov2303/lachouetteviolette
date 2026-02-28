@@ -402,12 +402,12 @@ export default function Contact() {
               </button>
             </div>
 
-            <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+            <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500 flex-1 flex flex-col">
               <iframe
                 data-testid="map-embed"
                 title="Localisation de La chouette violette"
                 src={`https://www.google.com/maps?q=${encodeURIComponent(address.replace(/\n/g, ", "))}&output=embed`}
-                className="w-full h-[250px] border-0"
+                className="w-full flex-1 min-h-[250px] border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
