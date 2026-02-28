@@ -48,7 +48,7 @@ export default function Project() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
           {pillars.map((pillar, index) => {
             const IconComp = iconMap[pillar.icon] || Sprout;
             return (
@@ -80,7 +80,7 @@ export default function Project() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="mt-16 max-w-4xl mx-auto"
+          className="mt-16 mx-auto px-4"
         >
           <div className="relative bg-gradient-to-br from-[#c9a0dc]/8 to-[#c9a0dc]/3 border border-[#c9a0dc]/15 rounded-xl p-8">
             <Quote className="absolute top-4 right-4 h-8 w-8 text-[#c9a0dc]/15" />
