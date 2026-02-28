@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth, useLogout } from "@/hooks/use-auth";
 import { useAllContent, useUpdateContent, useMessages } from "@/hooks/use-content";
 import { useLocation } from "wouter";
@@ -126,14 +126,18 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 }
 
 function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
-  const safeData = {
+  const buildForm = () => ({
     enabled: data?.enabled ?? false,
     message: data?.message || "Une place se libere !",
-    dates: data?.dates || [""],
-  };
-  const [form, setForm] = useState(safeData);
+    dates: data?.dates?.length ? data.dates : [""],
+  });
+  const [form, setForm] = useState(buildForm);
   const update = useUpdateContent("availability");
   const { toast } = useToast();
+
+  useEffect(() => {
+    setForm(buildForm());
+  }, [data]);
 
   const handleSave = () => {
     update.mutate(form, {
