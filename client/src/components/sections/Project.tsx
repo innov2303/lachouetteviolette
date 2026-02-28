@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import owlSeparator from "@assets/owl_orange.png";
+import { BookOpen as SeparatorIcon } from "lucide-react";
 import {
   Sprout, BookOpen, Music, Users, Heart, Star, Palette, Baby,
   HandHeart, Brain, Eye, Footprints, Smile, Sun, TreePine,
@@ -41,7 +41,7 @@ export default function Project() {
             </h2>
             <div className="flex items-center justify-center gap-3 mb-6">
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
-              <img src={owlSeparator} alt="" className="w-6 h-6 object-contain" />
+              <SeparatorIcon className="w-5 h-5 text-[#c9a0dc]" />
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
             </div>
             <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto text-lg">

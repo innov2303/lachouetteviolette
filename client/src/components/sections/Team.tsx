@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import owlSeparator from "@assets/owl_orange.png";
+import { Users } from "lucide-react";
 import owlAvatar1 from "@assets/owl-avatar-1.png";
 import owlAvatar2 from "@assets/owl-avatar-2.png";
 import owlAvatar3 from "@assets/owl-avatar-3.png";
@@ -54,7 +54,7 @@ export default function Team() {
           </h2>
           <div className="flex items-center justify-center gap-3 mb-6">
             <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
-            <img src={owlSeparator} alt="" className="w-6 h-6 object-contain" />
+            <Users className="w-5 h-5 text-[#c9a0dc]" />
             <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
           </div>
           <p className="text-muted-foreground leading-relaxed text-lg">

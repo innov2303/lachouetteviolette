@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import owlSeparator from "@assets/owl_orange.png";
-import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSectionContent } from "@/hooks/use-content";
 import type { ProjectContent } from "@shared/schema";
 
@@ -65,7 +64,7 @@ export default function Familiarisation() {
             </h2>
             <div className="flex items-center justify-center gap-3 mb-6">
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
-              <img src={owlSeparator} alt="" className="w-6 h-6 object-contain" />
+              <Heart className="w-5 h-5 text-[#c9a0dc]" />
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
             </div>
             <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto text-lg">

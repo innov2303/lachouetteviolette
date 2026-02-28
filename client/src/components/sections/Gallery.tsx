@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import owlSeparator from "@assets/owl_orange.png";
+import { Camera } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -82,7 +82,7 @@ export default function Gallery() {
 
             <div className="flex items-center justify-center gap-3 mb-6">
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
-              <img src={owlSeparator} alt="" className="w-6 h-6 object-contain" />
+              <Camera className="w-5 h-5 text-[#c9a0dc]" />
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
             </div>
 

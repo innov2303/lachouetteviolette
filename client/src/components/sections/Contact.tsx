@@ -28,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Loader2, Send, MapPin, Phone, Mail, ArrowUp, Clock, MessageCircle, ClipboardList, Map } from "lucide-react";
-import owlSeparator from "@assets/owl_orange.png";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 
 function ContactDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
@@ -307,7 +306,7 @@ export default function Contact() {
           </h2>
           <div className="flex items-center justify-center gap-3 mb-6">
             <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
-            <img src={owlSeparator} alt="" className="w-6 h-6 object-contain" />
+            <MapPin className="w-5 h-5 text-[#c9a0dc]" />
             <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
           </div>
           <p className="text-muted-foreground leading-relaxed text-lg">
