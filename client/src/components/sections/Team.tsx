@@ -60,13 +60,13 @@ export default function Team() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.15 }}
               data-testid={`team-card-${index}`}
-              className="group"
+              className="group text-center"
             >
-              <div className="aspect-[3/4] overflow-hidden rounded-md mb-6">
+              <div className="w-40 h-40 mx-auto overflow-hidden rounded-full mb-6 border-4 border-[#c9a0dc]/20 group-hover:border-[#c9a0dc]/50 transition-all duration-500">
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
               </div>
               <h3 className="font-display text-2xl font-bold text-foreground mb-1">
@@ -75,7 +75,7 @@ export default function Team() {
               <p className="text-primary text-sm font-medium tracking-wide uppercase mb-3">
                 {member.role}
               </p>
-              <p className="text-muted-foreground leading-relaxed text-sm">
+              <p className="text-muted-foreground leading-relaxed text-sm max-w-xs mx-auto">
                 {member.bio}
               </p>
             </motion.div>
