@@ -18,6 +18,26 @@ export const insertMessageSchema = createInsertSchema(messages).omit({
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 
+export const preinscriptions = pgTable("preinscriptions", {
+  id: serial("id").primaryKey(),
+  parentName: text("parent_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  childName: text("child_name").notNull(),
+  childBirthdate: text("child_birthdate").notNull(),
+  startDate: text("start_date").notNull(),
+  message: text("message"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertPreinscriptionSchema = createInsertSchema(preinscriptions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type Preinscription = typeof preinscriptions.$inferSelect;
+export type InsertPreinscription = z.infer<typeof insertPreinscriptionSchema>;
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),

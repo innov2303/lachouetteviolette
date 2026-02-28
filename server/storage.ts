@@ -1,10 +1,12 @@
 import { db } from "./db";
-import { messages, users, siteContent, type InsertMessage, type Message, type User, type InsertUser, type SiteContent } from "@shared/schema";
+import { messages, preinscriptions, users, siteContent, type InsertMessage, type Message, type InsertPreinscription, type Preinscription, type User, type InsertUser, type SiteContent } from "@shared/schema";
 import { eq } from "drizzle-orm";
 
 export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
   getMessages(): Promise<Message[]>;
+  createPreinscription(data: InsertPreinscription): Promise<Preinscription>;
+  getPreinscriptions(): Promise<Preinscription[]>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserById(id: number): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
@@ -21,6 +23,15 @@ export class DatabaseStorage implements IStorage {
 
   async getMessages(): Promise<Message[]> {
     return await db.select().from(messages).orderBy(messages.createdAt);
+  }
+
+  async createPreinscription(data: InsertPreinscription): Promise<Preinscription> {
+    const [row] = await db.insert(preinscriptions).values(data).returning();
+    return row;
+  }
+
+  async getPreinscriptions(): Promise<Preinscription[]> {
+    return await db.select().from(preinscriptions).orderBy(preinscriptions.createdAt);
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {

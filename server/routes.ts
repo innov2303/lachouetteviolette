@@ -67,6 +67,32 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/preinscriptions", async (req, res) => {
+    try {
+      const { insertPreinscriptionSchema } = await import("@shared/schema");
+      const input = insertPreinscriptionSchema.parse(req.body);
+      const preinscription = await storage.createPreinscription(input);
+      res.status(201).json(preinscription);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({
+          message: err.errors[0].message,
+          field: err.errors[0].path.join('.'),
+        });
+      }
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/preinscriptions", requireAuth, async (_req, res) => {
+    try {
+      const data = await storage.getPreinscriptions();
+      res.json(data);
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.get("/api/messages", requireAuth, async (_req, res) => {
     try {
       const msgs = await storage.getMessages();

@@ -33,3 +33,9 @@ export function useMessages() {
     queryKey: ["/api/messages"],
   });
 }
+
+export function usePreinscriptions() {
+  return useQuery({
+    queryKey: ["/api/preinscriptions"],
+  });
+}

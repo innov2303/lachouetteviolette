@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@shared/routes";
-import { InsertMessage } from "@shared/schema";
+import type { InsertMessage, InsertPreinscription } from "@shared/schema";
 
 export function useCreateMessage() {
   return useMutation({
@@ -22,6 +22,26 @@ export function useCreateMessage() {
       }
       
       return api.messages.create.responses[201].parse(await res.json());
+    },
+  });
+}
+
+export function useCreatePreinscription() {
+  return useMutation({
+    mutationFn: async (data: InsertPreinscription) => {
+      const { insertPreinscriptionSchema } = await import("@shared/schema");
+      const validated = insertPreinscriptionSchema.parse(data);
+      const res = await fetch("/api/preinscriptions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(validated),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: "Erreur" }));
+        throw new Error(err.message);
+      }
+      return res.json();
     },
   });
 }
