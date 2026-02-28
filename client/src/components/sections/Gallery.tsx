@@ -35,28 +35,33 @@ export default function Gallery() {
   const images = data?.images || defaultImages;
 
   return (
-    <section id="gallery" data-testid="section-gallery" className="min-h-[calc(100vh-53px)] flex items-center py-16">
+    <section id="gallery" data-testid="section-gallery" className="min-h-[calc(100vh-53px)] flex items-center py-20">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center px-4">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-4">
+            <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-6">
               {sectionLabel}
             </p>
-            <div className="flex items-end gap-3 mb-4">
-              <motion.img src={owlBlue} alt="Chouette bleue" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} />
-              <motion.img src={owlOrange} alt="Chouette orange" className="w-22 h-22 md:w-28 md:h-28 object-contain" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} />
-              <motion.img src={owlPink} alt="Chouette rose" className="w-20 h-20 md:w-24 md:h-24 object-contain" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.7 }} />
+
+            <div className="flex items-end gap-2 mb-6">
+              <motion.img src={owlBlue} alt="Chouette bleue" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10, rotate: -5 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, type: "spring" }} />
+              <motion.img src={owlOrange} alt="Chouette orange" className="w-18 h-18 md:w-24 md:h-24 object-contain drop-shadow-md" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5, type: "spring" }} />
+              <motion.img src={owlPink} alt="Chouette rose" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10, rotate: 5 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: 0.7, type: "spring" }} />
             </div>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
               {title}<br />
               <span className="text-[#c9a0dc]">{titleHighlight}</span>
             </h2>
-            <p className="text-muted-foreground leading-relaxed mb-6">
+
+            <div className="w-16 h-0.5 bg-[#c9a0dc]/40 mb-6" />
+
+            <p className="text-muted-foreground leading-relaxed text-lg mb-4">
               {description}
             </p>
             <p className="text-muted-foreground leading-relaxed">
@@ -70,30 +75,33 @@ export default function Gallery() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            <Carousel
-              plugins={[plugin.current]}
-              opts={{ align: "start", loop: true }}
-              className="w-full"
-            >
-              <CarouselContent>
-                {images.map((img, index) => (
-                  <CarouselItem key={index}>
-                    <div className="aspect-[4/3] overflow-hidden rounded-md">
-                      <img
-                        src={img.src}
-                        alt={img.alt}
-                        data-testid={`gallery-image-${index}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <div className="flex justify-center gap-2 mt-4">
-                <CarouselPrevious className="static transform-none rounded-none border-foreground/20 text-foreground" />
-                <CarouselNext className="static transform-none rounded-none border-foreground/20 text-foreground" />
-              </div>
-            </Carousel>
+            <div className="relative">
+              <div className="absolute -inset-3 bg-gradient-to-br from-[#c9a0dc]/15 to-transparent rounded-2xl" />
+              <Carousel
+                plugins={[plugin.current]}
+                opts={{ align: "start", loop: true }}
+                className="w-full relative"
+              >
+                <CarouselContent>
+                  {images.map((img, index) => (
+                    <CarouselItem key={index}>
+                      <div className="aspect-[4/3] overflow-hidden rounded-xl shadow-lg">
+                        <img
+                          src={img.src}
+                          alt={img.alt}
+                          data-testid={`gallery-image-${index}`}
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <div className="flex justify-center gap-3 mt-6">
+                  <CarouselPrevious className="static transform-none rounded-xl border-[#c9a0dc]/30 text-[#c9a0dc] hover:bg-[#c9a0dc]/10 hover:text-[#c9a0dc] hover:border-[#c9a0dc]/50 transition-all" />
+                  <CarouselNext className="static transform-none rounded-xl border-[#c9a0dc]/30 text-[#c9a0dc] hover:bg-[#c9a0dc]/10 hover:text-[#c9a0dc] hover:border-[#c9a0dc]/50 transition-all" />
+                </div>
+              </Carousel>
+            </div>
           </motion.div>
         </div>
       </div>
