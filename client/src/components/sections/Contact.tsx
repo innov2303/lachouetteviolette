@@ -36,7 +36,7 @@ function ContactDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v
 
   const form = useForm<InsertMessage>({
     resolver: zodResolver(insertMessageSchema),
-    defaultValues: { name: "", email: "", message: "" },
+    defaultValues: { name: "", email: "", phone: "", message: "" },
   });
 
   const onSubmit = (formData: InsertMessage) => {
@@ -87,6 +87,19 @@ function ContactDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v
                   <FormLabel>Adresse email</FormLabel>
                   <FormControl>
                     <Input data-testid="input-contact-email" placeholder="marie@exemple.fr" type="email" {...field} className="rounded-lg" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telephone</FormLabel>
+                  <FormControl>
+                    <Input data-testid="input-contact-phone" placeholder="06 12 34 56 78" type="tel" {...field} value={field.value ?? ""} className="rounded-lg" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
