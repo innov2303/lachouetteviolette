@@ -373,23 +373,6 @@ export default function Contact() {
               </div>
             </div>
 
-            {(socialLinks?.facebook || socialLinks?.instagram) && (
-              <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
-                <h4 className="font-semibold text-foreground mb-4">Retrouvez-nous</h4>
-                <div className="flex gap-3">
-                  {socialLinks.facebook && (
-                    <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" data-testid="contact-link-facebook" className="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform">
-                      <SiFacebook size={18} />
-                    </a>
-                  )}
-                  {socialLinks.instagram && (
-                    <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" data-testid="contact-link-instagram" className="w-10 h-10 rounded-xl bg-[#E4405F] text-white flex items-center justify-center hover:scale-110 transition-transform">
-                      <SiInstagram size={18} />
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
           </motion.div>
 
           <motion.div
@@ -430,11 +413,25 @@ export default function Contact() {
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
               />
-              <div className="p-3 flex items-center justify-center gap-2 border-t border-border/50">
-                <Map size={16} className="text-[#c9a0dc]" />
-                <span className="font-semibold text-foreground text-sm" data-testid="text-map-title">Retrouvez-nous</span>
-              </div>
             </div>
+
+            {(socialLinks?.facebook || socialLinks?.instagram) && (
+              <div className="bg-card border border-card-border rounded-xl p-5 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+                <h4 className="font-semibold text-foreground mb-3 text-sm">Retrouvez-nous</h4>
+                <div className="flex gap-3">
+                  {socialLinks.facebook && (
+                    <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" data-testid="contact-link-facebook" className="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform">
+                      <SiFacebook size={18} />
+                    </a>
+                  )}
+                  {socialLinks.instagram && (
+                    <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" data-testid="contact-link-instagram" className="w-10 h-10 rounded-xl bg-[#E4405F] text-white flex items-center justify-center hover:scale-110 transition-transform">
+                      <SiInstagram size={18} />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
 
