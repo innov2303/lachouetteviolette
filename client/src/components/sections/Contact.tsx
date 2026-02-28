@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Loader2, Send, MapPin, Phone, Mail, ArrowUp, Clock } from "lucide-react";
+import owlSeparator from "@assets/owl_orange.png";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { SocialLinksContent } from "@shared/schema";
 
@@ -85,7 +86,11 @@ export default function Contact() {
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
             {title}
           </h2>
-          <div className="w-16 h-0.5 bg-[#c9a0dc]/40 mx-auto mb-6" />
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
+            <img src={owlSeparator} alt="" className="w-6 h-6 object-contain" />
+            <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
+          </div>
           <p className="text-muted-foreground leading-relaxed text-lg">
             {description}
           </p>

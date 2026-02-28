@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Bird } from "lucide-react";
+import owlSeparator from "@assets/owl_orange.png";
 import {
   Carousel,
   CarouselContent,
@@ -62,7 +62,7 @@ export default function Gallery() {
 
             <div className="flex items-center justify-center gap-3 mb-6">
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
-              <Bird className="w-4 h-4 text-[#c9a0dc] fill-[#c9a0dc]/30" />
+              <img src={owlSeparator} alt="" className="w-6 h-6 object-contain" />
               <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
             </div>
 
