@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Heart } from "lucide-react";
 import { useSectionContent } from "@/hooks/use-content";
 import type { TeamContent } from "@shared/schema";
 
@@ -32,7 +33,7 @@ export default function Team() {
   const members = data?.members || defaultMembers;
 
   return (
-    <section id="team" data-testid="section-team" className="min-h-[calc(100vh-53px)] flex items-center py-16 bg-muted">
+    <section id="team" data-testid="section-team" className="min-h-[calc(100vh-53px)] flex items-center py-20 bg-muted">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -46,12 +47,17 @@ export default function Team() {
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
             {title}
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
+            <Heart className="w-4 h-4 text-[#c9a0dc] fill-[#c9a0dc]/30" />
+            <span className="w-12 h-0.5 bg-[#c9a0dc]/30" />
+          </div>
+          <p className="text-muted-foreground leading-relaxed text-lg">
             {description}
           </p>
         </motion.div>
 
-        <div className={`grid grid-cols-1 ${members.length === 2 ? 'md:grid-cols-2 max-w-4xl' : 'md:grid-cols-3 max-w-5xl'} gap-10 mx-auto`}>
+        <div className={`grid grid-cols-1 ${members.length === 2 ? 'md:grid-cols-2 max-w-3xl' : 'md:grid-cols-3 max-w-5xl'} gap-8 mx-auto`}>
           {members.map((member, index) => (
             <motion.div
               key={index}
@@ -60,22 +66,26 @@ export default function Team() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.15 }}
               data-testid={`team-card-${index}`}
-              className="group text-center"
+              className="group text-center bg-card border border-card-border rounded-2xl p-8 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500"
             >
-              <div className="w-40 h-40 mx-auto overflow-hidden rounded-full mb-6 border-4 border-[#c9a0dc]/20 group-hover:border-[#c9a0dc]/50 transition-all duration-500">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+              <div className="relative w-36 h-36 mx-auto mb-6">
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#c9a0dc]/40 to-[#c9a0dc]/10 group-hover:from-[#c9a0dc]/60 group-hover:to-[#c9a0dc]/25 transition-all duration-500" />
+                <div className="relative w-full h-full overflow-hidden rounded-full">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
               </div>
-              <h3 className="font-display text-2xl font-bold text-foreground mb-1">
+              <h3 className="font-display text-xl font-bold text-foreground mb-1">
                 {member.name}
               </h3>
-              <p className="text-primary text-sm font-medium tracking-wide uppercase mb-3">
+              <p className="text-[#c9a0dc] text-xs font-semibold tracking-[0.15em] uppercase mb-4">
                 {member.role}
               </p>
-              <p className="text-muted-foreground leading-relaxed text-sm max-w-xs mx-auto">
+              <div className="w-8 h-0.5 bg-[#c9a0dc]/25 mx-auto mb-4" />
+              <p className="text-muted-foreground leading-relaxed text-sm">
                 {member.bio}
               </p>
             </motion.div>
