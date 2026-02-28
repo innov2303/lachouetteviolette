@@ -4,14 +4,13 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { useSectionContent } from "@/hooks/use-content";
 import type { GalleryContent } from "@shared/schema";
 import type { CarouselApi } from "@/components/ui/carousel";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import owlBlue from "@assets/owl_blue.png";
 import owlOrange from "@assets/owl_orange.png";
 import owlPink from "@assets/owl_pink.png";
@@ -124,8 +123,22 @@ export default function Gallery() {
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300" />
-                  <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300" />
+                  <button
+                    type="button"
+                    data-testid="carousel-prev"
+                    onClick={() => api?.scrollPrev()}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm shadow-lg flex items-center justify-center text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 cursor-pointer"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="carousel-next"
+                    onClick={() => api?.scrollNext()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm shadow-lg flex items-center justify-center text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 cursor-pointer"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
                 </div>
                 <div className="flex justify-center gap-2 mt-4" data-testid="carousel-indicators">
                   {Array.from({ length: count }).map((_, i) => (
