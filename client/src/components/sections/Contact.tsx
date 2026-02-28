@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2, Send, MapPin, Phone, Mail, ArrowUp, Clock, MessageCircle, ClipboardList } from "lucide-react";
+import { Loader2, Send, MapPin, Phone, Mail, ArrowUp, Clock, MessageCircle, ClipboardList, Map } from "lucide-react";
 import owlSeparator from "@assets/owl_orange.png";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 
@@ -431,6 +431,31 @@ export default function Contact() {
             </button>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-10 px-4"
+        >
+          <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+            <div className="p-4 flex items-center gap-3 border-b border-border/50">
+              <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                <Map size={18} />
+              </div>
+              <h4 className="font-semibold text-foreground" data-testid="text-map-title">Nous trouver</h4>
+            </div>
+            <iframe
+              data-testid="map-embed"
+              title="Localisation de La chouette violette"
+              src={`https://www.google.com/maps?q=${encodeURIComponent(address.replace(/\n/g, ", "))}&output=embed`}
+              className="w-full h-[300px] md:h-[400px] border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+          </div>
+        </motion.div>
 
         <div className="flex justify-center mt-14">
           <a
