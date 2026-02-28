@@ -54,7 +54,7 @@ function ContactDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg" data-testid="dialog-contact">
+      <DialogContent className="sm:max-w-2xl" data-testid="dialog-contact">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-xl">
             <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
@@ -99,7 +99,7 @@ function ContactDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v
                 <FormItem>
                   <FormLabel>Votre message</FormLabel>
                   <FormControl>
-                    <Textarea data-testid="input-contact-message" placeholder="Bonjour, je souhaiterais me renseigner..." className="rounded-lg min-h-[100px] resize-none" {...field} />
+                    <Textarea data-testid="input-contact-message" placeholder="Bonjour, je souhaiterais me renseigner..." className="rounded-lg min-h-[120px] resize-y" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
