@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import owlSeparator from "@assets/owl_orange.png";
+import chouetteViolette from "@assets/La_chouette_violette_1772195969012.png";
 import { useSectionContent } from "@/hooks/use-content";
 import type { TeamContent } from "@shared/schema";
 
@@ -70,11 +71,11 @@ export default function Team() {
             >
               <div className="relative w-36 h-36 mx-auto mb-6">
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#c9a0dc]/40 to-[#c9a0dc]/10 group-hover:from-[#c9a0dc]/60 group-hover:to-[#c9a0dc]/25 transition-all duration-500" />
-                <div className="relative w-full h-full overflow-hidden rounded-full">
+                <div className="relative w-full h-full overflow-hidden rounded-full bg-[#c9a0dc]/10 flex items-center justify-center">
                   <img
-                    src={member.image}
+                    src={chouetteViolette}
                     alt={member.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-3/4 h-3/4 object-contain transition-transform duration-700 group-hover:scale-110"
                   />
                 </div>
               </div>
