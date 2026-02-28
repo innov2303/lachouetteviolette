@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2, Send, MapPin, Phone, Mail, ArrowUp } from "lucide-react";
+import { Loader2, Send, MapPin, Phone, Mail, ArrowUp, Clock } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { SocialLinksContent } from "@shared/schema";
 
@@ -71,7 +71,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" data-testid="section-contact" className="min-h-[calc(100vh-53px)] flex items-center py-16 bg-muted">
+    <section id="contact" data-testid="section-contact" className="min-h-[calc(100vh-53px)] flex items-center py-20 bg-muted">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -85,54 +85,62 @@ export default function Contact() {
           <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6">
             {title}
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <div className="w-16 h-0.5 bg-[#c9a0dc]/40 mx-auto mb-6" />
+          <p className="text-muted-foreground leading-relaxed text-lg">
             {description}
           </p>
         </motion.div>
 
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 px-4">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-2 space-y-8"
+            className="lg:col-span-2 space-y-6"
           >
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
-                <MapPin size={18} />
+            <div className="bg-card border border-card-border rounded-xl p-6 space-y-5 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                  <MapPin size={18} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground text-sm mb-1">Adresse</h4>
+                  <p className="text-muted-foreground text-sm whitespace-pre-line">
+                    {address}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-1">Adresse</h4>
-                <p className="text-muted-foreground text-sm whitespace-pre-line">
-                  {address}
-                </p>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                  <Phone size={18} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground text-sm mb-1">Telephone</h4>
+                  <p className="text-muted-foreground text-sm">{phone}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
-                <Phone size={18} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-1">Telephone</h4>
-                <p className="text-muted-foreground text-sm">{phone}</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
-                <Mail size={18} />
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-1">Email</h4>
-                <p className="text-muted-foreground text-sm">{email}</p>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                  <Mail size={18} />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-foreground text-sm mb-1">Email</h4>
+                  <p className="text-muted-foreground text-sm">{email}</p>
+                </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-border">
-              <h4 className="font-semibold text-foreground mb-3">Horaires d'accueil</h4>
-              <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                  <Clock size={18} />
+                </div>
+                Horaires d'accueil
+              </h4>
+              <div className="space-y-2.5 text-sm">
                 {schedule.map((s, i) => (
-                  <div key={i} className="flex justify-between gap-2">
-                    <span>{s.day}</span>
+                  <div key={i} className="flex justify-between gap-2 py-1 border-b border-border/50 last:border-0">
+                    <span className="text-muted-foreground">{s.day}</span>
                     <span className="font-medium text-foreground">{s.hours}</span>
                   </div>
                 ))}
@@ -140,8 +148,8 @@ export default function Contact() {
             </div>
 
             {(socialLinks?.facebook || socialLinks?.instagram) && (
-              <div className="pt-4 border-t border-border">
-                <h4 className="font-semibold text-foreground mb-3">Retrouvez-nous</h4>
+              <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+                <h4 className="font-semibold text-foreground mb-4">Retrouvez-nous</h4>
                 <div className="flex gap-3">
                   {socialLinks.facebook && (
                     <a
@@ -149,7 +157,7 @@ export default function Contact() {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid="contact-link-facebook"
-                      className="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:opacity-80 transition-opacity"
+                      className="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform"
                     >
                       <SiFacebook size={18} />
                     </a>
@@ -160,7 +168,7 @@ export default function Contact() {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid="contact-link-instagram"
-                      className="w-10 h-10 rounded-full bg-[#E4405F] text-white flex items-center justify-center hover:opacity-80 transition-opacity"
+                      className="w-10 h-10 rounded-xl bg-[#E4405F] text-white flex items-center justify-center hover:scale-110 transition-transform"
                     >
                       <SiInstagram size={18} />
                     </a>
@@ -174,8 +182,14 @@ export default function Contact() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-3 bg-card p-8 md:p-10 rounded-md border border-border"
+            className="lg:col-span-3 bg-card border border-card-border rounded-xl p-8 md:p-10 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500"
           >
+            <h3 className="font-display text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                <Send size={18} />
+              </div>
+              Envoyez-nous un message
+            </h3>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                 <FormField
@@ -191,7 +205,7 @@ export default function Contact() {
                           data-testid="input-name"
                           placeholder="Marie Dupont"
                           {...field}
-                          className="rounded-md border-border bg-background"
+                          className="rounded-lg border-border bg-background"
                         />
                       </FormControl>
                       <FormMessage />
@@ -212,7 +226,7 @@ export default function Contact() {
                           placeholder="marie@exemple.fr"
                           type="email"
                           {...field}
-                          className="rounded-md border-border bg-background"
+                          className="rounded-lg border-border bg-background"
                         />
                       </FormControl>
                       <FormMessage />
@@ -231,7 +245,7 @@ export default function Contact() {
                         <Textarea
                           data-testid="input-message"
                           placeholder="Bonjour, je souhaiterais me renseigner pour une place..."
-                          className="rounded-md border-border bg-background min-h-[130px] resize-none"
+                          className="rounded-lg border-border bg-background min-h-[130px] resize-none"
                           {...field}
                         />
                       </FormControl>
@@ -243,7 +257,7 @@ export default function Contact() {
                   type="submit"
                   data-testid="button-submit-contact"
                   disabled={createMessage.isPending}
-                  className="w-full rounded-none bg-primary text-primary-foreground tracking-wider uppercase text-sm py-3"
+                  className="w-full rounded-lg bg-[#c9a0dc] hover:bg-[#b88fd0] text-white tracking-wider uppercase text-sm py-3"
                 >
                   {createMessage.isPending ? (
                     <>
@@ -260,11 +274,11 @@ export default function Contact() {
           </motion.div>
         </div>
 
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center mt-14">
           <a
             href="#"
             data-testid="button-back-to-top"
-            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-[#c9a0dc] transition-colors"
           >
             <ArrowUp className="w-5 h-5" />
             <span className="text-sm tracking-[0.2em] uppercase font-light">
