@@ -57,7 +57,7 @@ export default function Team() {
           </p>
         </motion.div>
 
-        <div className={`grid grid-cols-1 ${members.length === 2 ? 'md:grid-cols-2 max-w-3xl' : 'md:grid-cols-3 max-w-5xl'} gap-8 mx-auto`}>
+        <div className={`grid grid-cols-1 ${members.length === 2 ? 'md:grid-cols-2 max-w-5xl' : 'md:grid-cols-3 max-w-6xl'} gap-8 mx-auto`}>
           {members.map((member, index) => (
             <motion.div
               key={index}
