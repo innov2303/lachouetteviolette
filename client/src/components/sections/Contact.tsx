@@ -398,24 +398,6 @@ export default function Contact() {
             viewport={{ once: true }}
             className="lg:col-span-3 flex flex-col gap-6"
           >
-            <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500 flex-1 flex flex-col">
-              <div className="p-4 flex items-center gap-3 border-b border-border/50">
-                <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
-                  <Map size={18} />
-                </div>
-                <h4 className="font-semibold text-foreground" data-testid="text-map-title">Nous trouver</h4>
-              </div>
-              <iframe
-                data-testid="map-embed"
-                title="Localisation de La chouette violette"
-                src={`https://www.google.com/maps?q=${encodeURIComponent(address.replace(/\n/g, ", "))}&output=embed`}
-                className="w-full flex-1 min-h-[350px] border-0"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-              />
-            </div>
-
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
@@ -436,6 +418,24 @@ export default function Contact() {
                 <ClipboardList size={18} />
                 Preinscription
               </button>
+            </div>
+
+            <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+              <div className="p-3 flex items-center gap-3 border-b border-border/50">
+                <div className="w-8 h-8 rounded-lg bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+                  <Map size={16} />
+                </div>
+                <h4 className="font-semibold text-foreground text-sm" data-testid="text-map-title">Nous trouver</h4>
+              </div>
+              <iframe
+                data-testid="map-embed"
+                title="Localisation de La chouette violette"
+                src={`https://www.google.com/maps?q=${encodeURIComponent(address.replace(/\n/g, ", "))}&output=embed`}
+                className="w-full h-[250px] border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
             </div>
           </motion.div>
         </div>
