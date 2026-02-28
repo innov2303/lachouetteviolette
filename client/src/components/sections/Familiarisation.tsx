@@ -120,14 +120,9 @@ export default function Familiarisation() {
                     <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#c9a0dc] text-white text-lg font-bold shadow-md">
                       {currentStep + 1}
                     </span>
-                    <div>
-                      <span className="text-xs text-[#c9a0dc] font-semibold uppercase tracking-wider">
-                        {steps[currentStep]?.day}
-                      </span>
-                      <h4 className="font-display text-xl font-bold text-foreground">
-                        {steps[currentStep]?.title}
-                      </h4>
-                    </div>
+                    <span className="text-xs text-[#c9a0dc] font-semibold uppercase tracking-wider">
+                      {steps[currentStep]?.day}
+                    </span>
                   </div>
                   <p className="text-muted-foreground leading-relaxed pl-16">
                     {steps[currentStep]?.description}

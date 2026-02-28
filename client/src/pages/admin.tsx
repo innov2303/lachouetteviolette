@@ -591,10 +591,7 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <Input placeholder="ex: Jour 1" value={step.day} onChange={(e) => { const steps = [...(form.familiarisationSteps || [])]; steps[i] = { ...steps[i], day: e.target.value }; setForm({ ...form, familiarisationSteps: steps }); }} data-testid={`input-step-day-${i}`} />
-                  <Input placeholder="Titre" value={step.title} onChange={(e) => { const steps = [...(form.familiarisationSteps || [])]; steps[i] = { ...steps[i], title: e.target.value }; setForm({ ...form, familiarisationSteps: steps }); }} data-testid={`input-step-title-${i}`} />
-                </div>
+                <Input placeholder="ex: Jour 1" value={step.day} onChange={(e) => { const steps = [...(form.familiarisationSteps || [])]; steps[i] = { ...steps[i], day: e.target.value }; setForm({ ...form, familiarisationSteps: steps }); }} data-testid={`input-step-day-${i}`} />
                 <Textarea placeholder="Description de l'etape" value={step.description} onChange={(e) => { const steps = [...(form.familiarisationSteps || [])]; steps[i] = { ...steps[i], description: e.target.value }; setForm({ ...form, familiarisationSteps: steps }); }} data-testid={`input-step-desc-${i}`} />
               </div>
             ))}
