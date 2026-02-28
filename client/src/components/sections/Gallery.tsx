@@ -8,9 +8,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useRef } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useSectionContent } from "@/hooks/use-content";
 import type { GalleryContent } from "@shared/schema";
+import type { CarouselApi } from "@/components/ui/carousel";
 import owlBlue from "@assets/owl_blue.png";
 import owlOrange from "@assets/owl_orange.png";
 import owlPink from "@assets/owl_pink.png";
@@ -27,6 +28,26 @@ export default function Gallery() {
     Autoplay({ delay: 4000, stopOnInteraction: true })
   );
   const { data } = useSectionContent<GalleryContent>("gallery");
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const onSelect = useCallback(() => {
+    if (!api) return;
+    setCurrent(api.selectedScrollSnap());
+    setCount(api.scrollSnapList().length);
+  }, [api]);
+
+  useEffect(() => {
+    if (!api) return;
+    onSelect();
+    api.on("select", onSelect);
+    api.on("reInit", onSelect);
+    return () => {
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
+    };
+  }, [api, onSelect]);
 
   const sectionLabel = data?.sectionLabel || "Decouvrez nos espaces";
   const title = data?.title || "Bienvenue a la MAM";
@@ -84,25 +105,42 @@ export default function Gallery() {
               <div className="absolute -inset-3 bg-gradient-to-br from-[#c9a0dc]/15 to-transparent rounded-2xl" />
               <Carousel
                 plugins={[plugin.current]}
+                setApi={setApi}
                 opts={{ align: "start", loop: true }}
                 className="w-full relative group/carousel"
               >
-                <CarouselContent>
-                  {images.map((img, index) => (
-                    <CarouselItem key={index}>
-                      <div className="aspect-[4/3] overflow-hidden rounded-xl shadow-lg">
-                        <img
-                          src={img.src}
-                          alt={img.alt}
-                          data-testid={`gallery-image-${index}`}
-                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                        />
-                      </div>
-                    </CarouselItem>
+                <div className="relative">
+                  <CarouselContent>
+                    {images.map((img, index) => (
+                      <CarouselItem key={index}>
+                        <div className="aspect-[4/3] overflow-hidden rounded-xl shadow-lg">
+                          <img
+                            src={img.src}
+                            alt={img.alt}
+                            data-testid={`gallery-image-${index}`}
+                            className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300" />
+                  <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300" />
+                </div>
+                <div className="flex justify-center gap-2 mt-4" data-testid="carousel-indicators">
+                  {Array.from({ length: count }).map((_, i) => (
+                    <button
+                      key={i}
+                      data-testid={`carousel-indicator-${i}`}
+                      onClick={() => api?.scrollTo(i)}
+                      className={`h-1 rounded-full transition-all duration-300 cursor-pointer ${
+                        i === current
+                          ? "w-8 bg-[#c9a0dc]"
+                          : "w-4 bg-[#c9a0dc]/30 hover:bg-[#c9a0dc]/50"
+                      }`}
+                    />
                   ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 disabled:opacity-0" />
-                <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border-0 shadow-lg text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 disabled:opacity-0" />
+                </div>
               </Carousel>
             </div>
           </motion.div>
