@@ -69,6 +69,12 @@ export const teamContentSchema = z.object({
   })),
 });
 
+export const familiarisationStepSchema = z.object({
+  day: z.string(),
+  title: z.string(),
+  description: z.string(),
+});
+
 export const projectContentSchema = z.object({
   sectionLabel: z.string(),
   title: z.string(),
@@ -80,6 +86,7 @@ export const projectContentSchema = z.object({
   })),
   approachTitle: z.string(),
   approachText: z.string(),
+  familiarisationSteps: z.array(familiarisationStepSchema).optional(),
   inspirationTitle: z.string(),
   inspirationText: z.string(),
 });

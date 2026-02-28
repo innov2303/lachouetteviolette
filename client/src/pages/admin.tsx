@@ -567,12 +567,38 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
         </div>
 
         <div>
-          <FieldLabel>Titre - Notre approche</FieldLabel>
+          <FieldLabel>Titre - Familiarisation</FieldLabel>
           <Input data-testid="input-approach-title" value={form.approachTitle} onChange={(e) => setForm({ ...form, approachTitle: e.target.value })} />
         </div>
         <div>
-          <FieldLabel>Texte - Notre approche</FieldLabel>
+          <FieldLabel>Texte d'introduction</FieldLabel>
           <Textarea data-testid="input-approach-text" value={form.approachText} onChange={(e) => setForm({ ...form, approachText: e.target.value })} className="min-h-[80px]" />
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <FieldLabel>Etapes de familiarisation</FieldLabel>
+            <Button variant="outline" size="sm" onClick={() => setForm({ ...form, familiarisationSteps: [...(form.familiarisationSteps || []), { day: "", title: "", description: "" }] })} data-testid="button-add-step">
+              <Plus className="h-4 w-4 mr-1" /> Ajouter
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {(form.familiarisationSteps || []).map((step, i) => (
+              <div key={i} className="p-4 border rounded-md bg-muted/50 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-foreground">Etape {i + 1}</span>
+                  <Button variant="ghost" size="sm" onClick={() => setForm({ ...form, familiarisationSteps: (form.familiarisationSteps || []).filter((_, j) => j !== i) })} className="text-destructive" data-testid={`button-remove-step-${i}`}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Input placeholder="ex: Jour 1" value={step.day} onChange={(e) => { const steps = [...(form.familiarisationSteps || [])]; steps[i] = { ...steps[i], day: e.target.value }; setForm({ ...form, familiarisationSteps: steps }); }} data-testid={`input-step-day-${i}`} />
+                  <Input placeholder="Titre" value={step.title} onChange={(e) => { const steps = [...(form.familiarisationSteps || [])]; steps[i] = { ...steps[i], title: e.target.value }; setForm({ ...form, familiarisationSteps: steps }); }} data-testid={`input-step-title-${i}`} />
+                </div>
+                <Textarea placeholder="Description de l'etape" value={step.description} onChange={(e) => { const steps = [...(form.familiarisationSteps || [])]; steps[i] = { ...steps[i], description: e.target.value }; setForm({ ...form, familiarisationSteps: steps }); }} data-testid={`input-step-desc-${i}`} />
+              </div>
+            ))}
+          </div>
         </div>
 
         <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-project" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">

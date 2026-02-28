@@ -57,8 +57,15 @@ const defaultProject: ProjectContent = {
     { icon: "BookOpen", title: "Eveil autonome", description: "Des jouets et des activites a disposition pour encourager l'autonomie et les choix personnels." },
     { icon: "Music", title: "Creativite", description: "Comptines, peinture, manipulation... La creativite au coeur de notre accompagnement quotidien." },
   ],
-  approachTitle: "Notre approche",
+  approachTitle: "La periode de familiarisation",
   approachText: "Notre MAM est un pont ideal entre la garde a domicile et la creche, offrant un cadre familial tout en favorisant la socialisation. Nous accueillons les enfants dans un climat de confiance et de respect.",
+  familiarisationSteps: [
+    { day: "Jour 1", title: "Decouverte", description: "L'enfant et le parent decouvrent ensemble l'espace de la MAM pendant environ 1 heure." },
+    { day: "Jour 2", title: "Premiere separation", description: "Le parent s'absente pour une courte duree (30 min) puis revient. L'enfant commence a creer des reperes." },
+    { day: "Jour 3", title: "Separation prolongee", description: "L'absence du parent s'allonge progressivement (1 a 2 heures). L'enfant participe aux activites." },
+    { day: "Jour 4", title: "Premier repas", description: "L'enfant reste pour le repas du midi. Il decouvre les rituels du repas avec les autres enfants." },
+    { day: "Jour 5", title: "Journee complete", description: "L'enfant passe une journee entiere a la MAM, incluant la sieste et les repas." },
+  ],
   inspirationTitle: "Nos inspirations",
   inspirationText: "Nous nous inspirons des pedagogies Montessori et Pikler-Loczy pour amenager notre espace et proposer nos activites, afin que l'enfant soit pleinement acteur de son developpement.",
 };
