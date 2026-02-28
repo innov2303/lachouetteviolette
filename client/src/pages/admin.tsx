@@ -460,7 +460,7 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
       HandHeart: ["soin", "accompagne", "aide", "soutien", "confiance"],
       Brain: ["reflexion", "penser", "intelligence", "cognitif", "cerveau"],
       Eye: ["observation", "regard", "voir", "decouvr", "eveil"],
-      Footprints: ["marche", "pas", "autonomie", "independ", "moteur"],
+      Footprints: ["marche", "pas", "autonomie", "independ", "moteur", "socialisation", "premier"],
       Smile: ["joie", "sourire", "bonheur", "plaisir", "rire", "heureux"],
       Sun: ["soleil", "exterieur", "dehors", "lumiere", "jardin"],
       TreePine: ["foret", "arbre", "plein air", "sortie"],
