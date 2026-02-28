@@ -315,12 +315,12 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 px-4">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-6"
+            className="lg:col-span-2 space-y-6"
           >
             <div className="bg-card border border-card-border rounded-xl p-6 space-y-5 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
               <div className="flex items-start gap-4">
@@ -352,30 +352,6 @@ export default function Contact() {
               </div>
             </div>
 
-            {(socialLinks?.facebook || socialLinks?.instagram) && (
-              <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
-                <h4 className="font-semibold text-foreground mb-4">Retrouvez-nous</h4>
-                <div className="flex gap-3">
-                  {socialLinks.facebook && (
-                    <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" data-testid="contact-link-facebook" className="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform">
-                      <SiFacebook size={18} />
-                    </a>
-                  )}
-                  {socialLinks.instagram && (
-                    <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" data-testid="contact-link-instagram" className="w-10 h-10 rounded-xl bg-[#E4405F] text-white flex items-center justify-center hover:scale-110 transition-transform">
-                      <SiInstagram size={18} />
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
             <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
               <h4 className="font-semibold text-foreground mb-4 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
@@ -396,14 +372,33 @@ export default function Contact() {
                 })}
               </div>
             </div>
+
+            {(socialLinks?.facebook || socialLinks?.instagram) && (
+              <div className="bg-card border border-card-border rounded-xl p-6 hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
+                <h4 className="font-semibold text-foreground mb-4">Retrouvez-nous</h4>
+                <div className="flex gap-3">
+                  {socialLinks.facebook && (
+                    <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" data-testid="contact-link-facebook" className="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center hover:scale-110 transition-transform">
+                      <SiFacebook size={18} />
+                    </a>
+                  )}
+                  {socialLinks.instagram && (
+                    <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" data-testid="contact-link-instagram" className="w-10 h-10 rounded-xl bg-[#E4405F] text-white flex items-center justify-center hover:scale-110 transition-transform">
+                      <SiInstagram size={18} />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            className="lg:col-span-3 flex flex-col gap-6"
           >
-            <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500 h-full flex flex-col">
+            <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500 flex-1 flex flex-col">
               <div className="p-4 flex items-center gap-3 border-b border-border/50">
                 <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
                   <Map size={18} />
@@ -414,48 +409,41 @@ export default function Contact() {
                 data-testid="map-embed"
                 title="Localisation de La chouette violette"
                 src={`https://www.google.com/maps?q=${encodeURIComponent(address.replace(/\n/g, ", "))}&output=embed`}
-                className="w-full flex-1 min-h-[250px] border-0"
+                className="w-full flex-1 min-h-[350px] border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
               />
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => setContactOpen(true)}
+                data-testid="button-open-contact"
+                className="group bg-card border border-card-border rounded-xl px-6 py-5 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer"
+              >
+                <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
+                  <MessageCircle size={22} />
+                </div>
+                <h3 className="font-display text-lg font-bold text-foreground mb-1">Nous contacter</h3>
+                <p className="text-sm text-muted-foreground">Posez-nous vos questions</p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPreinscriptionOpen(true)}
+                data-testid="button-open-preinscription"
+                className="group bg-card border border-card-border rounded-xl px-6 py-5 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer"
+              >
+                <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
+                  <ClipboardList size={22} />
+                </div>
+                <h3 className="font-display text-lg font-bold text-foreground mb-1">Preinscription</h3>
+                <p className="text-sm text-muted-foreground">Inscrivez votre enfant</p>
+              </button>
+            </div>
           </motion.div>
-        </div>
-
-        <div className="flex justify-center gap-6 mt-10 px-4">
-          <motion.button
-            type="button"
-            onClick={() => setContactOpen(true)}
-            data-testid="button-open-contact"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="group bg-card border border-card-border rounded-xl px-8 py-6 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer flex-1 max-w-xs"
-          >
-            <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
-              <MessageCircle size={22} />
-            </div>
-            <h3 className="font-display text-lg font-bold text-foreground mb-1">Nous contacter</h3>
-            <p className="text-sm text-muted-foreground">Posez-nous vos questions</p>
-          </motion.button>
-
-          <motion.button
-            type="button"
-            onClick={() => setPreinscriptionOpen(true)}
-            data-testid="button-open-preinscription"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="group bg-card border border-card-border rounded-xl px-8 py-6 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer flex-1 max-w-xs"
-          >
-            <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
-              <ClipboardList size={22} />
-            </div>
-            <h3 className="font-display text-lg font-bold text-foreground mb-1">Preinscription</h3>
-            <p className="text-sm text-muted-foreground">Inscrivez votre enfant</p>
-          </motion.button>
         </div>
 
         <div className="flex justify-center mt-14">
