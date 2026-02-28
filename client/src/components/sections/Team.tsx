@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 import owlSeparator from "@assets/owl_orange.png";
-import chouetteViolette from "@assets/owl-avatar-realistic.png";
+import owlAvatar1 from "@assets/owl-avatar-1.png";
+import owlAvatar2 from "@assets/owl-avatar-2.png";
+import owlAvatar3 from "@assets/owl-avatar-3.png";
+
+const owlAvatars = [owlAvatar1, owlAvatar2, owlAvatar3];
 import { useSectionContent } from "@/hooks/use-content";
 import type { TeamContent } from "@shared/schema";
 
@@ -73,7 +77,7 @@ export default function Team() {
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#c9a0dc]/40 to-[#c9a0dc]/10 group-hover:from-[#c9a0dc]/60 group-hover:to-[#c9a0dc]/25 transition-all duration-500" />
                 <div className="relative w-full h-full overflow-hidden rounded-full">
                   <img
-                    src={chouetteViolette}
+                    src={owlAvatars[index % owlAvatars.length]}
                     alt={member.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
