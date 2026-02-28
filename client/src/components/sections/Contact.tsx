@@ -421,26 +421,20 @@ export default function Contact() {
                 type="button"
                 onClick={() => setContactOpen(true)}
                 data-testid="button-open-contact"
-                className="group bg-card border border-card-border rounded-xl px-6 py-5 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer"
+                className="flex items-center justify-center gap-2 bg-[#c9a0dc] hover:bg-[#b88fd0] text-white rounded-xl px-6 py-3 font-semibold transition-colors duration-300 cursor-pointer"
               >
-                <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
-                  <MessageCircle size={22} />
-                </div>
-                <h3 className="font-display text-lg font-bold text-foreground mb-1">Nous contacter</h3>
-                <p className="text-sm text-muted-foreground">Posez-nous vos questions</p>
+                <MessageCircle size={18} />
+                Nous contacter
               </button>
 
               <button
                 type="button"
                 onClick={() => setPreinscriptionOpen(true)}
                 data-testid="button-open-preinscription"
-                className="group bg-card border border-card-border rounded-xl px-6 py-5 text-center hover:shadow-lg hover:border-[#c9a0dc]/30 transition-all duration-500 cursor-pointer"
+                className="flex items-center justify-center gap-2 border-2 border-[#c9a0dc] text-[#c9a0dc] hover:bg-[#c9a0dc] hover:text-white rounded-xl px-6 py-3 font-semibold transition-colors duration-300 cursor-pointer"
               >
-                <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center group-hover:bg-[#c9a0dc] group-hover:text-white transition-all duration-300">
-                  <ClipboardList size={22} />
-                </div>
-                <h3 className="font-display text-lg font-bold text-foreground mb-1">Preinscription</h3>
-                <p className="text-sm text-muted-foreground">Inscrivez votre enfant</p>
+                <ClipboardList size={18} />
+                Preinscription
               </button>
             </div>
           </motion.div>
