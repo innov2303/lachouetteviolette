@@ -421,12 +421,6 @@ export default function Contact() {
             </div>
 
             <div className="bg-card border border-card-border rounded-xl overflow-hidden hover:shadow-lg hover:border-[#c9a0dc]/25 transition-all duration-500">
-              <div className="p-3 flex items-center gap-3 border-b border-border/50">
-                <div className="w-8 h-8 rounded-lg bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
-                  <Map size={16} />
-                </div>
-                <h4 className="font-semibold text-foreground text-sm" data-testid="text-map-title">Nous trouver</h4>
-              </div>
               <iframe
                 data-testid="map-embed"
                 title="Localisation de La chouette violette"
@@ -436,6 +430,10 @@ export default function Contact() {
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
               />
+              <div className="p-3 flex items-center justify-center gap-2 border-t border-border/50">
+                <Map size={16} className="text-[#c9a0dc]" />
+                <span className="font-semibold text-foreground text-sm" data-testid="text-map-title">Retrouvez-nous</span>
+              </div>
             </div>
           </motion.div>
         </div>
