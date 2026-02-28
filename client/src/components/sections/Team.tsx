@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import owlSeparator from "@assets/owl_orange.png";
-import chouetteViolette from "@assets/hero-chouette-violette.png";
+import chouetteViolette from "@assets/logo-chouette.png";
 import { useSectionContent } from "@/hooks/use-content";
 import type { TeamContent } from "@shared/schema";
 
