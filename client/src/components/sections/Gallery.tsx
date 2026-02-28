@@ -59,7 +59,7 @@ export default function Gallery() {
               <span className="text-[#c9a0dc]">{titleHighlight}</span>
             </h2>
 
-            <div className="w-16 h-0.5 bg-[#c9a0dc]/40 mb-6" />
+            <div className="w-16 h-0.5 bg-[#c9a0dc]/40 mb-6 mx-auto lg:mx-0" />
 
             <p className="text-muted-foreground leading-relaxed text-lg mb-4">
               {description}
