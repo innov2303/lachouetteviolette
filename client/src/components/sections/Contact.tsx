@@ -148,15 +148,10 @@ export default function Contact() {
                   const displayHours = hasRange ? s.hours : "Fermé";
                   const parts = hasRange ? displayHours.split(/\s*-\s*/) : null;
                   return (
-                    <div key={i} className="flex items-start gap-2 py-1.5 border-b border-border/50 last:border-0">
-                      <span className="text-muted-foreground min-w-[90px]">{s.day}</span>
-                      {parts ? (
-                        <span className="font-medium text-foreground leading-relaxed">
-                          {parts[0]}<br />- {parts[1]}
-                        </span>
-                      ) : (
-                        <span className="font-medium text-muted-foreground italic">{displayHours}</span>
-                      )}
+                    <div key={i} className="flex items-center justify-center gap-2 py-1.5 border-b border-border/50 last:border-0">
+                      <span className="text-muted-foreground">{s.day}</span>
+                      <span className="text-muted-foreground/50">:</span>
+                      <span className="font-medium text-foreground">{displayHours}</span>
                     </div>
                   );
                 })}
