@@ -540,14 +540,6 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
           <FieldLabel>Texte - Notre approche</FieldLabel>
           <Textarea data-testid="input-approach-text" value={form.approachText} onChange={(e) => setForm({ ...form, approachText: e.target.value })} className="min-h-[80px]" />
         </div>
-        <div>
-          <FieldLabel>Titre - Nos inspirations</FieldLabel>
-          <Input data-testid="input-inspiration-title" value={form.inspirationTitle} onChange={(e) => setForm({ ...form, inspirationTitle: e.target.value })} />
-        </div>
-        <div>
-          <FieldLabel>Texte - Nos inspirations</FieldLabel>
-          <Textarea data-testid="input-inspiration-text" value={form.inspirationText} onChange={(e) => setForm({ ...form, inspirationText: e.target.value })} className="min-h-[80px]" />
-        </div>
 
         <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-project" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
           {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}

@@ -25,8 +25,6 @@ export default function Project() {
   const pillars = data?.pillars || [];
   const approachTitle = data?.approachTitle || "Notre approche";
   const approachText = data?.approachText || "";
-  const inspirationTitle = data?.inspirationTitle || "Nos inspirations";
-  const inspirationText = data?.inspirationText || "";
 
   return (
     <section id="project" data-testid="section-project" className="min-h-[calc(100vh-53px)] flex items-center py-20">
@@ -84,27 +82,15 @@ export default function Project() {
           transition={{ delay: 0.3 }}
           className="mt-16 max-w-4xl mx-auto"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="relative bg-gradient-to-br from-[#c9a0dc]/8 to-[#c9a0dc]/3 border border-[#c9a0dc]/15 rounded-xl p-8">
-              <Quote className="absolute top-4 right-4 h-8 w-8 text-[#c9a0dc]/15" />
-              <h3 className="font-display text-xl font-bold text-foreground mb-4 flex items-center gap-3">
-                <span className="w-1 h-6 bg-[#c9a0dc] rounded-full" />
-                {approachTitle}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {approachText}
-              </p>
-            </div>
-            <div className="relative bg-gradient-to-br from-[#c9a0dc]/8 to-[#c9a0dc]/3 border border-[#c9a0dc]/15 rounded-xl p-8">
-              <Quote className="absolute top-4 right-4 h-8 w-8 text-[#c9a0dc]/15" />
-              <h3 className="font-display text-xl font-bold text-foreground mb-4 flex items-center gap-3">
-                <span className="w-1 h-6 bg-[#c9a0dc] rounded-full" />
-                {inspirationTitle}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {inspirationText}
-              </p>
-            </div>
+          <div className="relative bg-gradient-to-br from-[#c9a0dc]/8 to-[#c9a0dc]/3 border border-[#c9a0dc]/15 rounded-xl p-8">
+            <Quote className="absolute top-4 right-4 h-8 w-8 text-[#c9a0dc]/15" />
+            <h3 className="font-display text-xl font-bold text-foreground mb-4 flex items-center gap-3">
+              <span className="w-1 h-6 bg-[#c9a0dc] rounded-full" />
+              {approachTitle}
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              {approachText}
+            </p>
           </div>
         </motion.div>
       </div>
