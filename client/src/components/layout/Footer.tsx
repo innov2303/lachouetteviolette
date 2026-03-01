@@ -18,15 +18,15 @@ export default function Footer() {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div className="flex flex-col items-center md:items-start gap-4">
-            <img
-              src={owlAvatar}
-              alt="La chouette violette"
-              className="w-24 h-24 rounded-full object-cover border-2 border-[#c9a0dc]/30"
-              data-testid="footer-owl-avatar"
-            />
             <h3 className="font-display text-2xl font-bold text-[#c9a0dc]">
               La chouette violette
             </h3>
+            <img
+              src={owlAvatar}
+              alt="La chouette violette"
+              className="w-24 h-24 rounded-full object-cover border-2 border-[#c9a0dc]/30 mx-auto md:mx-0"
+              data-testid="footer-owl-avatar"
+            />
           </div>
 
           <div>
