@@ -154,7 +154,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
   const onSubmit = (formData: InsertPreinscription) => {
     createPreinscription.mutate(formData, {
       onSuccess: () => {
-        toast({ title: "Preinscription envoyee !", description: "Nous reviendrons vers vous rapidement." });
+        toast({ title: "Pre-inscription envoyee !", description: "Nous reviendrons vers vous rapidement." });
         form.reset();
         onOpenChange(false);
         queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
@@ -173,9 +173,9 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
             <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
               <ClipboardList size={18} />
             </div>
-            Preinscription
+            Pre-inscription
           </DialogTitle>
-          <DialogDescription>Remplissez ce formulaire pour preincrire votre enfant.</DialogDescription>
+          <DialogDescription>Remplissez ce formulaire pour pre-inscrire votre enfant.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -419,7 +419,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
               className="w-full rounded-lg bg-[#c9a0dc] hover:bg-[#b88fd0] text-white"
             >
               {createPreinscription.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ClipboardList className="mr-2 h-4 w-4" />}
-              Envoyer la preinscription
+              Envoyer la pre-inscription
             </Button>
           </form>
         </Form>
@@ -557,7 +557,7 @@ export default function Contact() {
                 className="flex items-center justify-center gap-2 border-2 border-[#c9a0dc] text-[#c9a0dc] hover:bg-[#c9a0dc] hover:text-white rounded-xl px-6 py-3 font-semibold transition-colors duration-300 cursor-pointer"
               >
                 <ClipboardList size={18} />
-                Preinscription
+                Pre-inscription
               </button>
             </div>
 
