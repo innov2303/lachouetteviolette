@@ -44,4 +44,4 @@ integrations = ["resend:1.0.0"]
 [userenv]
 
 [userenv.shared]
-RESEND_FROM_EMAIL = "onboarding@resend.dev"
+RESEND_FROM_EMAIL = "contact@lachouetteviolette.fr"
