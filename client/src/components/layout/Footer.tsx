@@ -1,6 +1,7 @@
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import { useSectionContent } from "@/hooks/use-content";
 import type { SocialLinksContent, ContactContent } from "@shared/schema";
+import owlAvatar from "@assets/owl-avatar-realistic.png";
 
 export default function Footer() {
   const { data: socialLinks } = useSectionContent<SocialLinksContent>("socialLinks");
@@ -16,14 +17,16 @@ export default function Footer() {
     <footer data-testid="footer" className="bg-foreground text-background py-16">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          <div>
-            <h3 className="font-display text-2xl font-bold mb-4 text-[#c9a0dc]">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <img
+              src={owlAvatar}
+              alt="La chouette violette"
+              className="w-24 h-24 rounded-full object-cover border-2 border-[#c9a0dc]/30"
+              data-testid="footer-owl-avatar"
+            />
+            <h3 className="font-display text-2xl font-bold text-[#c9a0dc]">
               La chouette violette
             </h3>
-            <p className="text-background/60 text-sm leading-relaxed">
-              Une Maison d'Assistantes Maternelles chaleureuse et bienveillante
-              pour l'epanouissement de vos enfants.
-            </p>
           </div>
 
           <div>
