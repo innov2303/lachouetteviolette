@@ -99,8 +99,9 @@ export default function Gallery() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex items-center"
           >
-            <div className="relative">
+            <div className="relative w-full">
               <div className="absolute -inset-3 bg-gradient-to-br from-[#c9a0dc]/15 to-transparent rounded-2xl" />
               <Carousel
                 plugins={[plugin.current]}
