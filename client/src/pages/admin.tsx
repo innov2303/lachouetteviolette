@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2 } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent } from "@shared/schema";
 
@@ -15,6 +15,7 @@ const sectionTabs = [
   { id: "gallery", label: "Notre Maison", icon: Image },
   { id: "team", label: "Equipe", icon: Users },
   { id: "project", label: "Pedagogie", icon: BookOpen },
+  { id: "familiarisation", label: "Familiarisation", icon: Heart },
   { id: "contact", label: "Contact", icon: Mail },
   { id: "socialLinks", label: "Reseaux sociaux", icon: Share2 },
 ];
@@ -100,6 +101,7 @@ export default function Admin() {
               {activeTab === "gallery" && <GalleryEditor data={(content.data as Record<string, unknown>).gallery as GalleryContent} />}
               {activeTab === "team" && <TeamEditor data={(content.data as Record<string, unknown>).team as TeamContent} />}
               {activeTab === "project" && <ProjectEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
+              {activeTab === "familiarisation" && <FamiliarisationEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
               {activeTab === "contact" && <ContactEditor data={(content.data as Record<string, unknown>).contact as ContactContent} />}
               {activeTab === "socialLinks" && <SocialLinksEditor data={(content.data as Record<string, unknown>).socialLinks as SocialLinksContent} />}
             </>
@@ -564,8 +566,33 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
           </div>
         </div>
 
+        <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-project" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
+          {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+          Enregistrer
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function FamiliarisationEditor({ data }: { data: ProjectContent }) {
+  const [form, setForm] = useState(data);
+  const update = useUpdateContent("project");
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    update.mutate(form, {
+      onSuccess: () => toast({ title: "Section Familiarisation mise a jour" }),
+      onError: () => toast({ title: "Erreur", variant: "destructive" }),
+    });
+  };
+
+  return (
+    <div>
+      <SectionHeader title="Section Familiarisation" description="Modifiez la periode de familiarisation" />
+      <div className="space-y-4">
         <div>
-          <FieldLabel>Titre - Familiarisation</FieldLabel>
+          <FieldLabel>Titre</FieldLabel>
           <Input data-testid="input-approach-title" value={form.approachTitle} onChange={(e) => setForm({ ...form, approachTitle: e.target.value })} />
         </div>
         <div>
@@ -596,7 +623,7 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
           </div>
         </div>
 
-        <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-project" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
+        <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-familiarisation" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
           {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
           Enregistrer
         </Button>
