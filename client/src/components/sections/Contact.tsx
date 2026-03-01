@@ -27,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Send, MapPin, Phone, Mail, ArrowUp, Clock, MessageCircle, ClipboardList, Map } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 
@@ -140,8 +141,15 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
 
   const form = useForm<InsertPreinscription>({
     resolver: zodResolver(insertPreinscriptionSchema),
-    defaultValues: { parentName: "", email: "", phone: "", childName: "", childBirthdate: "", startDate: "", message: "" },
+    defaultValues: {
+      lastName: "", firstName: "", address: "", email: "", phone: "",
+      familySituation: "", familySituationOther: "", employment: "",
+      childName: "", childBirthdate: "", hasSiblings: "", onWaitingList: "",
+      startDate: "", scheduleDays: "", expectations: "",
+    },
   });
+
+  const familySituation = form.watch("familySituation");
 
   const onSubmit = (formData: InsertPreinscription) => {
     createPreinscription.mutate(formData, {
@@ -159,7 +167,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto" data-testid="dialog-preinscription">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="dialog-preinscription">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-xl">
             <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
@@ -171,14 +179,42 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nom</FormLabel>
+                    <FormControl>
+                      <Input data-testid="input-pre-lastname" placeholder="Dupont" {...field} className="rounded-lg" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prenom</FormLabel>
+                    <FormControl>
+                      <Input data-testid="input-pre-firstname" placeholder="Marie" {...field} className="rounded-lg" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
-              name="parentName"
+              name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nom du parent</FormLabel>
+                  <FormLabel>Adresse postale</FormLabel>
                   <FormControl>
-                    <Input data-testid="input-preinscription-parent" placeholder="Marie Dupont" {...field} className="rounded-lg" />
+                    <Input data-testid="input-pre-address" placeholder="12 Rue des Lilas, 31320 Castanet-Tolosan" {...field} className="rounded-lg" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -190,9 +226,9 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Adresse email</FormLabel>
                     <FormControl>
-                      <Input data-testid="input-preinscription-email" placeholder="marie@exemple.fr" type="email" {...field} className="rounded-lg" />
+                      <Input data-testid="input-pre-email" placeholder="marie@exemple.fr" type="email" {...field} className="rounded-lg" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -205,27 +241,80 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                   <FormItem>
                     <FormLabel>Telephone</FormLabel>
                     <FormControl>
-                      <Input data-testid="input-preinscription-phone" placeholder="06 12 34 56 78" {...field} className="rounded-lg" />
+                      <Input data-testid="input-pre-phone" placeholder="06 12 34 56 78" type="tel" {...field} className="rounded-lg" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="childName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Prenom de l'enfant</FormLabel>
-                  <FormControl>
-                    <Input data-testid="input-preinscription-child" placeholder="Lucas" {...field} className="rounded-lg" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="familySituation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Situation familiale</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger data-testid="select-pre-family" className="rounded-lg">
+                          <SelectValue placeholder="Choisir..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Marie(e)">Marie(e)</SelectItem>
+                        <SelectItem value="Pacse(e)">Pacse(e)</SelectItem>
+                        <SelectItem value="Celibataire">Celibataire</SelectItem>
+                        <SelectItem value="Autre">Autre</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {familySituation === "Autre" && (
+                <FormField
+                  control={form.control}
+                  name="familySituationOther"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Preciser</FormLabel>
+                      <FormControl>
+                        <Input data-testid="input-pre-family-other" placeholder="A preciser..." {...field} value={field.value ?? ""} className="rounded-lg" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="employment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Emploi</FormLabel>
+                    <FormControl>
+                      <Input data-testid="input-pre-employment" placeholder="Votre profession" {...field} className="rounded-lg" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="childName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prenom de l'enfant</FormLabel>
+                    <FormControl>
+                      <Input data-testid="input-pre-child" placeholder="Lucas" {...field} className="rounded-lg" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="childBirthdate"
@@ -233,21 +322,52 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                   <FormItem>
                     <FormLabel>Date de naissance</FormLabel>
                     <FormControl>
-                      <Input data-testid="input-preinscription-birthdate" type="date" {...field} className="rounded-lg" />
+                      <Input data-testid="input-pre-birthdate" type="date" {...field} className="rounded-lg" />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="hasSiblings"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>A-t-il des freres et soeurs ?</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                      <FormControl>
+                        <SelectTrigger data-testid="select-pre-siblings" className="rounded-lg">
+                          <SelectValue placeholder="Choisir..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Oui">Oui</SelectItem>
+                        <SelectItem value="Non">Non</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="startDate"
+                name="onWaitingList"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date de debut souhaitee</FormLabel>
-                    <FormControl>
-                      <Input data-testid="input-preinscription-start" type="date" {...field} className="rounded-lg" />
-                    </FormControl>
+                    <FormLabel>Sur liste d'attente en creche ?</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value ?? ""}>
+                      <FormControl>
+                        <SelectTrigger data-testid="select-pre-waitinglist" className="rounded-lg">
+                          <SelectValue placeholder="Choisir..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Oui">Oui</SelectItem>
+                        <SelectItem value="Non">Non</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -255,12 +375,38 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
             </div>
             <FormField
               control={form.control}
-              name="message"
+              name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Message (optionnel)</FormLabel>
+                  <FormLabel>Date du debut d'accueil souhaite</FormLabel>
                   <FormControl>
-                    <Textarea data-testid="input-preinscription-message" placeholder="Informations complementaires..." className="rounded-lg min-h-[80px] resize-none" {...field} value={field.value || ""} />
+                    <Input data-testid="input-pre-start" type="date" {...field} className="rounded-lg" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="scheduleDays"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Jours et horaires de garde souhaites</FormLabel>
+                  <FormControl>
+                    <Input data-testid="input-pre-schedule" placeholder="Ex: Lundi au Vendredi, 8h30 - 17h30" {...field} className="rounded-lg" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="expectations"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vos attentes concernant l'accueil de votre enfant</FormLabel>
+                  <FormControl>
+                    <Textarea data-testid="input-pre-expectations" placeholder="Decrivez en quelques mots vos attentes..." className="rounded-lg min-h-[100px] resize-y" {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

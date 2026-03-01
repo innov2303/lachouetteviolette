@@ -21,13 +21,21 @@ export type InsertMessage = z.infer<typeof insertMessageSchema>;
 
 export const preinscriptions = pgTable("preinscriptions", {
   id: serial("id").primaryKey(),
-  parentName: text("parent_name").notNull(),
+  lastName: text("last_name").notNull(),
+  firstName: text("first_name").notNull(),
+  address: text("address").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
+  familySituation: text("family_situation").notNull(),
+  familySituationOther: text("family_situation_other"),
+  employment: text("employment").notNull(),
   childName: text("child_name").notNull(),
   childBirthdate: text("child_birthdate").notNull(),
+  hasSiblings: text("has_siblings"),
+  onWaitingList: text("on_waiting_list"),
   startDate: text("start_date").notNull(),
-  message: text("message"),
+  scheduleDays: text("schedule_days").notNull(),
+  expectations: text("expectations"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
