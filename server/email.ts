@@ -1,13 +1,15 @@
 // Resend integration for sending emails
+// Supports both Replit integration (dev) and standalone RESEND_API_KEY (prod on Debian)
 import { Resend } from 'resend';
 
 const RECIPIENT_EMAIL = "mam.lachouetteviolette@gmail.com";
 const SENDER_NAME = "La chouette violette";
 const BRAND_COLOR = "#c9a0dc";
+const DEFAULT_FROM_EMAIL = "onboarding@resend.dev";
 
 let connectionSettings: any;
 
-async function getCredentials() {
+async function getReplitCredentials() {
   const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
   const xReplitToken = process.env.REPL_IDENTITY
     ? 'repl ' + process.env.REPL_IDENTITY
@@ -15,32 +17,49 @@ async function getCredentials() {
     ? 'depl ' + process.env.WEB_REPL_RENEWAL
     : null;
 
-  if (!xReplitToken) {
-    throw new Error('X-Replit-Token not found for repl/depl');
+  if (!xReplitToken || !hostname) {
+    return null;
   }
 
-  connectionSettings = await fetch(
-    'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
-    {
-      headers: {
-        'Accept': 'application/json',
-        'X-Replit-Token': xReplitToken
+  try {
+    connectionSettings = await fetch(
+      'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'X-Replit-Token': xReplitToken
+        }
       }
-    }
-  ).then(res => res.json()).then(data => data.items?.[0]);
+    ).then(res => res.json()).then(data => data.items?.[0]);
 
-  if (!connectionSettings || (!connectionSettings.settings.api_key)) {
-    throw new Error('Resend not connected');
+    if (!connectionSettings || (!connectionSettings.settings.api_key)) {
+      return null;
+    }
+    return { apiKey: connectionSettings.settings.api_key, fromEmail: connectionSettings.settings.from_email };
+  } catch {
+    return null;
   }
-  return { apiKey: connectionSettings.settings.api_key, fromEmail: connectionSettings.settings.from_email };
 }
 
-async function getUncachableResendClient() {
-  const { apiKey, fromEmail } = await getCredentials();
-  return {
-    client: new Resend(apiKey),
-    fromEmail
-  };
+async function getResendClient() {
+  const replitCreds = await getReplitCredentials();
+  if (replitCreds) {
+    return {
+      client: new Resend(replitCreds.apiKey),
+      fromEmail: replitCreds.fromEmail
+    };
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (apiKey) {
+    const fromEmail = process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL;
+    return {
+      client: new Resend(apiKey),
+      fromEmail
+    };
+  }
+
+  throw new Error('Resend not configured: set RESEND_API_KEY and RESEND_FROM_EMAIL environment variables');
 }
 
 function emailLayout(title: string, content: string): string {
@@ -105,7 +124,7 @@ export async function sendContactEmail(data: {
   message: string;
 }) {
   try {
-    const { client, fromEmail } = await getUncachableResendClient();
+    const { client, fromEmail } = await getResendClient();
     const content = `
       ${fieldsTable(
         fieldRow("Nom", data.name) +
@@ -148,7 +167,7 @@ export async function sendPreinscriptionEmail(data: {
   expectations?: string;
 }) {
   try {
-    const { client, fromEmail } = await getUncachableResendClient();
+    const { client, fromEmail } = await getResendClient();
     const content = `
       ${sectionTitle("Informations du parent")}
       ${fieldsTable(
