@@ -94,8 +94,7 @@ export default function Footer() {
 
         <div className="pt-8 border-t border-background/10 text-center text-xs text-background/40">
           <p>
-            &copy; {new Date().getFullYear()} La chouette violette - Maison d'Assistantes
-            Maternelles. Tous droits reserves.
+            &copy; {new Date().getFullYear()} La chouette violette - By Cyril Allegret - <a href="https://innov-studio.fr" target="_blank" rel="noopener noreferrer" className="text-[#c9a0dc] hover:text-[#b88fd0] transition-colors" data-testid="link-innov-studio">Innov Studio</a>. Tous droits reserves.
           </p>
         </div>
       </div>
