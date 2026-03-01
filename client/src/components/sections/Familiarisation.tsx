@@ -48,7 +48,7 @@ export default function Familiarisation() {
   };
 
   return (
-    <section id="familiarisation" data-testid="section-familiarisation" className="min-h-[calc(100vh-53px)] flex items-center py-20 bg-muted">
+    <section id="familiarisation" data-testid="section-familiarisation" aria-label="Période de familiarisation - Maison d'Assistantes Maternelles" className="min-h-[calc(100vh-53px)] flex items-center py-20 bg-muted">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <motion.div

@@ -25,7 +25,7 @@ export default function Project() {
   const pillars = data?.pillars || [];
 
   return (
-    <section id="project" data-testid="section-project" className="min-h-[calc(100vh-53px)] flex items-center py-20">
+    <section id="project" data-testid="section-project" aria-label="Projet pédagogique de la MAM à Castanet-Tolosan" className="min-h-[calc(100vh-53px)] flex items-center py-20">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <motion.div

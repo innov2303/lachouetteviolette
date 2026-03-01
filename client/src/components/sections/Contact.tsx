@@ -449,7 +449,7 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" data-testid="section-contact" className="min-h-[calc(100vh-53px)] flex items-center py-20">
+    <section id="contact" data-testid="section-contact" aria-label="Contactez la MAM La Chouette Violette à Castanet-Tolosan" className="min-h-[calc(100vh-53px)] flex items-center py-20">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

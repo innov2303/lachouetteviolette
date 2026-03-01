@@ -56,7 +56,7 @@ export default function Gallery() {
   const images = data?.images || defaultImages;
 
   return (
-    <section id="gallery" data-testid="section-gallery" className="min-h-[calc(100vh-53px)] flex items-center py-20">
+    <section id="gallery" data-testid="section-gallery" aria-label="Découvrez la MAM La Chouette Violette à Castanet-Tolosan" className="min-h-[calc(100vh-53px)] flex items-center py-20">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center px-4">
           <motion.div

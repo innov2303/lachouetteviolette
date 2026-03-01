@@ -38,7 +38,7 @@ export default function Team() {
   const members = data?.members || defaultMembers;
 
   return (
-    <section id="team" data-testid="section-team" className="min-h-[calc(100vh-53px)] flex items-center py-20 bg-muted">
+    <section id="team" data-testid="section-team" aria-label="Équipe d'assistantes maternelles agréées à Castanet-Tolosan" className="min-h-[calc(100vh-53px)] flex items-center py-20 bg-muted">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
