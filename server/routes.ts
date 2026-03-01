@@ -3,6 +3,7 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
+import { sendContactEmail, sendPreinscriptionEmail } from "./email";
 import { setupAuth, requireAuth } from "./auth";
 import { seedDefaultContent } from "./seed-content";
 import multer from "multer";
@@ -55,6 +56,7 @@ export async function registerRoutes(
     try {
       const input = api.messages.create.input.parse(req.body);
       const message = await storage.createMessage(input);
+      sendContactEmail(input);
       res.status(201).json(message);
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -72,6 +74,7 @@ export async function registerRoutes(
       const { insertPreinscriptionSchema } = await import("@shared/schema");
       const input = insertPreinscriptionSchema.parse(req.body);
       const preinscription = await storage.createPreinscription(input);
+      sendPreinscriptionEmail(input);
       res.status(201).json(preinscription);
     } catch (err) {
       if (err instanceof z.ZodError) {
