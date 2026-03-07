@@ -49,7 +49,9 @@ export function setupAuth(app: Express) {
   if (process.env.DATABASE_URL) {
     sessionConfig.store = new PgStore({
       conString: process.env.DATABASE_URL,
-      createTableIfMissing: false,
+      tableName: 'session',
+      pruneSessionInterval: 60 * 15,
+      schemaName: 'public',
     });
   }
 
