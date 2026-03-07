@@ -1,0 +1,31 @@
+13|lachoue | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+13|lachoue |     at async open (node:internal/fs/promises:634:25)
+13|lachoue |     at async Object.readFile (node:internal/fs/promises:1236:14)
+13|lachoue |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+13|lachoue |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+13|lachoue |   errno: -2,
+13|lachoue |   code: 'ENOENT',
+13|lachoue |   syscall: 'open',
+13|lachoue |   path: '/var/www/lachouetteviolette/dist/table.sql'
+13|lachoue | }
+13|lachoue | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+13|lachoue |     at async open (node:internal/fs/promises:634:25)
+13|lachoue |     at async Object.readFile (node:internal/fs/promises:1236:14)
+13|lachoue |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+13|lachoue |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+13|lachoue | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+13|lachoue |     at async open (node:internal/fs/promises:634:25)
+13|lachoue |     at async Object.readFile (node:internal/fs/promises:1236:14)
+13|lachoue |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+13|lachoue |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+13|lachoue |   errno: -2,
+13|lachoue |   code: 'ENOENT',
+13|lachoue |   syscall: 'open',
+13|lachoue |   path: '/var/www/lachouetteviolette/dist/table.sql'
+13|lachoue | }
+13|lachoue | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+13|lachoue |     at async open (node:internal/fs/promises:634:25)
+13|lachoue |     at async Object.readFile (node:internal/fs/promises:1236:14)
+13|lachoue |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+13|lachoue |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+
