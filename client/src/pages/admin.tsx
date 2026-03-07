@@ -818,6 +818,94 @@ function CommunicationEditor() {
       ctx.fill();
     };
 
+    const drawBottle = (cx: number, cy: number, s: number, color: string) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.roundRect(-s * 0.35, -s, s * 0.7, s * 2, s * 0.3);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.roundRect(-s * 0.15, -s * 1.5, s * 0.3, s * 0.6, s * 0.1);
+      ctx.fill();
+      ctx.fillStyle = color.replace(/[\d.]+\)$/, (m) => `${parseFloat(m) * 0.6})`);
+      ctx.beginPath();
+      ctx.roundRect(-s * 0.25, -s * 0.2, s * 0.5, s * 0.8, s * 0.15);
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const drawPacifier = (cx: number, cy: number, s: number, color: string) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(0, 0, s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = s * 0.3;
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.4, s * 1.4, Math.PI * 0.15, Math.PI * 0.85);
+      ctx.stroke();
+      ctx.fillStyle = color.replace(/[\d.]+\)$/, (m) => `${parseFloat(m) * 0.7})`);
+      ctx.beginPath();
+      ctx.ellipse(0, s * 0.3, s * 0.45, s * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const drawFootprint = (cx: number, cy: number, s: number, color: string, rot = 0) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rot);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, s * 0.5, s * 0.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      const toeOffsets = [[-s * 0.35, -s * 0.85], [0, -s * 1.0], [s * 0.35, -s * 0.85]];
+      toeOffsets.forEach(([tx, ty]) => {
+        ctx.beginPath();
+        ctx.arc(tx, ty, s * 0.18, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+    };
+
+    const drawRattle = (cx: number, cy: number, s: number, color: string) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.6, s * 0.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = color.replace(/[\d.]+\)$/, (m) => `${parseFloat(m) * 0.5})`);
+      ctx.beginPath();
+      ctx.roundRect(-s * 0.15, 0, s * 0.3, s * 1.4, s * 0.1);
+      ctx.fill();
+      ctx.fillStyle = color.replace(/[\d.]+\)$/, (m) => `${parseFloat(m) * 0.6})`);
+      ctx.beginPath();
+      ctx.arc(-s * 0.3, -s * 0.8, s * 0.15, 0, Math.PI * 2);
+      ctx.arc(s * 0.3, -s * 0.5, s * 0.15, 0, Math.PI * 2);
+      ctx.arc(0, -s * 1.2, s * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const drawBlock = (cx: number, cy: number, s: number, color: string, letter: string) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.roundRect(-s, -s, s * 2, s * 2, s * 0.25);
+      ctx.fill();
+      ctx.fillStyle = color.replace(/[\d.]+\)$/, (m) => `${Math.min(parseFloat(m) * 2.5, 0.9)})`);
+      ctx.font = `bold ${s * 1.2}px 'Comic Sans MS', cursive`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(letter, 0, 2);
+      ctx.restore();
+    };
+
     const grad = ctx.createLinearGradient(0, 0, W, H);
     grad.addColorStop(0, "#fef6ff");
     grad.addColorStop(0.5, "#f5e6fa");
@@ -845,7 +933,6 @@ function CommunicationEditor() {
     drawCloud(180, 950, 22, "rgba(249,198,217,0.25)");
     drawCloud(850, 900, 28, "rgba(181,232,195,0.2)");
 
-
     drawStar(100, 200, 18, "rgba(247,228,163,0.5)", 0.3);
     drawStar(950, 250, 14, "rgba(201,160,220,0.4)", 0.8);
     drawStar(130, 700, 12, "rgba(249,198,217,0.5)", 0.5);
@@ -857,6 +944,27 @@ function CommunicationEditor() {
     drawHeart(980, 420, 12, "rgba(201,160,220,0.3)");
     drawHeart(150, 830, 10, "rgba(249,198,217,0.4)");
     drawHeart(930, 850, 13, "rgba(201,160,220,0.35)");
+
+    drawBottle(75, 300, 16, "rgba(168,216,234,0.4)");
+    drawBottle(990, 330, 13, "rgba(201,160,220,0.35)");
+    drawBottle(110, 600, 11, "rgba(249,198,217,0.4)");
+
+    drawPacifier(960, 600, 12, "rgba(249,198,217,0.4)");
+    drawPacifier(90, 500, 10, "rgba(201,160,220,0.35)");
+    drawPacifier(950, 480, 9, "rgba(168,216,234,0.4)");
+
+    drawFootprint(140, 260, 10, "rgba(201,160,220,0.3)", -0.3);
+    drawFootprint(165, 310, 10, "rgba(201,160,220,0.3)", 0.2);
+    drawFootprint(900, 680, 9, "rgba(249,198,217,0.3)", 0.4);
+    drawFootprint(925, 730, 9, "rgba(249,198,217,0.3)", -0.1);
+    drawFootprint(85, 780, 8, "rgba(181,232,195,0.35)", 0.5);
+
+    drawRattle(960, 180, 12, "rgba(247,228,163,0.45)");
+    drawRattle(80, 880, 10, "rgba(201,160,220,0.35)");
+
+    drawBlock(940, 880, 14, "rgba(168,216,234,0.3)", "A");
+    drawBlock(110, 150, 12, "rgba(249,198,217,0.3)", "B");
+    drawBlock(960, 80, 11, "rgba(181,232,195,0.3)", "C");
 
     const owlSize = 220;
     const owlX = (W - owlSize) / 2;
