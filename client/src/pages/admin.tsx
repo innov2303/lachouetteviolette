@@ -778,27 +778,104 @@ function CommunicationEditor() {
     canvas.width = W;
     canvas.height = H;
 
+    const drawStar = (cx: number, cy: number, r: number, color: string, rot = 0) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rot);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+        const method = i === 0 ? "moveTo" : "lineTo";
+        ctx[method](r * Math.cos(angle), r * Math.sin(angle));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const drawHeart = (cx: number, cy: number, size: number, color: string) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(0, size * 0.3);
+      ctx.bezierCurveTo(-size * 0.5, -size * 0.3, -size, size * 0.1, 0, size);
+      ctx.bezierCurveTo(size, size * 0.1, size * 0.5, -size * 0.3, 0, size * 0.3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const drawCloud = (cx: number, cy: number, s: number, color: string) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(cx, cy, s, 0, Math.PI * 2);
+      ctx.arc(cx + s * 1.2, cy - s * 0.2, s * 0.8, 0, Math.PI * 2);
+      ctx.arc(cx - s * 1.1, cy - s * 0.1, s * 0.7, 0, Math.PI * 2);
+      ctx.arc(cx + s * 0.5, cy - s * 0.6, s * 0.65, 0, Math.PI * 2);
+      ctx.arc(cx - s * 0.4, cy - s * 0.5, s * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
     const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0, "#f3e8f9");
-    grad.addColorStop(1, "#e8d5f5");
+    grad.addColorStop(0, "#fef6ff");
+    grad.addColorStop(0.5, "#f5e6fa");
+    grad.addColorStop(1, "#e8f4fd");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
+    const colors = ["#c9a0dc", "#f9c6d9", "#a8d8ea", "#f7e4a3", "#b5e8c3"];
+    const rnd = (seed: number) => {
+      const x = Math.sin(seed * 9301 + 49297) % 1;
+      return x - Math.floor(x);
+    };
+    for (let i = 0; i < 25; i++) {
+      const x = rnd(i * 3) * W;
+      const y = rnd(i * 7 + 1) * H;
+      const s = 4 + rnd(i * 11) * 8;
+      ctx.fillStyle = colors[i % colors.length] + "40";
+      ctx.beginPath();
+      ctx.arc(x, y, s, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    drawCloud(120, 100, 30, "rgba(168,216,234,0.25)");
+    drawCloud(900, 150, 25, "rgba(201,160,220,0.2)");
+    drawCloud(180, 950, 22, "rgba(249,198,217,0.25)");
+    drawCloud(850, 900, 28, "rgba(181,232,195,0.2)");
+
     ctx.strokeStyle = "#c9a0dc";
-    ctx.lineWidth = 12;
+    ctx.lineWidth = 8;
+    ctx.setLineDash([20, 12]);
     ctx.beginPath();
-    ctx.roundRect(30, 30, W - 60, H - 60, 30);
+    ctx.roundRect(35, 35, W - 70, H - 70, 40);
     ctx.stroke();
+    ctx.setLineDash([]);
 
-    ctx.strokeStyle = "rgba(201,160,220,0.25)";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.roundRect(45, 45, W - 90, H - 90, 25);
-    ctx.stroke();
+    drawStar(100, 200, 18, "rgba(247,228,163,0.5)", 0.3);
+    drawStar(950, 250, 14, "rgba(201,160,220,0.4)", 0.8);
+    drawStar(130, 700, 12, "rgba(249,198,217,0.5)", 0.5);
+    drawStar(920, 750, 16, "rgba(168,216,234,0.5)", 1.2);
+    drawStar(200, 450, 10, "rgba(181,232,195,0.5)", 0.1);
+    drawStar(880, 500, 13, "rgba(247,228,163,0.5)", 0.6);
 
-    const owlSize = 200;
+    drawHeart(80, 400, 14, "rgba(249,198,217,0.35)");
+    drawHeart(980, 420, 12, "rgba(201,160,220,0.3)");
+    drawHeart(150, 830, 10, "rgba(249,198,217,0.4)");
+    drawHeart(930, 850, 13, "rgba(201,160,220,0.35)");
+
+    const owlSize = 220;
     const owlX = (W - owlSize) / 2;
-    const owlY = 80;
+    const owlY = 75;
+    ctx.save();
+    ctx.shadowColor = "rgba(201,160,220,0.4)";
+    ctx.shadowBlur = 20;
+    ctx.beginPath();
+    ctx.arc(owlX + owlSize / 2, owlY + owlSize / 2, owlSize / 2 + 8, 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+    ctx.restore();
     ctx.save();
     ctx.beginPath();
     ctx.arc(owlX + owlSize / 2, owlY + owlSize / 2, owlSize / 2, 0, Math.PI * 2);
@@ -807,58 +884,95 @@ function CommunicationEditor() {
     ctx.drawImage(owlImg, owlX, owlY, owlSize, owlSize);
     ctx.restore();
     ctx.strokeStyle = "#c9a0dc";
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 5;
     ctx.beginPath();
     ctx.arc(owlX + owlSize / 2, owlY + owlSize / 2, owlSize / 2, 0, Math.PI * 2);
     ctx.stroke();
 
+    drawStar(owlX - 20, owlY + 20, 12, "rgba(247,228,163,0.6)", 0.4);
+    drawStar(owlX + owlSize + 20, owlY + 30, 10, "rgba(249,198,217,0.6)", 0.9);
+    drawHeart(owlX + owlSize + 10, owlY + owlSize - 20, 9, "rgba(249,198,217,0.5)");
+
     ctx.fillStyle = "#7c5a9a";
-    ctx.font = "bold 52px Georgia, serif";
+    ctx.font = "bold 56px 'Comic Sans MS', 'Segoe Print', cursive";
     ctx.textAlign = "center";
-    ctx.fillText("La Chouette Violette", W / 2, owlY + owlSize + 65);
+    ctx.save();
+    ctx.shadowColor = "rgba(201,160,220,0.3)";
+    ctx.shadowBlur = 8;
+    ctx.fillText("La Chouette Violette", W / 2, owlY + owlSize + 70);
+    ctx.restore();
 
     ctx.fillStyle = "#c9a0dc";
-    ctx.font = "600 22px sans-serif";
-    ctx.fillText("MAISON D'ASSISTANTES MATERNELLES", W / 2, owlY + owlSize + 105);
+    ctx.font = "bold 22px 'Comic Sans MS', 'Segoe Print', cursive";
+    ctx.fillText("Maison d'Assistantes Maternelles", W / 2, owlY + owlSize + 110);
 
-    ctx.strokeStyle = "rgba(201,160,220,0.5)";
-    ctx.lineWidth = 2;
+    const sepY = owlY + owlSize + 135;
+    const sepColors = ["#c9a0dc", "#f9c6d9", "#a8d8ea", "#f7e4a3", "#b5e8c3", "#c9a0dc"];
+    for (let i = 0; i < 6; i++) {
+      ctx.fillStyle = sepColors[i];
+      ctx.beginPath();
+      ctx.arc(W / 2 - 60 + i * 24, sepY, 5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    const textZoneY = 490;
+    ctx.save();
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
     ctx.beginPath();
-    ctx.moveTo(W / 2 - 200, owlY + owlSize + 130);
-    ctx.lineTo(W / 2 + 200, owlY + owlSize + 130);
+    ctx.roundRect(120, textZoneY - 30, W - 240, 230, 30);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(201,160,220,0.3)";
+    ctx.lineWidth = 3;
+    ctx.setLineDash([10, 8]);
+    ctx.beginPath();
+    ctx.roundRect(120, textZoneY - 30, W - 240, 230, 30);
     ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
 
     const lines = text.split("\n");
-    ctx.fillStyle = "#4a3560";
-    ctx.font = "bold 42px sans-serif";
+    ctx.fillStyle = "#5a3d7a";
+    ctx.font = "bold 40px 'Comic Sans MS', 'Segoe Print', cursive";
     ctx.textAlign = "center";
-    const lineHeight = 58;
+    const lineHeight = 55;
     const totalTextH = lines.length * lineHeight;
-    const startY = 520 + (200 - totalTextH) / 2;
+    const startY = textZoneY + (200 - totalTextH) / 2 + 15;
     lines.forEach((line, i) => {
       ctx.fillText(line.trim(), W / 2, startY + i * lineHeight);
     });
 
-    const infoY = 800;
-    ctx.fillStyle = "#c9a0dc";
-    ctx.font = "bold 24px sans-serif";
-    ctx.fillText("07 69 15 92 42", W / 2, infoY);
-    ctx.fillStyle = "#7c5a9a";
-    ctx.font = "20px sans-serif";
-    ctx.fillText("2 bis, allée des aubépines — 31810 Castanet-Tolosan", W / 2, infoY + 40);
-    ctx.fillStyle = "#c9a0dc";
-    ctx.font = "bold 20px sans-serif";
-    ctx.fillText("www.lachouetteviolette.fr", W / 2, infoY + 80);
-    ctx.fillStyle = "#7c5a9a";
-    ctx.font = "18px sans-serif";
-    ctx.fillText("Facebook : La Chouette Violette", W / 2, infoY + 130);
+    const infoY = 780;
+    ctx.fillStyle = "rgba(255,255,255,0.5)";
+    ctx.beginPath();
+    ctx.roundRect(160, infoY - 30, W - 320, 230, 25);
+    ctx.fill();
 
-    for (let i = 0; i < 6; i++) {
-      const x = 100 + i * (W - 200) / 5;
-      ctx.fillStyle = "rgba(201,160,220,0.2)";
-      ctx.beginPath();
-      ctx.arc(x, H - 55, 8, 0, Math.PI * 2);
-      ctx.fill();
+    ctx.fillStyle = "#c9a0dc";
+    ctx.font = "bold 28px 'Comic Sans MS', 'Segoe Print', cursive";
+    ctx.fillText("07 69 15 92 42", W / 2, infoY + 10);
+
+    ctx.fillStyle = "#7c5a9a";
+    ctx.font = "20px 'Comic Sans MS', 'Segoe Print', cursive";
+    ctx.fillText("2 bis, allée des aubépines", W / 2, infoY + 55);
+    ctx.fillText("31810 Castanet-Tolosan", W / 2, infoY + 85);
+
+    ctx.fillStyle = "#c9a0dc";
+    ctx.font = "bold 22px 'Comic Sans MS', 'Segoe Print', cursive";
+    ctx.fillText("www.lachouetteviolette.fr", W / 2, infoY + 130);
+
+    ctx.fillStyle = "#7c5a9a";
+    ctx.font = "18px 'Comic Sans MS', 'Segoe Print', cursive";
+    ctx.fillText("Facebook : La Chouette Violette", W / 2, infoY + 170);
+
+    const footerY = H - 50;
+    const footerIcons = ["#c9a0dc", "#f9c6d9", "#a8d8ea", "#f7e4a3", "#b5e8c3", "#f9c6d9", "#c9a0dc"];
+    for (let i = 0; i < 7; i++) {
+      const x = 140 + i * ((W - 280) / 6);
+      if (i % 2 === 0) {
+        drawStar(x, footerY, 10, footerIcons[i] + "80", i * 0.5);
+      } else {
+        drawHeart(x, footerY - 8, 8, footerIcons[i] + "80");
+      }
     }
   }, [text, owlImg]);
 
