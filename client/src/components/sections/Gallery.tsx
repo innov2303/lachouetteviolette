@@ -58,6 +58,24 @@ export default function Gallery() {
   return (
     <section id="gallery" data-testid="section-gallery" aria-label="Découvrez la MAM La Chouette Violette à Castanet-Tolosan" className="min-h-[calc(100vh-53px)] flex items-center py-20">
       <div className="container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-10 px-4"
+        >
+          <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-6 text-center">
+            {sectionLabel}
+          </p>
+
+          <div className="flex items-end justify-center gap-2 mb-6">
+            <motion.img src={owlBlue} alt="Chouette bleue" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10, rotate: -5 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, type: "spring" }} />
+            <motion.img src={owlOrange} alt="Chouette orange" className="w-18 h-18 md:w-24 md:h-24 object-contain drop-shadow-md" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5, type: "spring" }} />
+            <motion.img src={owlPink} alt="Chouette rose" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10, rotate: 5 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: 0.7, type: "spring" }} />
+          </div>
+        </motion.div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center px-4">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -65,16 +83,6 @@ export default function Gallery() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-[#c9a0dc] font-semibold mb-6 text-center">
-              {sectionLabel}
-            </p>
-
-            <div className="flex items-end justify-center gap-2 mb-6">
-              <motion.img src={owlBlue} alt="Chouette bleue" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" data-testid="img-owl-blue" initial={{ opacity: 0, y: 10, rotate: -5 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, type: "spring" }} />
-              <motion.img src={owlOrange} alt="Chouette orange" className="w-18 h-18 md:w-24 md:h-24 object-contain drop-shadow-md" data-testid="img-owl-orange" initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5, type: "spring" }} />
-              <motion.img src={owlPink} alt="Chouette rose" className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" data-testid="img-owl-pink" initial={{ opacity: 0, y: 10, rotate: 5 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: 0.7, type: "spring" }} />
-            </div>
-
             <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4 leading-tight text-center">
               {title}<br />
               <span className="text-[#c9a0dc]">{titleHighlight}</span>
