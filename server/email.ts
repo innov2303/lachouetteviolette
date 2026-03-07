@@ -46,16 +46,15 @@ async function getResendClient() {
   if (replitCreds) {
     return {
       client: new Resend(replitCreds.apiKey),
-      fromEmail: replitCreds.fromEmail
+      fromEmail: DEFAULT_FROM_EMAIL
     };
   }
 
   const apiKey = process.env.RESEND_API_KEY;
   if (apiKey) {
-    const fromEmail = process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL;
     return {
       client: new Resend(apiKey),
-      fromEmail
+      fromEmail: DEFAULT_FROM_EMAIL
     };
   }
 
