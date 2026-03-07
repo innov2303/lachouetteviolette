@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import type { Express, Request, Response, NextFunction } from "express";
@@ -32,18 +33,27 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
-  app.use(
-    session({
-      secret: process.env.SESSION_SECRET || "dev-secret-change-me",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: "lax",
-      },
-    })
-  );
+  const PgStore = connectPgSimple(session);
+
+  const sessionConfig: session.SessionOptions = {
+    secret: process.env.SESSION_SECRET || "dev-secret-change-me",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "lax",
+    },
+  };
+
+  if (process.env.DATABASE_URL) {
+    sessionConfig.store = new PgStore({
+      conString: process.env.DATABASE_URL,
+      createTableIfMissing: true,
+    });
+  }
+
+  app.use(session(sessionConfig));
 
   app.use(passport.initialize());
   app.use(passport.session());
