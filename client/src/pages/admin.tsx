@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth, useLogout } from "@/hooks/use-auth";
 import { useAllContent, useUpdateContent } from "@/hooks/use-content";
 import { useLocation } from "wouter";
@@ -6,9 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent } from "@shared/schema";
+import owlAvatar from "@assets/owl-avatar-realistic.png";
 
 const sectionTabs = [
   { id: "availability", label: "Place disponible", icon: CalendarCheck },
@@ -18,6 +19,7 @@ const sectionTabs = [
   { id: "familiarisation", label: "Familiarisation", icon: Heart },
   { id: "contact", label: "Contact", icon: Mail },
   { id: "socialLinks", label: "Reseaux sociaux", icon: Share2 },
+  { id: "communication", label: "Communication", icon: Megaphone },
 ];
 
 export default function Admin() {
@@ -104,6 +106,7 @@ export default function Admin() {
               {activeTab === "familiarisation" && <FamiliarisationEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
               {activeTab === "contact" && <ContactEditor data={(content.data as Record<string, unknown>).contact as ContactContent} />}
               {activeTab === "socialLinks" && <SocialLinksEditor data={(content.data as Record<string, unknown>).socialLinks as SocialLinksContent} />}
+              {activeTab === "communication" && <CommunicationEditor />}
             </>
           ) : null}
         </main>
@@ -748,6 +751,166 @@ function SocialLinksEditor({ data }: { data: SocialLinksContent }) {
         <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-social" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
           {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
           Enregistrer
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function CommunicationEditor() {
+  const [text, setText] = useState("Des places sont disponibles\npour la rentrée 2026 !");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [owlImg, setOwlImg] = useState<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => setOwlImg(img);
+    img.src = owlAvatar;
+  }, []);
+
+  const drawFlyer = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !owlImg) return;
+    const ctx = canvas.getContext("2d")!;
+    const W = 1080;
+    const H = 1080;
+    canvas.width = W;
+    canvas.height = H;
+
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, "#f3e8f9");
+    grad.addColorStop(1, "#e8d5f5");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = "#c9a0dc";
+    ctx.lineWidth = 12;
+    ctx.beginPath();
+    ctx.roundRect(30, 30, W - 60, H - 60, 30);
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(201,160,220,0.25)";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(45, 45, W - 90, H - 90, 25);
+    ctx.stroke();
+
+    const owlSize = 200;
+    const owlX = (W - owlSize) / 2;
+    const owlY = 80;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(owlX + owlSize / 2, owlY + owlSize / 2, owlSize / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(owlImg, owlX, owlY, owlSize, owlSize);
+    ctx.restore();
+    ctx.strokeStyle = "#c9a0dc";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(owlX + owlSize / 2, owlY + owlSize / 2, owlSize / 2, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = "#7c5a9a";
+    ctx.font = "bold 52px Georgia, serif";
+    ctx.textAlign = "center";
+    ctx.fillText("La Chouette Violette", W / 2, owlY + owlSize + 65);
+
+    ctx.fillStyle = "#c9a0dc";
+    ctx.font = "600 22px sans-serif";
+    ctx.fillText("MAISON D'ASSISTANTES MATERNELLES", W / 2, owlY + owlSize + 105);
+
+    ctx.strokeStyle = "rgba(201,160,220,0.5)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(W / 2 - 200, owlY + owlSize + 130);
+    ctx.lineTo(W / 2 + 200, owlY + owlSize + 130);
+    ctx.stroke();
+
+    const lines = text.split("\n");
+    ctx.fillStyle = "#4a3560";
+    ctx.font = "bold 42px sans-serif";
+    ctx.textAlign = "center";
+    const lineHeight = 58;
+    const totalTextH = lines.length * lineHeight;
+    const startY = 520 + (200 - totalTextH) / 2;
+    lines.forEach((line, i) => {
+      ctx.fillText(line.trim(), W / 2, startY + i * lineHeight);
+    });
+
+    const infoY = 800;
+    ctx.fillStyle = "#c9a0dc";
+    ctx.font = "bold 24px sans-serif";
+    ctx.fillText("07 69 15 92 42", W / 2, infoY);
+    ctx.fillStyle = "#7c5a9a";
+    ctx.font = "20px sans-serif";
+    ctx.fillText("2 bis, allée des aubépines — 31810 Castanet-Tolosan", W / 2, infoY + 40);
+    ctx.fillStyle = "#c9a0dc";
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText("www.lachouetteviolette.fr", W / 2, infoY + 80);
+    ctx.fillStyle = "#7c5a9a";
+    ctx.font = "18px sans-serif";
+    ctx.fillText("Facebook : La Chouette Violette", W / 2, infoY + 130);
+
+    for (let i = 0; i < 6; i++) {
+      const x = 100 + i * (W - 200) / 5;
+      ctx.fillStyle = "rgba(201,160,220,0.2)";
+      ctx.beginPath();
+      ctx.arc(x, H - 55, 8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }, [text, owlImg]);
+
+  useEffect(() => {
+    drawFlyer();
+  }, [drawFlyer]);
+
+  const handleDownload = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = `communication-chouette-violette-${Date.now()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  };
+
+  return (
+    <div>
+      <SectionHeader title="Communication" description="Générez une fiche de communication à partager sur les réseaux sociaux." />
+      <div className="space-y-6">
+        <div>
+          <FieldLabel>Texte de la fiche</FieldLabel>
+          <Textarea
+            data-testid="input-comm-text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={4}
+            placeholder="Saisissez votre texte ici..."
+            className="text-base"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Utilisez Entrée pour créer des sauts de ligne.</p>
+        </div>
+        <div className="border border-border rounded-xl overflow-hidden bg-white">
+          <div className="p-4 border-b border-border bg-muted/30">
+            <p className="text-sm font-medium text-foreground">Aperçu (1080 x 1080)</p>
+          </div>
+          <div className="p-4 flex justify-center">
+            <canvas
+              ref={canvasRef}
+              data-testid="canvas-comm-preview"
+              className="w-full max-w-[500px] rounded-lg shadow-md"
+              style={{ aspectRatio: "1/1" }}
+            />
+          </div>
+        </div>
+        <Button
+          onClick={handleDownload}
+          data-testid="button-download-comm"
+          className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white"
+        >
+          <Download className="h-4 w-4 mr-2" />
+          Télécharger l'image
         </Button>
       </div>
     </div>
