@@ -137,13 +137,14 @@ export async function sendContactEmail(data: {
       </div>
     `;
 
-    await client.emails.send({
+    console.log(`Sending contact email: from=${fromEmail}, to=${RECIPIENT_EMAIL}`);
+    const result = await client.emails.send({
       from: `${SENDER_NAME} <${fromEmail}>`,
       to: RECIPIENT_EMAIL,
       subject: `Nouveau message de contact - ${data.name}`,
       html: emailLayout("Nouveau message de contact", content)
     });
-    console.log('Contact email sent successfully');
+    console.log('Contact email result:', JSON.stringify(result));
   } catch (err) {
     console.error('Failed to send contact email:', err);
   }
@@ -199,13 +200,14 @@ export async function sendPreinscriptionEmail(data: {
       ` : ''}
     `;
 
-    await client.emails.send({
+    console.log(`Sending preinscription email: from=${fromEmail}, to=${RECIPIENT_EMAIL}`);
+    const result = await client.emails.send({
       from: `${SENDER_NAME} <${fromEmail}>`,
       to: RECIPIENT_EMAIL,
       subject: `Nouvelle pr\u00e9-inscription - ${data.firstName} ${data.lastName}`,
       html: emailLayout("Nouvelle demande de pr\u00e9-inscription", content)
     });
-    console.log('Preinscription email sent successfully');
+    console.log('Preinscription email result:', JSON.stringify(result));
   } catch (err) {
     console.error('Failed to send preinscription email:', err);
   }
