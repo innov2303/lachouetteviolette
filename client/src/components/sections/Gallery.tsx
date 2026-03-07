@@ -58,7 +58,7 @@ export default function Gallery() {
   return (
     <section id="gallery" data-testid="section-gallery" aria-label="Découvrez la MAM La Chouette Violette à Castanet-Tolosan" className="min-h-[calc(100vh-53px)] flex items-center py-20">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start px-4">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -99,7 +99,7 @@ export default function Gallery() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex items-center"
+            className="lg:sticky lg:top-1/3"
           >
             <div className="relative w-full">
               <div className="absolute -inset-3 bg-gradient-to-br from-[#c9a0dc]/15 to-transparent rounded-2xl" />
