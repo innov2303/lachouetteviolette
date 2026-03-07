@@ -42,18 +42,18 @@ async function getReplitCredentials() {
 }
 
 async function getResendClient() {
-  const replitCreds = await getReplitCredentials();
-  if (replitCreds) {
-    return {
-      client: new Resend(replitCreds.apiKey),
-      fromEmail: DEFAULT_FROM_EMAIL
-    };
-  }
-
   const apiKey = process.env.RESEND_API_KEY;
   if (apiKey) {
     return {
       client: new Resend(apiKey),
+      fromEmail: DEFAULT_FROM_EMAIL
+    };
+  }
+
+  const replitCreds = await getReplitCredentials();
+  if (replitCreds) {
+    return {
+      client: new Resend(replitCreds.apiKey),
       fromEmail: DEFAULT_FROM_EMAIL
     };
   }
