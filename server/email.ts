@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 const RECIPIENT_EMAIL = "cyrilallegretb@gmail.com";
 const SENDER_NAME = "La chouette violette";
 const BRAND_COLOR = "#c9a0dc";
-const DEFAULT_FROM_EMAIL = "onboarding@resend.dev";
+const DEFAULT_FROM_EMAIL = "noreply@lachouetteviolette.fr";
 
 let connectionSettings: any;
 
