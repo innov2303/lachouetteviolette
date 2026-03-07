@@ -928,43 +928,43 @@ function CommunicationEditor() {
       ctx.fill();
     }
 
-    drawCloud(120, 100, 30, "rgba(168,216,234,0.25)");
-    drawCloud(900, 150, 25, "rgba(201,160,220,0.2)");
-    drawCloud(180, 950, 22, "rgba(249,198,217,0.25)");
-    drawCloud(850, 900, 28, "rgba(181,232,195,0.2)");
+    drawCloud(120, 100, 35, "rgba(168,216,234,0.45)");
+    drawCloud(900, 150, 30, "rgba(201,160,220,0.4)");
+    drawCloud(180, 950, 28, "rgba(249,198,217,0.45)");
+    drawCloud(850, 900, 32, "rgba(181,232,195,0.4)");
 
-    drawStar(100, 200, 18, "rgba(247,228,163,0.5)", 0.3);
-    drawStar(950, 250, 14, "rgba(201,160,220,0.4)", 0.8);
-    drawStar(130, 700, 12, "rgba(249,198,217,0.5)", 0.5);
-    drawStar(920, 750, 16, "rgba(168,216,234,0.5)", 1.2);
-    drawStar(200, 450, 10, "rgba(181,232,195,0.5)", 0.1);
-    drawStar(880, 500, 13, "rgba(247,228,163,0.5)", 0.6);
+    drawStar(100, 200, 24, "rgba(247,228,163,0.75)", 0.3);
+    drawStar(950, 250, 20, "rgba(201,160,220,0.7)", 0.8);
+    drawStar(130, 700, 18, "rgba(249,198,217,0.7)", 0.5);
+    drawStar(920, 750, 22, "rgba(168,216,234,0.75)", 1.2);
+    drawStar(200, 450, 16, "rgba(181,232,195,0.7)", 0.1);
+    drawStar(880, 500, 19, "rgba(247,228,163,0.7)", 0.6);
 
-    drawHeart(80, 400, 14, "rgba(249,198,217,0.35)");
-    drawHeart(980, 420, 12, "rgba(201,160,220,0.3)");
-    drawHeart(150, 830, 10, "rgba(249,198,217,0.4)");
-    drawHeart(930, 850, 13, "rgba(201,160,220,0.35)");
+    drawHeart(80, 400, 20, "rgba(249,198,217,0.6)");
+    drawHeart(980, 420, 18, "rgba(201,160,220,0.55)");
+    drawHeart(150, 830, 16, "rgba(249,198,217,0.65)");
+    drawHeart(930, 850, 19, "rgba(201,160,220,0.6)");
 
-    drawBottle(75, 300, 16, "rgba(168,216,234,0.4)");
-    drawBottle(990, 330, 13, "rgba(201,160,220,0.35)");
-    drawBottle(110, 600, 11, "rgba(249,198,217,0.4)");
+    drawBottle(75, 300, 22, "rgba(168,216,234,0.65)");
+    drawBottle(990, 330, 19, "rgba(201,160,220,0.6)");
+    drawBottle(110, 600, 17, "rgba(249,198,217,0.65)");
 
-    drawPacifier(960, 600, 12, "rgba(249,198,217,0.4)");
-    drawPacifier(90, 500, 10, "rgba(201,160,220,0.35)");
-    drawPacifier(950, 480, 9, "rgba(168,216,234,0.4)");
+    drawPacifier(960, 600, 18, "rgba(249,198,217,0.65)");
+    drawPacifier(90, 500, 15, "rgba(201,160,220,0.6)");
+    drawPacifier(950, 480, 14, "rgba(168,216,234,0.65)");
 
-    drawFootprint(140, 260, 10, "rgba(201,160,220,0.3)", -0.3);
-    drawFootprint(165, 310, 10, "rgba(201,160,220,0.3)", 0.2);
-    drawFootprint(900, 680, 9, "rgba(249,198,217,0.3)", 0.4);
-    drawFootprint(925, 730, 9, "rgba(249,198,217,0.3)", -0.1);
-    drawFootprint(85, 780, 8, "rgba(181,232,195,0.35)", 0.5);
+    drawFootprint(140, 260, 15, "rgba(201,160,220,0.55)", -0.3);
+    drawFootprint(165, 310, 15, "rgba(201,160,220,0.55)", 0.2);
+    drawFootprint(900, 680, 14, "rgba(249,198,217,0.55)", 0.4);
+    drawFootprint(925, 730, 14, "rgba(249,198,217,0.55)", -0.1);
+    drawFootprint(85, 780, 13, "rgba(181,232,195,0.6)", 0.5);
 
-    drawRattle(960, 180, 12, "rgba(247,228,163,0.45)");
-    drawRattle(80, 880, 10, "rgba(201,160,220,0.35)");
+    drawRattle(960, 180, 18, "rgba(247,228,163,0.7)");
+    drawRattle(80, 880, 15, "rgba(201,160,220,0.6)");
 
-    drawBlock(940, 880, 14, "rgba(168,216,234,0.3)", "A");
-    drawBlock(110, 150, 12, "rgba(249,198,217,0.3)", "B");
-    drawBlock(960, 80, 11, "rgba(181,232,195,0.3)", "C");
+    drawBlock(940, 880, 20, "rgba(168,216,234,0.55)", "A");
+    drawBlock(110, 150, 18, "rgba(249,198,217,0.55)", "B");
+    drawBlock(960, 80, 16, "rgba(181,232,195,0.55)", "C");
 
     const owlSize = 220;
     const owlX = (W - owlSize) / 2;
@@ -995,12 +995,12 @@ function CommunicationEditor() {
     drawHeart(owlX + owlSize + 10, owlY + owlSize - 20, 9, "rgba(249,198,217,0.5)");
 
     ctx.fillStyle = "#7c5a9a";
-    ctx.font = "bold 56px 'Comic Sans MS', 'Segoe Print', cursive";
+    ctx.font = "bold 48px 'Comic Sans MS', 'Segoe Print', cursive";
     ctx.textAlign = "center";
     ctx.save();
     ctx.shadowColor = "rgba(201,160,220,0.3)";
     ctx.shadowBlur = 8;
-    ctx.fillText("La Chouette Violette", W / 2, owlY + owlSize + 70);
+    ctx.fillText("MAM La Chouette Violette", W / 2, owlY + owlSize + 70);
     ctx.restore();
 
     ctx.fillStyle = "#c9a0dc";
