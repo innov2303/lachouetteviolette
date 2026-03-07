@@ -5,60 +5,14 @@ import { Resend } from 'resend';
 const RECIPIENT_EMAIL = "cyrilallegretb@gmail.com";
 const SENDER_NAME = "La chouette violette";
 const BRAND_COLOR = "#c9a0dc";
-const DEFAULT_FROM_EMAIL = "noreply@lachouetteviolette.fr";
+const FROM_EMAIL = "noreply@lachouetteviolette.fr";
 
-let connectionSettings: any;
-
-async function getReplitCredentials() {
-  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-  const xReplitToken = process.env.REPL_IDENTITY
-    ? 'repl ' + process.env.REPL_IDENTITY
-    : process.env.WEB_REPL_RENEWAL
-    ? 'depl ' + process.env.WEB_REPL_RENEWAL
-    : null;
-
-  if (!xReplitToken || !hostname) {
-    return null;
-  }
-
-  try {
-    connectionSettings = await fetch(
-      'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
-      {
-        headers: {
-          'Accept': 'application/json',
-          'X-Replit-Token': xReplitToken
-        }
-      }
-    ).then(res => res.json()).then(data => data.items?.[0]);
-
-    if (!connectionSettings || (!connectionSettings.settings.api_key)) {
-      return null;
-    }
-    return { apiKey: connectionSettings.settings.api_key, fromEmail: connectionSettings.settings.from_email };
-  } catch {
-    return null;
-  }
-}
-
-async function getResendClient() {
+function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
-  if (apiKey) {
-    return {
-      client: new Resend(apiKey),
-      fromEmail: DEFAULT_FROM_EMAIL
-    };
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not set');
   }
-
-  const replitCreds = await getReplitCredentials();
-  if (replitCreds) {
-    return {
-      client: new Resend(replitCreds.apiKey),
-      fromEmail: DEFAULT_FROM_EMAIL
-    };
-  }
-
-  throw new Error('Resend not configured: set RESEND_API_KEY and RESEND_FROM_EMAIL environment variables');
+  return new Resend(apiKey);
 }
 
 function emailLayout(title: string, content: string): string {
@@ -123,7 +77,7 @@ export async function sendContactEmail(data: {
   message: string;
 }) {
   try {
-    const { client, fromEmail } = await getResendClient();
+    const client = getResendClient();
     const content = `
       ${fieldsTable(
         fieldRow("Nom", data.name) +
@@ -136,9 +90,9 @@ export async function sendContactEmail(data: {
       </div>
     `;
 
-    console.log(`Sending contact email: from=${fromEmail}, to=${RECIPIENT_EMAIL}`);
+    console.log(`Sending contact email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}`);
     const result = await client.emails.send({
-      from: `${SENDER_NAME} <${fromEmail}>`,
+      from: `${SENDER_NAME} <${FROM_EMAIL}>`,
       to: RECIPIENT_EMAIL,
       subject: `Nouveau message de contact - ${data.name}`,
       html: emailLayout("Nouveau message de contact", content)
@@ -167,7 +121,7 @@ export async function sendPreinscriptionEmail(data: {
   expectations?: string;
 }) {
   try {
-    const { client, fromEmail } = await getResendClient();
+    const client = getResendClient();
     const content = `
       ${sectionTitle("Informations du parent")}
       ${fieldsTable(
@@ -199,9 +153,9 @@ export async function sendPreinscriptionEmail(data: {
       ` : ''}
     `;
 
-    console.log(`Sending preinscription email: from=${fromEmail}, to=${RECIPIENT_EMAIL}`);
+    console.log(`Sending preinscription email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}`);
     const result = await client.emails.send({
-      from: `${SENDER_NAME} <${fromEmail}>`,
+      from: `${SENDER_NAME} <${FROM_EMAIL}>`,
       to: RECIPIENT_EMAIL,
       subject: `Nouvelle pr\u00e9-inscription - ${data.firstName} ${data.lastName}`,
       html: emailLayout("Nouvelle demande de pr\u00e9-inscription", content)
