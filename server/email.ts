@@ -2,7 +2,7 @@
 // Supports both Replit integration (dev) and standalone RESEND_API_KEY (prod on Debian)
 import { Resend } from 'resend';
 
-const RECIPIENT_EMAIL = "mam.lachouetteviolette@gmail.com";
+const RECIPIENT_EMAIL = "cyrilallegretb@gmail.com";
 const SENDER_NAME = "La chouette violette";
 const BRAND_COLOR = "#c9a0dc";
 const DEFAULT_FROM_EMAIL = "onboarding@resend.dev";
