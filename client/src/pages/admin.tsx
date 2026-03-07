@@ -845,13 +845,6 @@ function CommunicationEditor() {
     drawCloud(180, 950, 22, "rgba(249,198,217,0.25)");
     drawCloud(850, 900, 28, "rgba(181,232,195,0.2)");
 
-    ctx.strokeStyle = "#c9a0dc";
-    ctx.lineWidth = 8;
-    ctx.setLineDash([20, 12]);
-    ctx.beginPath();
-    ctx.roundRect(35, 35, W - 70, H - 70, 40);
-    ctx.stroke();
-    ctx.setLineDash([]);
 
     drawStar(100, 200, 18, "rgba(247,228,163,0.5)", 0.3);
     drawStar(950, 250, 14, "rgba(201,160,220,0.4)", 0.8);
