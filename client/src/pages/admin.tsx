@@ -483,6 +483,8 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
   const guessIcon = (title: string): string => {
     const t = title.toLowerCase();
     const keywords: Record<string, string[]> = {
+      Moon: ["sommeil", "sieste", "dormir", "dodo", "nuit", "repos", "dortoir"],
+      BedDouble: ["lit", "coucher", "bercer"],
       Sprout: ["motricite", "grandir", "croissance", "developpe", "nature", "pousse"],
       Users: ["social", "ensemble", "groupe", "partage", "collectif", "equipe"],
       BookOpen: ["lecture", "lire", "livre", "histoire", "conte", "apprendre"],
@@ -493,7 +495,7 @@ function ProjectEditor({ data }: { data: ProjectContent }) {
       Baby: ["bebe", "nourrisson", "tout-petit", "enfant"],
       HandHeart: ["soin", "accompagne", "aide", "soutien", "confiance"],
       Brain: ["reflexion", "penser", "intelligence", "cognitif", "cerveau"],
-      Eye: ["observation", "regard", "voir", "decouvr", "eveil"],
+      Eye: ["observation", "regard", "voir", "decouvr", "eveil", "sensoriel", "motrice"],
       Footprints: ["marche", "pas", "autonomie", "independ", "moteur", "socialisation", "premier"],
       Smile: ["joie", "sourire", "bonheur", "plaisir", "rire", "heureux"],
       Sun: ["soleil", "exterieur", "dehors", "lumiere", "jardin"],

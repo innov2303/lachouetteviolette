@@ -4,7 +4,7 @@ import {
   Sprout, BookOpen, Music, Users, Heart, Star, Palette, Baby,
   HandHeart, Brain, Eye, Footprints, Smile, Sun, TreePine,
   Puzzle, Gamepad2, Apple, Flower2, Bird, Shield, Clock, Lightbulb,
-  MessageCircle, Globe, Leaf, Sparkles, GraduationCap, Home,
+  MessageCircle, Globe, Leaf, Sparkles, GraduationCap, Home, Moon, BedDouble,
 } from "lucide-react";
 import { useSectionContent } from "@/hooks/use-content";
 import type { ProjectContent } from "@shared/schema";
@@ -13,7 +13,7 @@ const iconMap: Record<string, typeof Sprout> = {
   Sprout, BookOpen, Music, Users, Heart, Star, Palette, Baby,
   HandHeart, Brain, Eye, Footprints, Smile, Sun, TreePine,
   Puzzle, Gamepad2, Apple, Flower2, Bird, Shield, Clock, Lightbulb,
-  MessageCircle, Globe, Leaf, Sparkles, GraduationCap, Home,
+  MessageCircle, Globe, Leaf, Sparkles, GraduationCap, Home, Moon, BedDouble,
 };
 
 export default function Project() {
