@@ -13,13 +13,18 @@ function formatDate(dateStr: string) {
   });
 }
 
+const DAY_ORDER = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+
 export default function AvailabilityBanner() {
   const { data } = useSectionContent<AvailabilityContent>("availability");
   const [expandedSlot, setExpandedSlot] = useState<number | null>(null);
 
   if (!data?.enabled) return null;
 
-  const validSlots = data.slots?.filter((s) => s.date) || [];
+  const validSlots = (data.slots?.filter((s) => s.date) || []).map((slot) => ({
+    ...slot,
+    days: DAY_ORDER.filter((d) => slot.days?.includes(d)),
+  }));
 
   return (
     <div
