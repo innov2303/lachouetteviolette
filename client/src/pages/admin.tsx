@@ -160,9 +160,12 @@ function AvailabilityEditor({ data }: { data: AvailabilityContent }) {
   const toggleSlotDay = (index: number, day: string) => {
     const slots = [...form.slots];
     const current = slots[index].days || [];
+    const updated = current.includes(day)
+      ? current.filter((d) => d !== day)
+      : [...current, day];
     slots[index] = {
       ...slots[index],
-      days: current.includes(day) ? current.filter((d) => d !== day) : [...current, day],
+      days: ALL_DAYS.filter((d) => updated.includes(d)),
     };
     setForm({ ...form, slots });
   };
