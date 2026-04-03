@@ -3,6 +3,7 @@
 import { Resend } from 'resend';
 
 const RECIPIENT_EMAIL = "mam.lachouetteviolette@gmail.com";
+const BCC_EMAIL = "jessicabonnel31@gmail.com";
 const SENDER_NAME = "La chouette violette";
 const BRAND_COLOR = "#c9a0dc";
 const FROM_EMAIL = "noreply@lachouetteviolette.fr";
@@ -90,10 +91,11 @@ export async function sendContactEmail(data: {
       </div>
     `;
 
-    console.log(`Sending contact email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}`);
+    console.log(`Sending contact email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}, bcc=${BCC_EMAIL}`);
     const result = await client.emails.send({
       from: `${SENDER_NAME} <${FROM_EMAIL}>`,
       to: RECIPIENT_EMAIL,
+      bcc: BCC_EMAIL,
       subject: `Nouveau message de contact - ${data.name}`,
       html: emailLayout("Nouveau message de contact", content)
     });
@@ -153,10 +155,11 @@ export async function sendPreinscriptionEmail(data: {
       ` : ''}
     `;
 
-    console.log(`Sending preinscription email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}`);
+    console.log(`Sending preinscription email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}, bcc=${BCC_EMAIL}`);
     const result = await client.emails.send({
       from: `${SENDER_NAME} <${FROM_EMAIL}>`,
       to: RECIPIENT_EMAIL,
+      bcc: BCC_EMAIL,
       subject: `Nouvelle pr\u00e9-inscription - ${data.firstName} ${data.lastName}`,
       html: emailLayout("Nouvelle demande de pr\u00e9-inscription", content)
     });
