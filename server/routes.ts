@@ -200,5 +200,48 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/sitemap.xml", (_req, res) => {
+    res.header("Content-Type", "application/xml");
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://lachouetteviolette.fr/</loc>
+    <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://lachouetteviolette.fr/#galerie</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lachouetteviolette.fr/#equipe</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lachouetteviolette.fr/#pedagogie</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lachouetteviolette.fr/#contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>`);
+  });
+
+  app.get("/robots.txt", (_req, res) => {
+    res.header("Content-Type", "text/plain");
+    res.send(`User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin-login
+
+Sitemap: https://lachouetteviolette.fr/sitemap.xml`);
+  });
+
   return httpServer;
 }
