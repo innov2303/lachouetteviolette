@@ -1149,8 +1149,16 @@ const PERIOD_OPTIONS = [
 
 const SOURCE_COLORS = ["#c9a0dc", "#a8d8ea", "#f9c6d9", "#b5e8c3", "#f7e4a3", "#d4b0e8"];
 
+const PAGE_SIZE = 20;
+
 function AnalyticsEditor() {
   const [period, setPeriod] = useState("month");
+  const [sourcePage, setSourcePage] = useState(0);
+
+  const handlePeriodChange = (p: string) => {
+    setPeriod(p);
+    setSourcePage(0);
+  };
 
   const { data, isLoading, refetch } = useQuery<{
     byDay: { date: string; count: number }[];
@@ -1170,6 +1178,8 @@ function AnalyticsEditor() {
   const total = data?.total ?? 0;
   const byDay = data?.byDay ?? [];
   const bySource = data?.bySource ?? [];
+  const totalSourcePages = Math.ceil(bySource.length / PAGE_SIZE);
+  const pagedSources = bySource.slice(sourcePage * PAGE_SIZE, (sourcePage + 1) * PAGE_SIZE);
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr + "T12:00:00");
@@ -1192,7 +1202,7 @@ function AnalyticsEditor() {
               data-testid={`button-period-${opt.value}`}
               variant={period === opt.value ? "default" : "outline"}
               size="sm"
-              onClick={() => setPeriod(opt.value)}
+              onClick={() => handlePeriodChange(opt.value)}
               className={period === opt.value ? "bg-[#c9a0dc] hover:bg-[#b88fd0] text-white border-0" : ""}
             >
               {opt.label}
@@ -1280,25 +1290,55 @@ function AnalyticsEditor() {
               Aucune donnée pour cette période
             </div>
           ) : (
-            <div className="space-y-3" data-testid="list-visits-by-source">
-              {bySource.map((item, i) => {
-                const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
-                return (
-                  <div key={item.source} className="space-y-1" data-testid={`source-item-${i}`}>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-foreground capitalize">{item.source}</span>
-                      <span className="text-muted-foreground">{item.count} visite{item.count > 1 ? "s" : ""} ({pct}%)</span>
+            <>
+              <div className="space-y-3" data-testid="list-visits-by-source">
+                {pagedSources.map((item, i) => {
+                  const globalIndex = sourcePage * PAGE_SIZE + i;
+                  const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
+                  return (
+                    <div key={item.source} className="space-y-1" data-testid={`source-item-${globalIndex}`}>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium text-foreground capitalize">{item.source}</span>
+                        <span className="text-muted-foreground">{item.count} visite{item.count > 1 ? "s" : ""} ({pct}%)</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{ width: `${pct}%`, backgroundColor: SOURCE_COLORS[globalIndex % SOURCE_COLORS.length] }}
+                        />
+                      </div>
                     </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{ width: `${pct}%`, backgroundColor: SOURCE_COLORS[i % SOURCE_COLORS.length] }}
-                      />
-                    </div>
+                  );
+                })}
+              </div>
+              {totalSourcePages > 1 && (
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
+                  <span className="text-xs text-muted-foreground">
+                    Page {sourcePage + 1} / {totalSourcePages} — {bySource.length} sources au total
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSourcePage((p) => Math.max(0, p - 1))}
+                      disabled={sourcePage === 0}
+                      data-testid="button-sources-prev"
+                    >
+                      ← Précédent
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSourcePage((p) => Math.min(totalSourcePages - 1, p + 1))}
+                      disabled={sourcePage >= totalSourcePages - 1}
+                      data-testid="button-sources-next"
+                    >
+                      Suivant →
+                    </Button>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
