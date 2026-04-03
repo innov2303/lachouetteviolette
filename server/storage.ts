@@ -1,6 +1,6 @@
 import { db } from "./db";
-import { messages, preinscriptions, users, siteContent, type InsertMessage, type Message, type InsertPreinscription, type Preinscription, type User, type InsertUser, type SiteContent } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { messages, preinscriptions, users, siteContent, pageVisits, type InsertMessage, type Message, type InsertPreinscription, type Preinscription, type User, type InsertUser, type SiteContent, type PageVisit } from "@shared/schema";
+import { eq, gte, sql } from "drizzle-orm";
 
 export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
@@ -13,6 +13,9 @@ export interface IStorage {
   getSiteContent(section: string): Promise<SiteContent | undefined>;
   getAllSiteContent(): Promise<SiteContent[]>;
   upsertSiteContent(section: string, content: unknown): Promise<SiteContent>;
+  trackVisit(path: string, source: string, isAdmin: boolean): Promise<void>;
+  getVisitsByDay(since: Date): Promise<{ date: string; count: number }[]>;
+  getVisitsBySource(since: Date): Promise<{ source: string; count: number }[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -73,6 +76,36 @@ export class DatabaseStorage implements IStorage {
       .values({ section, content })
       .returning();
     return created;
+  }
+
+  async trackVisit(path: string, source: string, isAdmin: boolean): Promise<void> {
+    await db.insert(pageVisits).values({ path, source, isAdmin });
+  }
+
+  async getVisitsByDay(since: Date): Promise<{ date: string; count: number }[]> {
+    const rows = await db
+      .select({
+        date: sql<string>`to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`,
+        count: sql<number>`cast(count(*) as int)`,
+      })
+      .from(pageVisits)
+      .where(gte(pageVisits.visitedAt, since))
+      .groupBy(sql`to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`)
+      .orderBy(sql`to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`);
+    return rows;
+  }
+
+  async getVisitsBySource(since: Date): Promise<{ source: string; count: number }[]> {
+    const rows = await db
+      .select({
+        source: pageVisits.source,
+        count: sql<number>`cast(count(*) as int)`,
+      })
+      .from(pageVisits)
+      .where(gte(pageVisits.visitedAt, since))
+      .groupBy(pageVisits.source)
+      .orderBy(sql`count(*) desc`);
+    return rows;
   }
 }
 

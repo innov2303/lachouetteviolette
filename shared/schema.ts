@@ -1,4 +1,4 @@
-import { pgTable, text, serial, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -145,6 +145,16 @@ export const availabilityContentSchema = z.object({
   message: z.string(),
   slots: z.array(availabilitySlotSchema),
 });
+
+export const pageVisits = pgTable("page_visits", {
+  id: serial("id").primaryKey(),
+  path: text("path").notNull(),
+  source: text("source").notNull().default("direct"),
+  isAdmin: boolean("is_admin").notNull().default(false),
+  visitedAt: timestamp("visited_at").defaultNow().notNull(),
+});
+
+export type PageVisit = typeof pageVisits.$inferSelect;
 
 export const socialLinksContentSchema = z.object({
   facebook: z.string(),

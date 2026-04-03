@@ -153,5 +153,52 @@ export async function registerRoutes(
     res.json({ message: "Fichier supprime" });
   });
 
+  app.post("/api/analytics/visit", async (req, res) => {
+    try {
+      const { path: visitPath, source, isAdmin } = req.body;
+      if (!visitPath) return res.status(400).json({ message: "path required" });
+      const referer = source || req.headers.referer || "direct";
+      let sourceLabel = "direct";
+      try {
+        if (referer && referer !== "direct") {
+          const url = new URL(referer);
+          const host = url.hostname.replace(/^www\./, "");
+          if (host.includes("facebook")) sourceLabel = "Facebook";
+          else if (host.includes("instagram")) sourceLabel = "Instagram";
+          else if (host.includes("google")) sourceLabel = "Google";
+          else sourceLabel = host;
+        }
+      } catch {
+        sourceLabel = "direct";
+      }
+      await storage.trackVisit(visitPath, sourceLabel, !!isAdmin);
+      res.status(201).json({ ok: true });
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/analytics", requireAuth, async (req, res) => {
+    try {
+      const period = (req.query.period as string) || "month";
+      const now = new Date();
+      let since: Date;
+      switch (period) {
+        case "day": since = new Date(now.getTime() - 24 * 60 * 60 * 1000); break;
+        case "week": since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); break;
+        case "year": since = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000); break;
+        default: since = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      }
+      const [byDay, bySource] = await Promise.all([
+        storage.getVisitsByDay(since),
+        storage.getVisitsBySource(since),
+      ]);
+      const total = byDay.reduce((acc, r) => acc + r.count, 0);
+      res.json({ byDay, bySource, total, period, since: since.toISOString() });
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   return httpServer;
 }

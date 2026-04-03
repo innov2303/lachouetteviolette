@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
 import { useAuth, useLogout } from "@/hooks/use-auth";
 import { useAllContent, useUpdateContent } from "@/hooks/use-content";
 import { useLocation } from "wouter";
@@ -6,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2 } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent } from "@shared/schema";
 import owlAvatar from "@assets/owl-avatar-realistic.png";
@@ -20,6 +22,7 @@ const sectionTabs = [
   { id: "contact", label: "Contact", icon: Mail },
   { id: "socialLinks", label: "Reseaux sociaux", icon: Share2 },
   { id: "communication", label: "Communication", icon: Megaphone },
+  { id: "analytics", label: "Analyse site", icon: BarChart2 },
 ];
 
 export default function Admin() {
@@ -107,6 +110,7 @@ export default function Admin() {
               {activeTab === "contact" && <ContactEditor data={(content.data as Record<string, unknown>).contact as ContactContent} />}
               {activeTab === "socialLinks" && <SocialLinksEditor data={(content.data as Record<string, unknown>).socialLinks as SocialLinksContent} />}
               {activeTab === "communication" && <CommunicationEditor />}
+              {activeTab === "analytics" && <AnalyticsEditor />}
             </>
           ) : null}
         </main>
@@ -1135,3 +1139,169 @@ function CommunicationEditor() {
   );
 }
 
+
+const PERIOD_OPTIONS = [
+  { value: "day", label: "Aujourd'hui" },
+  { value: "week", label: "7 derniers jours" },
+  { value: "month", label: "30 derniers jours" },
+  { value: "year", label: "12 derniers mois" },
+];
+
+const SOURCE_COLORS = ["#c9a0dc", "#a8d8ea", "#f9c6d9", "#b5e8c3", "#f7e4a3", "#d4b0e8"];
+
+function AnalyticsEditor() {
+  const [period, setPeriod] = useState("month");
+
+  const { data, isLoading, refetch } = useQuery<{
+    byDay: { date: string; count: number }[];
+    bySource: { source: string; count: number }[];
+    total: number;
+    since: string;
+  }>({
+    queryKey: ["/api/analytics", period],
+    queryFn: async () => {
+      const res = await fetch(`/api/analytics?period=${period}`, { credentials: "include" });
+      if (!res.ok) throw new Error("Erreur");
+      return res.json();
+    },
+    refetchInterval: 60000,
+  });
+
+  const total = data?.total ?? 0;
+  const byDay = data?.byDay ?? [];
+  const bySource = data?.bySource ?? [];
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr + "T12:00:00");
+    if (period === "year") return d.toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
+    return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  };
+
+  return (
+    <div>
+      <SectionHeader
+        title="Analyse du site"
+        description="Statistiques de fréquentation du site public. Les connexions administrateur sont exclues."
+      />
+
+      <div className="space-y-6">
+        <div className="flex items-center gap-2 flex-wrap">
+          {PERIOD_OPTIONS.map((opt) => (
+            <Button
+              key={opt.value}
+              data-testid={`button-period-${opt.value}`}
+              variant={period === opt.value ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPeriod(opt.value)}
+              className={period === opt.value ? "bg-[#c9a0dc] hover:bg-[#b88fd0] text-white border-0" : ""}
+            >
+              {opt.label}
+            </Button>
+          ))}
+          <Button variant="ghost" size="sm" onClick={() => refetch()} data-testid="button-refresh-analytics">
+            <TrendingUp className="h-4 w-4 mr-1" /> Actualiser
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="border border-border rounded-xl p-5 bg-gradient-to-br from-[#f5e6fa] to-white">
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Users2 className="h-4 w-4" />
+              <span className="text-xs uppercase tracking-wide font-medium">Visites totales</span>
+            </div>
+            {isLoading ? (
+              <Loader2 className="h-6 w-6 animate-spin text-[#c9a0dc]" />
+            ) : (
+              <p className="text-3xl font-bold text-[#7c5a9a]">{total.toLocaleString("fr-FR")}</p>
+            )}
+          </div>
+          <div className="border border-border rounded-xl p-5 bg-gradient-to-br from-[#e8f4fd] to-white">
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Globe className="h-4 w-4" />
+              <span className="text-xs uppercase tracking-wide font-medium">Sources différentes</span>
+            </div>
+            {isLoading ? (
+              <Loader2 className="h-6 w-6 animate-spin text-[#c9a0dc]" />
+            ) : (
+              <p className="text-3xl font-bold text-[#4a7fa5]">{bySource.length.toLocaleString("fr-FR")}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-[#c9a0dc]" />
+            Visites par jour
+          </h3>
+          {isLoading ? (
+            <div className="h-48 flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" />
+            </div>
+          ) : byDay.length === 0 ? (
+            <div className="h-48 flex items-center justify-center text-muted-foreground text-sm">
+              Aucune donnée pour cette période
+            </div>
+          ) : (
+            <div data-testid="chart-visits-by-day" className="h-52">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={byDay} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="visitGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#c9a0dc" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#c9a0dc" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0e8f5" />
+                  <XAxis dataKey="date" tickFormatter={formatDate} tick={{ fontSize: 11 }} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+                  <Tooltip
+                    labelFormatter={formatDate}
+                    formatter={(v: number) => [v, "Visites"]}
+                    contentStyle={{ borderRadius: 8, fontSize: 12 }}
+                  />
+                  <Area type="monotone" dataKey="count" stroke="#c9a0dc" strokeWidth={2} fill="url(#visitGrad)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+
+        <div className="border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Globe className="h-4 w-4 text-[#c9a0dc]" />
+            Visites par source
+          </h3>
+          {isLoading ? (
+            <div className="h-36 flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" />
+            </div>
+          ) : bySource.length === 0 ? (
+            <div className="h-36 flex items-center justify-center text-muted-foreground text-sm">
+              Aucune donnée pour cette période
+            </div>
+          ) : (
+            <div className="space-y-3" data-testid="list-visits-by-source">
+              {bySource.map((item, i) => {
+                const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
+                return (
+                  <div key={item.source} className="space-y-1" data-testid={`source-item-${i}`}>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium text-foreground capitalize">{item.source}</span>
+                      <span className="text-muted-foreground">{item.count} visite{item.count > 1 ? "s" : ""} ({pct}%)</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${pct}%`, backgroundColor: SOURCE_COLORS[i % SOURCE_COLORS.length] }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
