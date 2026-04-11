@@ -1165,10 +1165,18 @@ function EmailRecipientsEditor() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [testingId, setTestingId] = useState<string | null>(null);
 
-  const { data, isLoading, isError, refetch } = useQuery<{ recipients: EmailRecipient[] }>({
+  const { data, isLoading, isError, error, refetch } = useQuery<{ recipients: EmailRecipient[] }, Error>({
     queryKey: ["/api/admin/email-recipients"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/email-recipients", { credentials: "include" });
+      if (!res.ok) {
+        const body = await res.text().catch(() => res.statusText);
+        throw new Error(`${res.status}: ${body}`);
+      }
+      return res.json();
+    },
     staleTime: 0,
-    retry: 2,
+    retry: 1,
   });
 
   const saveMutation = useMutation({
@@ -1267,7 +1275,7 @@ function EmailRecipientsEditor() {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
         <p className="text-red-500 font-medium">Impossible de charger les destinataires</p>
-        <p className="text-sm text-muted-foreground">Vérifiez que vous êtes bien connecté à l'espace admin.</p>
+        {error && <p className="text-xs font-mono text-muted-foreground bg-muted rounded px-3 py-2 max-w-sm break-all">{error.message}</p>}
         <Button variant="outline" size="sm" onClick={() => refetch()}>Réessayer</Button>
       </div>
     );

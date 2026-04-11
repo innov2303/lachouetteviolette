@@ -11,7 +11,9 @@ export function useAuth() {
       return await res.json();
     },
     retry: false,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchInterval: 5 * 60 * 1000,
   });
 }
 
