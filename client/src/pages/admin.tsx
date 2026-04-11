@@ -98,7 +98,13 @@ export default function Admin() {
         </aside>
 
         <main className="flex-1 p-8 max-w-4xl">
-          {content.isLoading ? (
+          {activeTab === "emailRecipients" ? (
+            <EmailRecipientsEditor />
+          ) : activeTab === "communication" ? (
+            <CommunicationEditor />
+          ) : activeTab === "analytics" ? (
+            <AnalyticsEditor />
+          ) : content.isLoading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" />
             </div>
@@ -111,9 +117,6 @@ export default function Admin() {
               {activeTab === "familiarisation" && <FamiliarisationEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
               {activeTab === "contact" && <ContactEditor data={(content.data as Record<string, unknown>).contact as ContactContent} />}
               {activeTab === "socialLinks" && <SocialLinksEditor data={(content.data as Record<string, unknown>).socialLinks as SocialLinksContent} />}
-              {activeTab === "communication" && <CommunicationEditor />}
-              {activeTab === "analytics" && <AnalyticsEditor />}
-              {activeTab === "emailRecipients" && <EmailRecipientsEditor />}
             </>
           ) : null}
         </main>
@@ -1162,13 +1165,10 @@ function EmailRecipientsEditor() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [testingId, setTestingId] = useState<string | null>(null);
 
-  const { data, isLoading } = useQuery<{ recipients: EmailRecipient[] }>({
+  const { data, isLoading, isError, refetch } = useQuery<{ recipients: EmailRecipient[] }>({
     queryKey: ["/api/admin/email-recipients"],
-    queryFn: async () => {
-      const res = await fetch("/api/admin/email-recipients", { credentials: "include" });
-      if (!res.ok) throw new Error("Erreur chargement");
-      return res.json();
-    },
+    staleTime: 0,
+    retry: 2,
   });
 
   const saveMutation = useMutation({
@@ -1259,6 +1259,16 @@ function EmailRecipientsEditor() {
     return (
       <div className="flex items-center justify-center py-20">
         <Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
+        <p className="text-red-500 font-medium">Impossible de charger les destinataires</p>
+        <p className="text-sm text-muted-foreground">Vérifiez que vous êtes bien connecté à l'espace admin.</p>
+        <Button variant="outline" size="sm" onClick={() => refetch()}>Réessayer</Button>
       </div>
     );
   }
