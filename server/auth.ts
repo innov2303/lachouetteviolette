@@ -52,6 +52,7 @@ export function setupAuth(app: Express) {
       tableName: 'session',
       pruneSessionInterval: 60 * 15,
       schemaName: 'public',
+      createTableIfMissing: true,
     });
   }
 
