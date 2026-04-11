@@ -92,7 +92,8 @@ export async function sendContactEmail(data: {
 }, recipients?: EmailRecipient[]) {
   try {
     const client = getResendClient();
-    const { to, bcc } = buildRecipients(recipients);
+    const list = (recipients && recipients.length > 0) ? recipients : DEFAULT_RECIPIENTS;
+    const active = list.filter((r) => r.active);
     const content = `
       ${fieldsTable(
         fieldRow("Nom", data.name) +
@@ -104,17 +105,13 @@ export async function sendContactEmail(data: {
         ${data.message.replace(/\n/g, '<br>')}
       </div>
     `;
-
-    console.log(`Sending contact email: to=${to.join(',')}, bcc=${bcc.join(',')}`);
-    const payload: Record<string, unknown> = {
-      from: `${SENDER_NAME} <${FROM_EMAIL}>`,
-      to,
-      subject: `Nouveau message de contact - ${data.name}`,
-      html: emailLayout("Nouveau message de contact", content),
-    };
-    if (bcc.length > 0) payload.bcc = bcc;
-    const result = await client.emails.send(payload as Parameters<typeof client.emails.send>[0]);
-    console.log('Contact email result:', JSON.stringify(result));
+    const subject = `Nouveau message de contact - ${data.name}`;
+    const html = emailLayout("Nouveau message de contact", content);
+    for (const recipient of active) {
+      console.log(`Sending contact email to: ${recipient.email}`);
+      const result = await client.emails.send({ from: `${SENDER_NAME} <${FROM_EMAIL}>`, to: recipient.email, subject, html });
+      console.log(`Contact email result for ${recipient.email}:`, JSON.stringify(result));
+    }
   } catch (err) {
     console.error('Failed to send contact email:', err);
   }
@@ -139,7 +136,6 @@ export async function sendPreinscriptionEmail(data: {
 }, recipients?: EmailRecipient[]) {
   try {
     const client = getResendClient();
-    const { to, bcc } = buildRecipients(recipients);
     const content = `
       ${sectionTitle("Informations du parent")}
       ${fieldsTable(
@@ -171,16 +167,15 @@ export async function sendPreinscriptionEmail(data: {
       ` : ''}
     `;
 
-    console.log(`Sending preinscription email: to=${to.join(',')}, bcc=${bcc.join(',')}`);
-    const payload: Record<string, unknown> = {
-      from: `${SENDER_NAME} <${FROM_EMAIL}>`,
-      to,
-      subject: `Nouvelle pr\u00e9-inscription - ${data.firstName} ${data.lastName}`,
-      html: emailLayout("Nouvelle demande de pr\u00e9-inscription", content),
-    };
-    if (bcc.length > 0) payload.bcc = bcc;
-    const result = await client.emails.send(payload as Parameters<typeof client.emails.send>[0]);
-    console.log('Preinscription email result:', JSON.stringify(result));
+    const subject = `Nouvelle pr\u00e9-inscription - ${data.firstName} ${data.lastName}`;
+    const html = emailLayout("Nouvelle demande de pr\u00e9-inscription", content);
+    const list = (recipients && recipients.length > 0) ? recipients : DEFAULT_RECIPIENTS;
+    const active = list.filter((r) => r.active);
+    for (const recipient of active) {
+      console.log(`Sending preinscription email to: ${recipient.email}`);
+      const result = await client.emails.send({ from: `${SENDER_NAME} <${FROM_EMAIL}>`, to: recipient.email, subject, html });
+      console.log(`Preinscription email result for ${recipient.email}:`, JSON.stringify(result));
+    }
   } catch (err) {
     console.error('Failed to send preinscription email:', err);
   }
