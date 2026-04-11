@@ -1156,6 +1156,7 @@ const PERIOD_OPTIONS = [
 function EmailRecipientsEditor() {
   const { toast } = useToast();
   const qc = useQueryClient();
+  const [, setLocation] = useLocation();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editEmail, setEditEmail] = useState("");
@@ -1169,14 +1170,18 @@ function EmailRecipientsEditor() {
     queryKey: ["/api/admin/email-recipients"],
     queryFn: async () => {
       const res = await fetch("/api/admin/email-recipients", { credentials: "include" });
+      if (res.status === 401) {
+        setLocation("/admin/login");
+        throw new Error("Session expirée — redirection vers la connexion");
+      }
       if (!res.ok) {
         const body = await res.text().catch(() => res.statusText);
-        throw new Error(`${res.status}: ${body}`);
+        throw new Error(`Erreur ${res.status}: ${body}`);
       }
       return res.json();
     },
     staleTime: 0,
-    retry: 1,
+    retry: false,
   });
 
   const saveMutation = useMutation({
