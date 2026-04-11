@@ -3,7 +3,8 @@ import type { Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import { sendContactEmail, sendPreinscriptionEmail } from "./email";
+import { sendContactEmail, sendPreinscriptionEmail, sendTestEmail } from "./email";
+import type { EmailRecipient, EmailRecipientsContent } from "@shared/schema";
 import { setupAuth, requireAuth } from "./auth";
 import { seedDefaultContent } from "./seed-content";
 import multer from "multer";
@@ -52,11 +53,19 @@ export async function registerRoutes(
     next();
   });
 
+  async function getEmailRecipients(): Promise<EmailRecipient[]> {
+    const data = await storage.getSiteContent("emailRecipients");
+    if (!data) return [];
+    const parsed = (data.content as EmailRecipientsContent).recipients ?? [];
+    return parsed;
+  }
+
   app.post(api.messages.create.path, async (req, res) => {
     try {
       const input = api.messages.create.input.parse(req.body);
       const message = await storage.createMessage(input);
-      sendContactEmail(input);
+      const recipients = await getEmailRecipients();
+      sendContactEmail(input, recipients);
       res.status(201).json(message);
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -74,7 +83,8 @@ export async function registerRoutes(
       const { insertPreinscriptionSchema } = await import("@shared/schema");
       const input = insertPreinscriptionSchema.parse(req.body);
       const preinscription = await storage.createPreinscription(input);
-      sendPreinscriptionEmail(input);
+      const recipients = await getEmailRecipients();
+      sendPreinscriptionEmail(input, recipients);
       res.status(201).json(preinscription);
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -84,6 +94,43 @@ export async function registerRoutes(
         });
       }
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/admin/email-recipients", requireAuth, async (_req, res) => {
+    try {
+      const data = await storage.getSiteContent("emailRecipients");
+      const recipients = data ? (data.content as EmailRecipientsContent).recipients : [];
+      res.json({ recipients });
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.put("/api/admin/email-recipients", requireAuth, async (req, res) => {
+    try {
+      const { emailRecipientsContentSchema } = await import("@shared/schema");
+      const parsed = emailRecipientsContentSchema.parse(req.body);
+      await storage.upsertSiteContent("emailRecipients", parsed);
+      res.json({ ok: true, recipients: parsed.recipients });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/admin/email-test", requireAuth, async (req, res) => {
+    try {
+      const { email, label } = z.object({ email: z.string().email(), label: z.string() }).parse(req.body);
+      const result = await sendTestEmail(email, label);
+      res.json(result);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 

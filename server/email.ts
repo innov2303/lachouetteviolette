@@ -1,12 +1,14 @@
-// Resend integration for sending emails
-// Supports both Replit integration (dev) and standalone RESEND_API_KEY (prod on Debian)
 import { Resend } from 'resend';
+import type { EmailRecipient } from '@shared/schema';
 
-const RECIPIENT_EMAIL = "mam.lachouetteviolette@gmail.com";
-const BCC_EMAIL = "jessicabonnel31@gmail.com";
 const SENDER_NAME = "La chouette violette";
 const BRAND_COLOR = "#c9a0dc";
 const FROM_EMAIL = "noreply@lachouetteviolette.fr";
+
+const DEFAULT_RECIPIENTS: EmailRecipient[] = [
+  { id: "main", label: "MAM principal", email: "mam.lachouetteviolette@gmail.com", active: true, isBcc: false },
+  { id: "jessica", label: "Jessica", email: "jessicabonnel31@gmail.com", active: true, isBcc: true },
+];
 
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
@@ -14,6 +16,17 @@ function getResendClient() {
     throw new Error('RESEND_API_KEY is not set');
   }
   return new Resend(apiKey);
+}
+
+function buildRecipients(recipients?: EmailRecipient[]) {
+  const list = (recipients && recipients.length > 0) ? recipients : DEFAULT_RECIPIENTS;
+  const active = list.filter((r) => r.active);
+  const to = active.filter((r) => !r.isBcc).map((r) => r.email);
+  const bcc = active.filter((r) => r.isBcc).map((r) => r.email);
+  if (to.length === 0 && bcc.length > 0) {
+    return { to: [bcc[0]], bcc: bcc.slice(1) };
+  }
+  return { to, bcc };
 }
 
 function emailLayout(title: string, content: string): string {
@@ -76,9 +89,10 @@ export async function sendContactEmail(data: {
   email: string;
   phone?: string;
   message: string;
-}) {
+}, recipients?: EmailRecipient[]) {
   try {
     const client = getResendClient();
+    const { to, bcc } = buildRecipients(recipients);
     const content = `
       ${fieldsTable(
         fieldRow("Nom", data.name) +
@@ -91,14 +105,15 @@ export async function sendContactEmail(data: {
       </div>
     `;
 
-    console.log(`Sending contact email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}, bcc=${BCC_EMAIL}`);
-    const result = await client.emails.send({
+    console.log(`Sending contact email: to=${to.join(',')}, bcc=${bcc.join(',')}`);
+    const payload: Record<string, unknown> = {
       from: `${SENDER_NAME} <${FROM_EMAIL}>`,
-      to: RECIPIENT_EMAIL,
-      bcc: BCC_EMAIL,
+      to,
       subject: `Nouveau message de contact - ${data.name}`,
-      html: emailLayout("Nouveau message de contact", content)
-    });
+      html: emailLayout("Nouveau message de contact", content),
+    };
+    if (bcc.length > 0) payload.bcc = bcc;
+    const result = await client.emails.send(payload as Parameters<typeof client.emails.send>[0]);
     console.log('Contact email result:', JSON.stringify(result));
   } catch (err) {
     console.error('Failed to send contact email:', err);
@@ -121,9 +136,10 @@ export async function sendPreinscriptionEmail(data: {
   startDate: string;
   scheduleDays: string;
   expectations?: string;
-}) {
+}, recipients?: EmailRecipient[]) {
   try {
     const client = getResendClient();
+    const { to, bcc } = buildRecipients(recipients);
     const content = `
       ${sectionTitle("Informations du parent")}
       ${fieldsTable(
@@ -155,16 +171,48 @@ export async function sendPreinscriptionEmail(data: {
       ` : ''}
     `;
 
-    console.log(`Sending preinscription email: from=${FROM_EMAIL}, to=${RECIPIENT_EMAIL}, bcc=${BCC_EMAIL}`);
-    const result = await client.emails.send({
+    console.log(`Sending preinscription email: to=${to.join(',')}, bcc=${bcc.join(',')}`);
+    const payload: Record<string, unknown> = {
       from: `${SENDER_NAME} <${FROM_EMAIL}>`,
-      to: RECIPIENT_EMAIL,
-      bcc: BCC_EMAIL,
+      to,
       subject: `Nouvelle pr\u00e9-inscription - ${data.firstName} ${data.lastName}`,
-      html: emailLayout("Nouvelle demande de pr\u00e9-inscription", content)
-    });
+      html: emailLayout("Nouvelle demande de pr\u00e9-inscription", content),
+    };
+    if (bcc.length > 0) payload.bcc = bcc;
+    const result = await client.emails.send(payload as Parameters<typeof client.emails.send>[0]);
     console.log('Preinscription email result:', JSON.stringify(result));
   } catch (err) {
     console.error('Failed to send preinscription email:', err);
+  }
+}
+
+export async function sendTestEmail(recipientEmail: string, recipientLabel: string) {
+  try {
+    const client = getResendClient();
+    const content = `
+      <p style="color: #444; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">
+        Ceci est un email de test envoy&eacute; depuis l'interface d'administration de
+        <strong>La Chouette Violette</strong>.
+      </p>
+      ${fieldsTable(
+        fieldRow("Destinataire", recipientLabel) +
+        fieldRow("Email", recipientEmail) +
+        fieldRow("Statut", '<span style="color: #22c55e; font-weight: 600;">✓ Email re&ccedil;u avec succ&egrave;s</span>')
+      )}
+      <p style="color: #888; font-size: 13px; margin: 16px 0 0;">
+        Si vous recevez ce message, la configuration email fonctionne correctement.
+      </p>
+    `;
+    const result = await client.emails.send({
+      from: `${SENDER_NAME} <${FROM_EMAIL}>`,
+      to: recipientEmail,
+      subject: `[Test] Email La Chouette Violette - ${recipientLabel}`,
+      html: emailLayout("Email de test", content),
+    });
+    console.log('Test email result:', JSON.stringify(result));
+    return { ok: true };
+  } catch (err) {
+    console.error('Failed to send test email:', err);
+    return { ok: false, error: String(err) };
   }
 }

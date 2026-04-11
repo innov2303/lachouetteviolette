@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
 import { useAuth, useLogout } from "@/hooks/use-auth";
 import { useAllContent, useUpdateContent } from "@/hooks/use-content";
@@ -8,9 +8,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2 } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent } from "@shared/schema";
+import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, EmailRecipient } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
 import owlAvatar from "@assets/owl-avatar-realistic.png";
 
 const sectionTabs = [
@@ -23,6 +24,7 @@ const sectionTabs = [
   { id: "socialLinks", label: "Reseaux sociaux", icon: Share2 },
   { id: "communication", label: "Communication", icon: Megaphone },
   { id: "analytics", label: "Analyse site", icon: BarChart2 },
+  { id: "emailRecipients", label: "Destinataires email", icon: Mail },
 ];
 
 export default function Admin() {
@@ -111,6 +113,7 @@ export default function Admin() {
               {activeTab === "socialLinks" && <SocialLinksEditor data={(content.data as Record<string, unknown>).socialLinks as SocialLinksContent} />}
               {activeTab === "communication" && <CommunicationEditor />}
               {activeTab === "analytics" && <AnalyticsEditor />}
+              {activeTab === "emailRecipients" && <EmailRecipientsEditor />}
             </>
           ) : null}
         </main>
@@ -1146,6 +1149,295 @@ const PERIOD_OPTIONS = [
   { value: "month", label: "30 derniers jours" },
   { value: "year", label: "12 derniers mois" },
 ];
+
+function EmailRecipientsEditor() {
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editLabel, setEditLabel] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [addLabel, setAddLabel] = useState("");
+  const [addEmail, setAddEmail] = useState("");
+  const [addIsBcc, setAddIsBcc] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [testingId, setTestingId] = useState<string | null>(null);
+
+  const { data, isLoading } = useQuery<{ recipients: EmailRecipient[] }>({
+    queryKey: ["/api/admin/email-recipients"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/email-recipients", { credentials: "include" });
+      if (!res.ok) throw new Error("Erreur chargement");
+      return res.json();
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (recipients: EmailRecipient[]) => {
+      const res = await apiRequest("PUT", "/api/admin/email-recipients", { recipients });
+      return res.json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["/api/admin/email-recipients"] });
+      toast({ title: "Sauvegardé", description: "La liste des destinataires a été mise à jour." });
+    },
+    onError: () => toast({ title: "Erreur", description: "Impossible de sauvegarder.", variant: "destructive" }),
+  });
+
+  const testMutation = useMutation({
+    mutationFn: async ({ email, label }: { email: string; label: string }) => {
+      const res = await apiRequest("POST", "/api/admin/email-test", { email, label });
+      return res.json();
+    },
+    onSuccess: (_data, vars) => {
+      setTestingId(null);
+      toast({ title: "Email de test envoyé !", description: `Un email de test a été envoyé à ${vars.email}.` });
+    },
+    onError: (_err, vars) => {
+      setTestingId(null);
+      toast({ title: "Échec d'envoi", description: `Impossible d'envoyer à ${vars.email}.`, variant: "destructive" });
+    },
+  });
+
+  const recipients = data?.recipients ?? [];
+
+  function updateRecipient(updated: EmailRecipient) {
+    saveMutation.mutate(recipients.map((r) => (r.id === updated.id ? updated : r)));
+  }
+
+  function deleteRecipient(id: string) {
+    if (recipients.length <= 1) {
+      toast({ title: "Action impossible", description: "Au moins un destinataire est requis.", variant: "destructive" });
+      return;
+    }
+    saveMutation.mutate(recipients.filter((r) => r.id !== id));
+  }
+
+  function startEdit(r: EmailRecipient) {
+    setEditingId(r.id);
+    setEditLabel(r.label);
+    setEditEmail(r.email);
+  }
+
+  function confirmEdit(r: EmailRecipient) {
+    if (!editEmail.includes("@")) {
+      toast({ title: "Email invalide", description: "Veuillez saisir une adresse email valide.", variant: "destructive" });
+      return;
+    }
+    updateRecipient({ ...r, label: editLabel.trim(), email: editEmail.trim() });
+    setEditingId(null);
+  }
+
+  function addRecipient() {
+    if (!addEmail.includes("@")) {
+      toast({ title: "Email invalide", description: "Veuillez saisir une adresse email valide.", variant: "destructive" });
+      return;
+    }
+    if (!addLabel.trim()) {
+      toast({ title: "Nom manquant", description: "Veuillez saisir un nom pour ce destinataire.", variant: "destructive" });
+      return;
+    }
+    const newR: EmailRecipient = {
+      id: `r-${Date.now()}`,
+      label: addLabel.trim(),
+      email: addEmail.trim(),
+      active: true,
+      isBcc: addIsBcc,
+    };
+    saveMutation.mutate([...recipients, newR]);
+    setAddLabel("");
+    setAddEmail("");
+    setAddIsBcc(true);
+    setShowAddForm(false);
+  }
+
+  function handleTest(r: EmailRecipient) {
+    setTestingId(r.id);
+    testMutation.mutate({ email: r.email, label: r.label });
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        title="Destinataires email"
+        description="Gérez les adresses qui reçoivent les formulaires de contact et de pré-inscription."
+      />
+
+      <div className="space-y-3">
+        {recipients.map((r) => (
+          <div
+            key={r.id}
+            data-testid={`card-recipient-${r.id}`}
+            className={`border rounded-xl p-4 bg-white transition-all ${r.active ? "border-border" : "border-dashed border-muted-foreground/30 opacity-60"}`}
+          >
+            {editingId === r.id ? (
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    value={editLabel}
+                    onChange={(e) => setEditLabel(e.target.value)}
+                    placeholder="Nom du destinataire"
+                    className="flex-1"
+                    data-testid={`input-edit-label-${r.id}`}
+                  />
+                  <Input
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    placeholder="adresse@email.fr"
+                    className="flex-1"
+                    data-testid={`input-edit-email-${r.id}`}
+                  />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <Button variant="outline" size="sm" onClick={() => setEditingId(null)} data-testid={`button-cancel-edit-${r.id}`}>
+                    <X className="h-4 w-4 mr-1" /> Annuler
+                  </Button>
+                  <Button size="sm" onClick={() => confirmEdit(r)} data-testid={`button-confirm-edit-${r.id}`} className="bg-[#c9a0dc] hover:bg-[#b88ecc] text-white">
+                    <Check className="h-4 w-4 mr-1" /> Valider
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-medium text-foreground text-sm" data-testid={`text-recipient-label-${r.id}`}>{r.label}</span>
+                    <span className="text-muted-foreground text-sm truncate" data-testid={`text-recipient-email-${r.id}`}>{r.email}</span>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${r.isBcc ? "bg-amber-100 text-amber-700" : "bg-[#c9a0dc]/15 text-[#9b6bb5]"}`}
+                      data-testid={`badge-recipient-type-${r.id}`}
+                    >
+                      {r.isBcc ? "Copie cachée (BCC)" : "Destinataire principal"}
+                    </span>
+                    {!r.active && <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">Désactivé</span>}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => updateRecipient({ ...r, isBcc: !r.isBcc })}
+                    title={r.isBcc ? "Passer en destinataire principal" : "Passer en copie cachée"}
+                    className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                    data-testid={`button-toggle-bcc-${r.id}`}
+                  >
+                    {r.isBcc ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                  <button
+                    onClick={() => updateRecipient({ ...r, active: !r.active })}
+                    title={r.active ? "Désactiver" : "Activer"}
+                    className="p-1.5 rounded hover:bg-muted transition-colors"
+                    data-testid={`button-toggle-active-${r.id}`}
+                  >
+                    {r.active
+                      ? <ToggleRight className="h-5 w-5 text-[#c9a0dc]" />
+                      : <ToggleLeft className="h-5 w-5 text-muted-foreground" />}
+                  </button>
+                  <button
+                    onClick={() => startEdit(r)}
+                    className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                    data-testid={`button-edit-recipient-${r.id}`}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleTest(r)}
+                    disabled={testingId === r.id || testMutation.isPending}
+                    data-testid={`button-test-recipient-${r.id}`}
+                    className="text-xs h-7 px-2"
+                  >
+                    {testingId === r.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3 mr-1" />}
+                    Test
+                  </Button>
+                  <button
+                    onClick={() => deleteRecipient(r.id)}
+                    className="p-1.5 rounded hover:bg-red-50 transition-colors text-muted-foreground hover:text-red-500"
+                    data-testid={`button-delete-recipient-${r.id}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!showAddForm ? (
+        <Button
+          variant="outline"
+          onClick={() => setShowAddForm(true)}
+          className="w-full border-dashed"
+          data-testid="button-show-add-recipient"
+        >
+          <Plus className="h-4 w-4 mr-2" /> Ajouter un destinataire
+        </Button>
+      ) : (
+        <div className="border rounded-xl p-4 bg-[#faf8fc] space-y-4">
+          <p className="text-sm font-medium text-foreground">Nouveau destinataire</p>
+          <div className="flex gap-2 flex-wrap">
+            <Input
+              value={addLabel}
+              onChange={(e) => setAddLabel(e.target.value)}
+              placeholder="Nom (ex : Marie)"
+              className="flex-1 min-w-40"
+              data-testid="input-add-label"
+            />
+            <Input
+              value={addEmail}
+              onChange={(e) => setAddEmail(e.target.value)}
+              placeholder="adresse@email.fr"
+              className="flex-1 min-w-48"
+              data-testid="input-add-email"
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setAddIsBcc(!addIsBcc)}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              data-testid="button-toggle-add-bcc"
+            >
+              {addIsBcc ? <ToggleRight className="h-5 w-5 text-[#c9a0dc]" /> : <ToggleLeft className="h-5 w-5" />}
+              <span>Copie cachée (BCC)</span>
+            </button>
+            <span className="text-xs text-muted-foreground">— Les autres destinataires ne verront pas cette adresse</span>
+          </div>
+          <div className="flex gap-2 justify-end">
+            <Button variant="outline" size="sm" onClick={() => setShowAddForm(false)} data-testid="button-cancel-add">
+              Annuler
+            </Button>
+            <Button
+              size="sm"
+              onClick={addRecipient}
+              disabled={saveMutation.isPending}
+              className="bg-[#c9a0dc] hover:bg-[#b88ecc] text-white"
+              data-testid="button-confirm-add"
+            >
+              {saveMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4 mr-1" />}
+              Ajouter
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-700 space-y-1">
+        <p className="font-medium">Comment ça fonctionne ?</p>
+        <ul className="list-disc list-inside space-y-0.5 text-blue-600">
+          <li><strong>Destinataire principal</strong> : visible par le parent qui envoie le formulaire</li>
+          <li><strong>Copie cachée (BCC)</strong> : reçoit l'email en silence, adresse non visible</li>
+          <li>Utilisez le bouton <strong>Test</strong> pour vérifier que l'envoi fonctionne</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
 
 const SOURCE_COLORS = ["#c9a0dc", "#a8d8ea", "#f9c6d9", "#b5e8c3", "#f7e4a3", "#d4b0e8"];
 

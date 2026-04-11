@@ -1,5 +1,5 @@
 import { storage } from "./storage";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent } from "@shared/schema";
+import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, EmailRecipientsContent } from "@shared/schema";
 
 const defaultHero: HeroContent = {
   subtitle: "Maison d'Assistantes Maternelles",
@@ -145,5 +145,17 @@ export async function seedDefaultContent() {
       await storage.upsertSiteContent("availability", a);
       console.log("Migrated availability content from dates to slots format");
     }
+  }
+
+  const emailRecipientsData = await storage.getSiteContent("emailRecipients");
+  if (!emailRecipientsData) {
+    const defaultEmailRecipients: EmailRecipientsContent = {
+      recipients: [
+        { id: "main", label: "MAM principal", email: "mam.lachouetteviolette@gmail.com", active: true, isBcc: false },
+        { id: "jessica", label: "Jessica", email: "jessicabonnel31@gmail.com", active: true, isBcc: true },
+      ],
+    };
+    await storage.upsertSiteContent("emailRecipients", defaultEmailRecipients);
+    console.log("Seeded default email recipients");
   }
 }

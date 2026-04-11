@@ -161,6 +161,21 @@ export const socialLinksContentSchema = z.object({
   instagram: z.string(),
 });
 
+export const emailRecipientSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  email: z.string().email(),
+  active: z.boolean(),
+  isBcc: z.boolean(),
+});
+
+export const emailRecipientsContentSchema = z.object({
+  recipients: z.array(emailRecipientSchema),
+});
+
+export type EmailRecipient = z.infer<typeof emailRecipientSchema>;
+export type EmailRecipientsContent = z.infer<typeof emailRecipientsContentSchema>;
+
 export type AvailabilityContent = z.infer<typeof availabilityContentSchema>;
 export type SocialLinksContent = z.infer<typeof socialLinksContentSchema>;
 export type HeroContent = z.infer<typeof heroContentSchema>;
