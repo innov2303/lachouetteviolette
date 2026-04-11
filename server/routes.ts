@@ -152,12 +152,16 @@ export async function registerRoutes(
     }
   });
 
+  const PRIVATE_SECTIONS = ["emailRecipients"];
+
   app.get("/api/content", async (_req, res) => {
     try {
       const allContent = await storage.getAllSiteContent();
       const contentMap: Record<string, unknown> = {};
       for (const row of allContent) {
-        contentMap[row.section] = row.content;
+        if (!PRIVATE_SECTIONS.includes(row.section)) {
+          contentMap[row.section] = row.content;
+        }
       }
       res.json(contentMap);
     } catch {
@@ -167,6 +171,9 @@ export async function registerRoutes(
 
   app.get("/api/content/:section", async (req, res) => {
     try {
+      if (PRIVATE_SECTIONS.includes(req.params.section)) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const row = await storage.getSiteContent(req.params.section);
       if (!row) return res.status(404).json({ message: "Section not found" });
       res.json(row.content);
