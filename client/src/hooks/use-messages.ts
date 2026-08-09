@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@shared/routes";
+import { insertPreinscriptionSchema } from "@shared/schema";
 import type { InsertMessage, InsertPreinscription } from "@shared/schema";
 
 export function useCreateMessage() {
@@ -29,7 +30,6 @@ export function useCreateMessage() {
 export function useCreatePreinscription() {
   return useMutation({
     mutationFn: async (data: InsertPreinscription) => {
-      const { insertPreinscriptionSchema } = await import("@shared/schema");
       const validated = insertPreinscriptionSchema.parse(data);
       const res = await fetch("/api/preinscriptions", {
         method: "POST",
