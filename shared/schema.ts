@@ -42,6 +42,20 @@ export const preinscriptions = pgTable("preinscriptions", {
 export const insertPreinscriptionSchema = createInsertSchema(preinscriptions).omit({
   id: true,
   createdAt: true,
+}).extend({
+  lastName: z.string().min(1, "Le nom est requis"),
+  firstName: z.string().min(1, "Le prénom est requis"),
+  address: z.string().min(1, "L'adresse est requise"),
+  email: z.string().min(1, "L'email est requis").email("Email invalide"),
+  phone: z.string().min(1, "Le téléphone est requis"),
+  familySituation: z.string().min(1, "La situation familiale est requise"),
+  employment: z.string().min(1, "L'emploi est requis"),
+  childName: z.string().min(1, "Le prénom de l'enfant est requis"),
+  childBirthdate: z.string().min(1, "La date de naissance est requise"),
+  hasSiblings: z.string().min(1, "Ce champ est requis"),
+  onWaitingList: z.string().min(1, "Ce champ est requis"),
+  startDate: z.string().min(1, "La date de début est requise"),
+  scheduleDays: z.string().min(1, "Les jours et horaires sont requis"),
 });
 
 export type Preinscription = typeof preinscriptions.$inferSelect;
