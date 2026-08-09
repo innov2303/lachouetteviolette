@@ -141,6 +141,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
 
   const form = useForm<InsertPreinscription>({
     resolver: zodResolver(insertPreinscriptionSchema),
+    mode: "onChange",
     defaultValues: {
       lastName: "", firstName: "", address: "", email: "", phone: "",
       familySituation: "", familySituationOther: "", employment: "",
@@ -185,7 +186,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nom</FormLabel>
+                    <FormLabel>Nom <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input data-testid="input-pre-lastname" placeholder="Dupont" {...field} className="rounded-lg" />
                     </FormControl>
@@ -198,7 +199,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Prenom</FormLabel>
+                    <FormLabel>Prénom <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input data-testid="input-pre-firstname" placeholder="Marie" {...field} className="rounded-lg" />
                     </FormControl>
@@ -212,7 +213,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Adresse postale</FormLabel>
+                  <FormLabel>Adresse postale <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Input data-testid="input-pre-address" placeholder="12 Rue des Lilas, 31320 Castanet-Tolosan" {...field} className="rounded-lg" />
                   </FormControl>
@@ -226,7 +227,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Adresse email</FormLabel>
+                    <FormLabel>Adresse email <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input data-testid="input-pre-email" placeholder="marie@exemple.fr" type="email" {...field} className="rounded-lg" />
                     </FormControl>
@@ -239,7 +240,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Telephone</FormLabel>
+                    <FormLabel>Téléphone <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input data-testid="input-pre-phone" placeholder="06 12 34 56 78" type="tel" {...field} className="rounded-lg" />
                     </FormControl>
@@ -254,7 +255,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="familySituation"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Situation familiale</FormLabel>
+                    <FormLabel>Situation familiale <span className="text-red-500">*</span></FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger data-testid="select-pre-family" className="rounded-lg">
@@ -292,7 +293,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="employment"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Emploi</FormLabel>
+                    <FormLabel>Emploi <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input data-testid="input-pre-employment" placeholder="Votre profession" {...field} className="rounded-lg" />
                     </FormControl>
@@ -307,7 +308,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="childName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Prenom de l'enfant</FormLabel>
+                    <FormLabel>Prénom de l'enfant <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input data-testid="input-pre-child" placeholder="Lucas" {...field} className="rounded-lg" />
                     </FormControl>
@@ -320,7 +321,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="childBirthdate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date de naissance</FormLabel>
+                    <FormLabel>Date de naissance <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input data-testid="input-pre-birthdate" type="date" {...field} className="rounded-lg" />
                     </FormControl>
@@ -335,7 +336,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="hasSiblings"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>A-t-il des freres et soeurs ?</FormLabel>
+                    <FormLabel>A-t-il des frères et sœurs ? <span className="text-red-500">*</span></FormLabel>
                     <Select onValueChange={field.onChange} value={field.value ?? ""}>
                       <FormControl>
                         <SelectTrigger data-testid="select-pre-siblings" className="rounded-lg">
@@ -356,7 +357,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
                 name="onWaitingList"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sur liste d'attente en creche ?</FormLabel>
+                    <FormLabel>Sur liste d'attente en crèche ? <span className="text-red-500">*</span></FormLabel>
                     <Select onValueChange={field.onChange} value={field.value ?? ""}>
                       <FormControl>
                         <SelectTrigger data-testid="select-pre-waitinglist" className="rounded-lg">
@@ -378,7 +379,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date du debut d'accueil souhaite</FormLabel>
+                  <FormLabel>Date de début d'accueil souhaité <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Input data-testid="input-pre-start" type="date" {...field} className="rounded-lg" />
                   </FormControl>
@@ -391,7 +392,7 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
               name="scheduleDays"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Jours et horaires de garde souhaites</FormLabel>
+                  <FormLabel>Jours et horaires de garde souhaités <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Input data-testid="input-pre-schedule" placeholder="Ex: Lundi au Vendredi, 8h30 - 17h30" {...field} className="rounded-lg" />
                   </FormControl>
@@ -415,8 +416,8 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
             <Button
               type="submit"
               data-testid="button-submit-preinscription"
-              disabled={createPreinscription.isPending}
-              className="w-full rounded-lg bg-[#c9a0dc] hover:bg-[#b88fd0] text-white"
+              disabled={createPreinscription.isPending || !form.formState.isValid}
+              className="w-full rounded-lg bg-[#c9a0dc] hover:bg-[#b88fd0] text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {createPreinscription.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ClipboardList className="mr-2 h-4 w-4" />}
               Envoyer la pre-inscription
