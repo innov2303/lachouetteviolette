@@ -1,0 +1,442 @@
+3|lachouet | Warning: connect.session() MemoryStore is not
+3|lachouet | designed for a production environment, as it will leak
+3|lachouet | memory, and will not scale past a single process.
+3|lachouet | Error: ENOENT: no such file or directory, stat '/var/www/lachouetteviolette/dist/public/index.html'
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Failed to prune sessions: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+3|lachouet | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+3|lachouet | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+3|lachouet | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+3|lachouet | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+3|lachouet | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+3|lachouet | Internal Server Error: Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158) {
+3|lachouet |   errno: -2,
+3|lachouet |   code: 'ENOENT',
+3|lachouet |   syscall: 'open',
+3|lachouet |   path: '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet | }
+3|lachouet | Error: ENOENT: no such file or directory, open '/var/www/lachouetteviolette/dist/table.sql'
+3|lachouet |     at async open (node:internal/fs/promises:634:25)
+3|lachouet |     at async Object.readFile (node:internal/fs/promises:1236:14)
+3|lachouet |     at async n._rawEnsureSessionStoreTable (/var/www/lachouetteviolette/dist/index.cjs:117:7073)
+3|lachouet |     at async n._asyncQuery (/var/www/lachouetteviolette/dist/index.cjs:117:8158)
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | Internal Server Error: error: permission denied for table session
+3|lachouet |     at /var/www/lachouetteviolette/node_modules/pg-pool/index.js:45:11
+3|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+3|lachouet |     at async PGStore._asyncQuery (/var/www/lachouetteviolette/node_modules/connect-pg-simple/index.js:322:21) {
+3|lachouet |   length: 95,
+3|lachouet |   severity: 'ERROR',
+3|lachouet |   code: '42501',
+3|lachouet |   detail: undefined,
+3|lachouet |   hint: undefined,
+3|lachouet |   position: undefined,
+3|lachouet |   internalPosition: undefined,
+3|lachouet |   internalQuery: undefined,
+3|lachouet |   where: undefined,
+3|lachouet |   schema: undefined,
+3|lachouet |   table: undefined,
+3|lachouet |   column: undefined,
+3|lachouet |   dataType: undefined,
+3|lachouet |   constraint: undefined,
+3|lachouet |   file: 'aclchk.c',
+3|lachouet |   line: '2843',
+3|lachouet |   routine: 'aclcheck_error'
+3|lachouet | }
+3|lachouet | Internal Server Error: error: permission denied for table session
+3|lachouet |     at /var/www/lachouetteviolette/node_modules/pg-pool/index.js:45:11
+3|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+3|lachouet |     at async PGStore._asyncQuery (/var/www/lachouetteviolette/node_modules/connect-pg-simple/index.js:322:21) {
+3|lachouet |   length: 95,
+3|lachouet |   severity: 'ERROR',
+3|lachouet |   code: '42501',
+3|lachouet |   detail: undefined,
+3|lachouet |   hint: undefined,
+3|lachouet |   position: undefined,
+3|lachouet |   internalPosition: undefined,
+3|lachouet |   internalQuery: undefined,
+3|lachouet |   where: undefined,
+3|lachouet |   schema: undefined,
+3|lachouet |   table: undefined,
+3|lachouet |   column: undefined,
+3|lachouet |   dataType: undefined,
+3|lachouet |   constraint: undefined,
+3|lachouet |   file: 'aclchk.c',
+3|lachouet |   line: '2843',
+3|lachouet |   routine: 'aclcheck_error'
+3|lachouet | }
+3|lachouet | Internal Server Error: error: permission denied for table session
+3|lachouet |     at /var/www/lachouetteviolette/node_modules/pg-pool/index.js:45:11
+3|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+3|lachouet |     at async PGStore._asyncQuery (/var/www/lachouetteviolette/node_modules/connect-pg-simple/index.js:322:21) {
+3|lachouet |   length: 95,
+3|lachouet |   severity: 'ERROR',
+3|lachouet |   code: '42501',
+3|lachouet |   detail: undefined,
+3|lachouet |   hint: undefined,
+3|lachouet |   position: undefined,
+3|lachouet |   internalPosition: undefined,
+3|lachouet |   internalQuery: undefined,
+3|lachouet |   where: undefined,
+3|lachouet |   schema: undefined,
+3|lachouet |   table: undefined,
+3|lachouet |   column: undefined,
+3|lachouet |   dataType: undefined,
+3|lachouet |   constraint: undefined,
+3|lachouet |   file: 'aclchk.c',
+3|lachouet |   line: '2843',
+3|lachouet |   routine: 'aclcheck_error'
+3|lachouet | }
+3|lachouet | Internal Server Error: error: permission denied for table session
+3|lachouet |     at /var/www/lachouetteviolette/node_modules/pg-pool/index.js:45:11
+3|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+3|lachouet |     at async PGStore._asyncQuery (/var/www/lachouetteviolette/node_modules/connect-pg-simple/index.js:322:21) {
+3|lachouet |   length: 95,
+3|lachouet |   severity: 'ERROR',
+3|lachouet |   code: '42501',
+3|lachouet |   detail: undefined,
+3|lachouet |   hint: undefined,
+3|lachouet |   position: undefined,
+3|lachouet |   internalPosition: undefined,
+3|lachouet |   internalQuery: undefined,
+3|lachouet |   where: undefined,
+3|lachouet |   schema: undefined,
+3|lachouet |   table: undefined,
+3|lachouet |   column: undefined,
+3|lachouet |   dataType: undefined,
+3|lachouet |   constraint: undefined,
+3|lachouet |   file: 'aclchk.c',
+3|lachouet |   line: '2843',
+3|lachouet |   routine: 'aclcheck_error'
+3|lachouet | }
+3|lachouet | Internal Server Error: error: permission denied for table session
+3|lachouet |     at /var/www/lachouetteviolette/node_modules/pg-pool/index.js:45:11
+3|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+3|lachouet |     at async PGStore._asyncQuery (/var/www/lachouetteviolette/node_modules/connect-pg-simple/index.js:322:21) {
+3|lachouet |   length: 95,
+3|lachouet |   severity: 'ERROR',
+3|lachouet |   code: '42501',
+3|lachouet |   detail: undefined,
+3|lachouet |   hint: undefined,
+3|lachouet |   position: undefined,
+3|lachouet |   internalPosition: undefined,
+3|lachouet |   internalQuery: undefined,
+3|lachouet |   where: undefined,
+3|lachouet |   schema: undefined,
+3|lachouet |   table: undefined,
+3|lachouet |   column: undefined,
+3|lachouet |   dataType: undefined,
+3|lachouet |   constraint: undefined,
+3|lachouet |   file: 'aclchk.c',
+3|lachouet |   line: '2843',
+3|lachouet |   routine: 'aclcheck_error'
+3|lachouet | }
+3|lachouet | Internal Server Error: error: permission denied for table session
+3|lachouet |     at /var/www/lachouetteviolette/node_modules/pg-pool/index.js:45:11
+3|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+3|lachouet |     at async PGStore._asyncQuery (/var/www/lachouetteviolette/node_modules/connect-pg-simple/index.js:322:21) {
+3|lachouet |   length: 95,
+3|lachouet |   severity: 'ERROR',
+3|lachouet |   code: '42501',
+3|lachouet |   detail: undefined,
+3|lachouet |   hint: undefined,
+3|lachouet |   position: undefined,
+3|lachouet |   internalPosition: undefined,
+3|lachouet |   internalQuery: undefined,
+3|lachouet |   where: undefined,
+3|lachouet |   schema: undefined,
+3|lachouet |   table: undefined,
+3|lachouet |   column: undefined,
+3|lachouet |   dataType: undefined,
+3|lachouet |   constraint: undefined,
+3|lachouet |   file: 'aclchk.c',
+3|lachouet |   line: '2843',
+3|lachouet |   routine: 'aclcheck_error'
+3|lachouet | }
+3|lachouet | Internal Server Error: error: permission denied for table session
+3|lachouet |     at /var/www/lachouetteviolette/node_modules/pg-pool/index.js:45:11
+3|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+3|lachouet |     at async PGStore._asyncQuery (/var/www/lachouetteviolette/node_modules/connect-pg-simple/index.js:322:21) {
+3|lachouet |   length: 95,
+3|lachouet |   severity: 'ERROR',
+3|lachouet |   code: '42501',
+3|lachouet |   detail: undefined,
+3|lachouet |   hint: undefined,
+3|lachouet |   position: undefined,
+3|lachouet |   internalPosition: undefined,
+3|lachouet |   internalQuery: undefined,
+3|lachouet |   where: undefined,
+3|lachouet |   schema: undefined,
+3|lachouet |   table: undefined,
+3|lachouet |   column: undefined,
+3|lachouet |   dataType: undefined,
+3|lachouet |   constraint: undefined,
+3|lachouet |   file: 'aclchk.c',
+3|lachouet |   line: '2843',
+3|lachouet |   routine: 'aclcheck_error'
+3|lachouet | }
+3|lachouet | URIError: Failed to decode param '%c0'
+3|lachouet |     at decodeURIComponent (<anonymous>)
+3|lachouet |     at P3 (/var/www/lachouetteviolette/dist/index.cjs:43:2023)
+3|lachouet |     at Array.map (<anonymous>)
+3|lachouet |     at /var/www/lachouetteviolette/dist/index.cjs:39:21286
+3|lachouet |     at Array.<anonymous> (/var/www/lachouetteviolette/dist/index.cjs:39:21463)
+3|lachouet |     at ga.match (/var/www/lachouetteviolette/dist/index.cjs:43:1818)
+3|lachouet |     at oD (/var/www/lachouetteviolette/dist/index.cjs:43:7745)
+3|lachouet |     at v (/var/www/lachouetteviolette/dist/index.cjs:43:5727)
+3|lachouet |     at Ve.<anonymous> (/var/www/lachouetteviolette/dist/index.cjs:57:10089)
+3|lachouet |     at Ve.emit (node:events:524:28)
+3|lachouet | URIError: Failed to decode param '%c0'
+3|lachouet |     at decodeURIComponent (<anonymous>)
+3|lachouet |     at P3 (/var/www/lachouetteviolette/dist/index.cjs:43:2023)
+3|lachouet |     at Array.map (<anonymous>)
+3|lachouet |     at /var/www/lachouetteviolette/dist/index.cjs:39:21286
+3|lachouet |     at Array.<anonymous> (/var/www/lachouetteviolette/dist/index.cjs:39:21463)
+3|lachouet |     at ga.match (/var/www/lachouetteviolette/dist/index.cjs:43:1818)
+3|lachouet |     at oD (/var/www/lachouetteviolette/dist/index.cjs:43:7745)
+3|lachouet |     at v (/var/www/lachouetteviolette/dist/index.cjs:43:5727)
+3|lachouet |     at Ve.<anonymous> (/var/www/lachouetteviolette/dist/index.cjs:57:10089)
+3|lachouet |     at Ve.emit (node:events:524:28)
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | .env: line 9: syntax error near unexpected token `newline'
+3|lachouet | .env: line 9: `RESEND_FROM_EMAIL=La Chouette Violette <noreply@lachouetteviolette.fr>'
+3|lachouet | URIError: Failed to decode param '%c0'
+3|lachouet |     at decodeURIComponent (<anonymous>)
+3|lachouet |     at R3 (/var/www/lachouetteviolette/dist/index.cjs:43:2023)
+3|lachouet |     at Array.map (<anonymous>)
+3|lachouet |     at /var/www/lachouetteviolette/dist/index.cjs:39:21286
+3|lachouet |     at Array.<anonymous> (/var/www/lachouetteviolette/dist/index.cjs:39:21463)
+3|lachouet |     at xa.match (/var/www/lachouetteviolette/dist/index.cjs:43:1818)
+3|lachouet |     at lD (/var/www/lachouetteviolette/dist/index.cjs:43:7745)
+3|lachouet |     at v (/var/www/lachouetteviolette/dist/index.cjs:43:5727)
+3|lachouet |     at We.<anonymous> (/var/www/lachouetteviolette/dist/index.cjs:57:10089)
+3|lachouet |     at We.emit (node:events:524:28)
