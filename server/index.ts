@@ -22,6 +22,14 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
+// Catch malformed URLs sent by bots/scanners (e.g. %c0, %80...)
+app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof URIError) {
+    return res.status(400).end();
+  }
+  next(err);
+});
+
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
