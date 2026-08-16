@@ -45,11 +45,6 @@ export default defineConfig({
       },
     },
   },
-  css: {
-    postcss: {
-      from: undefined,
-    },
-  },
   server: {
     fs: {
       strict: true,
