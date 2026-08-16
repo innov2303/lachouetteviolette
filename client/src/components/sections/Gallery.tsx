@@ -30,6 +30,14 @@ export default function Gallery() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleManualNav = useCallback((action: () => void) => {
+    action();
+    plugin.current.stop();
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => plugin.current.play(), 4000);
+  }, []);
 
   const onSelect = useCallback(() => {
     if (!api) return;
@@ -135,7 +143,7 @@ export default function Gallery() {
                   <button
                     type="button"
                     data-testid="carousel-prev"
-                    onClick={() => api?.scrollPrev()}
+                    onClick={() => handleManualNav(() => api?.scrollPrev())}
                     className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm shadow-lg flex items-center justify-center text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 cursor-pointer"
                   >
                     <ChevronLeft className="h-5 w-5" />
@@ -143,7 +151,7 @@ export default function Gallery() {
                   <button
                     type="button"
                     data-testid="carousel-next"
-                    onClick={() => api?.scrollNext()}
+                    onClick={() => handleManualNav(() => api?.scrollNext())}
                     className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm shadow-lg flex items-center justify-center text-foreground/70 hover:bg-white hover:text-foreground opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 cursor-pointer"
                   >
                     <ChevronRight className="h-5 w-5" />
@@ -154,7 +162,7 @@ export default function Gallery() {
                     <button
                       key={i}
                       data-testid={`carousel-indicator-${i}`}
-                      onClick={() => api?.scrollTo(i)}
+                      onClick={() => handleManualNav(() => api?.scrollTo(i))}
                       className={`h-1 rounded-full transition-all duration-300 cursor-pointer ${
                         i === current
                           ? "w-8 bg-[#c9a0dc]"
