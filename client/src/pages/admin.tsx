@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X, ClipboardList, ChevronDown } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X, ClipboardList, ChevronDown, Phone, MapPin, Briefcase, Baby, Calendar, Clock, MessageSquare, UserCheck } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, EmailRecipient } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -203,7 +203,7 @@ function PreinscriptionsEditor() {
         {counts.map(s => (
           <div key={s.value} className={`rounded-xl border px-4 py-3 ${s.color}`}>
             <p className="text-2xl font-bold">{s.count}</p>
-            <p className="text-xs mt-0.5">{s.label}</p>
+            <p className="text-xs mt-0.5 opacity-80">{s.label}</p>
           </div>
         ))}
       </div>
@@ -214,65 +214,143 @@ function PreinscriptionsEditor() {
           <p>Aucune pré-inscription reçue pour le moment.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {preinscriptions.map((p: any) => (
-            <div key={p.id} className="border border-border rounded-xl bg-white">
-              {/* En-tête de la carte */}
-              <div className="flex items-center justify-between px-4 py-3 gap-3">
-                <button
-                  className="flex-1 flex items-start gap-3 text-left"
-                  onClick={() => setExpandedId(expandedId === p.id ? null : p.id)}
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm">{p.firstName} {p.lastName}</p>
-                    <p className="text-xs text-muted-foreground truncate">{p.email} · {p.phone}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Enfant : <span className="font-medium">{p.childName}</span> · Né·e le {p.childBirthdate} · Début : {p.startDate}
-                    </p>
-                  </div>
-                  <ChevronDown className={`h-4 w-4 text-muted-foreground shrink-0 mt-1 transition-transform ${expandedId === p.id ? "rotate-180" : ""}`} />
-                </button>
-                <StatusBadge
-                  status={p.status ?? "en_attente"}
-                  onSelect={(status) => statusMutation.mutate({ id: p.id, status })}
-                />
-              </div>
+        <div className="space-y-4">
+          {preinscriptions.map((p: any) => {
+            const initials = `${p.firstName?.[0] ?? ""}${p.lastName?.[0] ?? ""}`.toUpperCase();
+            const isExpanded = expandedId === p.id;
+            return (
+              <div key={p.id} className="border border-[#c9a0dc]/20 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow">
 
-              {/* Détail dépliable */}
-              {expandedId === p.id && (
-                <div className="border-t border-border px-4 py-3 bg-muted/30 space-y-3 text-sm">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <Detail label="Adresse" value={p.address} />
-                    <Detail label="Situation familiale" value={p.familySituation === "autre" ? p.familySituationOther : p.familySituation} />
-                    <Detail label="Emploi" value={p.employment} />
-                    <Detail label="Jours souhaités" value={p.scheduleDays} />
-                    <Detail label="Fratrie" value={p.hasSiblings === "oui" ? "Oui" : "Non"} />
-                    <Detail label="Liste d'attente autre MAM" value={p.onWaitingList === "oui" ? "Oui" : "Non"} />
+                {/* En-tête de la carte */}
+                <div className="flex items-center gap-4 px-5 py-4">
+                  {/* Avatar initiales */}
+                  <div className="w-11 h-11 rounded-full bg-[#c9a0dc]/15 border border-[#c9a0dc]/30 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-bold text-[#c9a0dc]">{initials}</span>
                   </div>
-                  {p.expectations && (
-                    <div>
-                      <p className="text-xs text-muted-foreground font-medium mb-1">Attentes</p>
-                      <p className="text-sm leading-relaxed">{p.expectations}</p>
+
+                  {/* Infos principales */}
+                  <button
+                    className="flex-1 text-left min-w-0"
+                    onClick={() => setExpandedId(isExpanded ? null : p.id)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-foreground">{p.firstName} {p.lastName}</p>
+                      <span className="text-[#c9a0dc]/60 text-xs hidden sm:inline">·</span>
+                      <p className="text-xs text-[#c9a0dc] font-medium hidden sm:inline">
+                        Enfant : {p.childName}
+                      </p>
                     </div>
-                  )}
-                  <p className="text-xs text-muted-foreground">
-                    Reçue le {p.createdAt ? new Date(p.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "—"}
-                  </p>
+                    <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <Mail className="h-3 w-3" />{p.email}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <Phone className="h-3 w-3" />{p.phone}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Statut + chevron */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <StatusBadge
+                      status={p.status ?? "en_attente"}
+                      onSelect={(status) => statusMutation.mutate({ id: p.id, status })}
+                    />
+                    <button
+                      onClick={() => setExpandedId(isExpanded ? null : p.id)}
+                      className="p-1 rounded-md hover:bg-muted transition-colors"
+                    >
+                      <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                    </button>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
+
+                {/* Détail dépliable */}
+                {isExpanded && (
+                  <div className="border-t border-[#c9a0dc]/15 mx-2 mb-2">
+                    <div className="px-4 py-4 space-y-5">
+
+                      {/* Section parent */}
+                      <div>
+                        <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                          <UserCheck className="h-3.5 w-3.5" /> Informations parent
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <DetailField icon={<MapPin className="h-3.5 w-3.5" />} label="Adresse" value={p.address} />
+                          <DetailField icon={<Users className="h-3.5 w-3.5" />} label="Situation familiale" value={p.familySituation === "autre" ? p.familySituationOther : p.familySituation} />
+                          <DetailField icon={<Briefcase className="h-3.5 w-3.5" />} label="Emploi" value={p.employment} />
+                          <DetailField icon={<UserCheck className="h-3.5 w-3.5" />} label="Liste d'attente autre MAM" value={p.onWaitingList === "oui" ? "Oui" : "Non"} />
+                        </div>
+                      </div>
+
+                      {/* Séparateur */}
+                      <div className="h-px bg-[#c9a0dc]/10" />
+
+                      {/* Section enfant */}
+                      <div>
+                        <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                          <Baby className="h-3.5 w-3.5" /> Informations enfant
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <DetailField icon={<Baby className="h-3.5 w-3.5" />} label="Prénom" value={p.childName} />
+                          <DetailField icon={<Calendar className="h-3.5 w-3.5" />} label="Date de naissance" value={p.childBirthdate} />
+                          <DetailField icon={<Users className="h-3.5 w-3.5" />} label="Fratrie" value={p.hasSiblings === "oui" ? "Oui" : "Non"} />
+                        </div>
+                      </div>
+
+                      {/* Séparateur */}
+                      <div className="h-px bg-[#c9a0dc]/10" />
+
+                      {/* Section planning */}
+                      <div>
+                        <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                          <Clock className="h-3.5 w-3.5" /> Planning souhaité
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <DetailField icon={<CalendarCheck className="h-3.5 w-3.5" />} label="Date de début" value={p.startDate} />
+                          <DetailField icon={<Clock className="h-3.5 w-3.5" />} label="Jours et horaires" value={p.scheduleDays} />
+                        </div>
+                      </div>
+
+                      {/* Attentes */}
+                      {p.expectations && (
+                        <>
+                          <div className="h-px bg-[#c9a0dc]/10" />
+                          <div>
+                            <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <MessageSquare className="h-3.5 w-3.5" /> Attentes & remarques
+                            </p>
+                            <p className="text-sm text-foreground/80 leading-relaxed bg-[#c9a0dc]/5 rounded-lg px-3 py-2.5 border border-[#c9a0dc]/10">
+                              {p.expectations}
+                            </p>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Date de réception */}
+                      <p className="text-xs text-muted-foreground text-right pt-1">
+                        Reçue le {p.createdAt ? new Date(p.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "—"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
 
-function Detail({ label, value }: { label: string; value?: string | null }) {
+function DetailField({ icon, label, value }: { icon: React.ReactNode; label: string; value?: string | null }) {
   return (
-    <div>
-      <p className="text-xs text-muted-foreground font-medium">{label}</p>
-      <p className="text-sm">{value || "—"}</p>
+    <div className="flex items-start gap-2.5 bg-muted/40 rounded-lg px-3 py-2.5">
+      <span className="text-[#c9a0dc] mt-0.5 shrink-0">{icon}</span>
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
+        <p className="text-sm font-medium text-foreground leading-snug">{value || "—"}</p>
+      </div>
     </div>
   );
 }
