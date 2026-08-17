@@ -8,7 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X, ClipboardList, ChevronDown, Phone, MapPin, Briefcase, Baby, Calendar, Clock, MessageSquare, UserCheck } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X, ClipboardList, ChevronDown, Phone, MapPin, Briefcase, Baby, Calendar, Clock, MessageSquare, UserCheck, RotateCcw, AlertTriangle } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, EmailRecipient } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -170,15 +171,42 @@ function StatusBadge({ status, onSelect }: { status: string; onSelect: (s: Prein
 function PreinscriptionsEditor() {
   const queryClient = useQueryClient();
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [view, setView] = useState<"actives" | "corbeille">("actives");
 
   const { data: preinscriptions = [], isLoading, isError, refetch } = useQuery<any[]>({
     queryKey: ["/api/preinscriptions"],
+  });
+
+  const { data: archived = [], isLoading: archiveLoading, refetch: refetchArchive } = useQuery<any[]>({
+    queryKey: ["/api/preinscriptions/archived"],
+    enabled: view === "corbeille",
   });
 
   const statusMutation = useMutation({
     mutationFn: ({ id, status }: { id: number; status: string }) =>
       apiRequest("PUT", `/api/preinscriptions/${id}/status`, { status }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
+    },
+  });
+
+  const restoreMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("PUT", `/api/preinscriptions/${id}/restore`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
+    },
+  });
+
+  const permanentDeleteMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}/permanent`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] }),
   });
 
   const counts = STATUS_OPTIONS.map(s => ({
@@ -196,147 +224,292 @@ function PreinscriptionsEditor() {
 
   return (
     <div className="space-y-6">
-      <SectionHeader title="Pré-inscriptions" description="Consultez et gérez le statut des demandes de pré-inscription reçues." />
-
-      {/* Compteurs par statut */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {counts.map(s => (
-          <div key={s.value} className={`rounded-xl border px-4 py-3 ${s.color}`}>
-            <p className="text-2xl font-bold">{s.count}</p>
-            <p className="text-xs mt-0.5 opacity-80">{s.label}</p>
-          </div>
-        ))}
+      <div className="flex items-start justify-between">
+        <SectionHeader title="Pré-inscriptions" description="Consultez et gérez le statut des demandes de pré-inscription reçues." />
       </div>
 
-      {preinscriptions.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">
-          <ClipboardList className="h-12 w-12 mx-auto mb-3 opacity-30" />
-          <p>Aucune pré-inscription reçue pour le moment.</p>
-        </div>
-      ) : (
+      {/* Sous-onglets Actives / Corbeille */}
+      <div className="flex gap-1 bg-muted/50 rounded-lg p-1 w-fit">
+        <button
+          onClick={() => setView("actives")}
+          className={`px-4 py-1.5 text-sm rounded-md font-medium transition-all ${view === "actives" ? "bg-white shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Actives
+          {preinscriptions.length > 0 && (
+            <span className="ml-1.5 text-xs bg-[#c9a0dc]/20 text-[#c9a0dc] rounded-full px-1.5 py-0.5">{preinscriptions.length}</span>
+          )}
+        </button>
+        <button
+          onClick={() => setView("corbeille")}
+          className={`px-4 py-1.5 text-sm rounded-md font-medium transition-all flex items-center gap-1.5 ${view === "corbeille" ? "bg-white shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          <Trash2 className="h-3.5 w-3.5" /> Corbeille
+        </button>
+      </div>
+
+      {view === "actives" && (
+        <>
+          {/* Compteurs par statut */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {counts.map(s => (
+              <div key={s.value} className={`rounded-xl border px-4 py-3 ${s.color}`}>
+                <p className="text-2xl font-bold">{s.count}</p>
+                <p className="text-xs mt-0.5 opacity-80">{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {preinscriptions.length === 0 ? (
+            <div className="text-center py-16 text-muted-foreground">
+              <ClipboardList className="h-12 w-12 mx-auto mb-3 opacity-30" />
+              <p>Aucune pré-inscription reçue pour le moment.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {preinscriptions.map((p: any) => (
+                <PreinscriptionCard
+                  key={p.id}
+                  p={p}
+                  expandedId={expandedId}
+                  setExpandedId={setExpandedId}
+                  onStatusChange={(status) => statusMutation.mutate({ id: p.id, status })}
+                  onDelete={() => deleteMutation.mutate(p.id)}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {view === "corbeille" && (
         <div className="space-y-4">
-          {preinscriptions.map((p: any) => {
-            const initials = `${p.firstName?.[0] ?? ""}${p.lastName?.[0] ?? ""}`.toUpperCase();
-            const isExpanded = expandedId === p.id;
-            return (
-              <div key={p.id} className="border border-[#c9a0dc]/20 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            Les demandes supprimées sont conservées pendant 1 an, puis effacées définitivement.
+          </div>
 
-                {/* En-tête de la carte */}
-                <div className="flex items-center gap-4 px-5 py-4">
-                  {/* Avatar initiales */}
-                  <div className="w-11 h-11 rounded-full bg-[#c9a0dc]/15 border border-[#c9a0dc]/30 flex items-center justify-center shrink-0">
-                    <span className="text-sm font-bold text-[#c9a0dc]">{initials}</span>
-                  </div>
-
-                  {/* Infos principales */}
-                  <button
-                    className="flex-1 text-left min-w-0"
-                    onClick={() => setExpandedId(isExpanded ? null : p.id)}
-                  >
-                    <div className="flex items-center gap-2">
+          {archiveLoading ? (
+            <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" /></div>
+          ) : archived.length === 0 ? (
+            <div className="text-center py-16 text-muted-foreground">
+              <Trash2 className="h-12 w-12 mx-auto mb-3 opacity-20" />
+              <p>La corbeille est vide.</p>
+            </div>
+          ) : (
+            archived.map((p: any) => {
+              const deletedAt = p.deletedAt ? new Date(p.deletedAt) : null;
+              const expiresAt = deletedAt ? new Date(deletedAt.getTime() + 365 * 24 * 60 * 60 * 1000) : null;
+              const initials = `${p.firstName?.[0] ?? ""}${p.lastName?.[0] ?? ""}`.toUpperCase();
+              return (
+                <div key={p.id} className="border border-border rounded-2xl bg-white/60 opacity-80">
+                  <div className="flex items-center gap-4 px-5 py-4">
+                    <div className="w-11 h-11 rounded-full bg-muted border border-border flex items-center justify-center shrink-0">
+                      <span className="text-sm font-bold text-muted-foreground">{initials}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
                       <p className="font-semibold text-foreground">{p.firstName} {p.lastName}</p>
-                      <span className="text-[#c9a0dc]/60 text-xs hidden sm:inline">·</span>
-                      <p className="text-xs text-[#c9a0dc] font-medium hidden sm:inline">
-                        Enfant : {p.childName}
-                      </p>
+                      <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <Baby className="h-3 w-3" /> {p.childName}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <Mail className="h-3 w-3" />{p.email}
+                        </span>
+                      </div>
+                      {expiresAt && (
+                        <p className="text-xs text-amber-600 mt-1">
+                          Suppression définitive le {expiresAt.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                        </p>
+                      )}
                     </div>
-                    <div className="flex items-center gap-3 mt-0.5 flex-wrap">
-                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                        <Mail className="h-3 w-3" />{p.email}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                        <Phone className="h-3 w-3" />{p.phone}
-                      </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 gap-1.5 text-xs"
+                        onClick={() => restoreMutation.mutate(p.id)}
+                        disabled={restoreMutation.isPending}
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" /> Restaurer
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Supprimer définitivement ?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              La demande de <strong>{p.firstName} {p.lastName}</strong> sera effacée de façon permanente et irréversible.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction
+                              className="bg-red-500 hover:bg-red-600"
+                              onClick={() => permanentDeleteMutation.mutate(p.id)}
+                            >
+                              Supprimer définitivement
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
-                  </button>
-
-                  {/* Statut + chevron */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    <StatusBadge
-                      status={p.status ?? "en_attente"}
-                      onSelect={(status) => statusMutation.mutate({ id: p.id, status })}
-                    />
-                    <button
-                      onClick={() => setExpandedId(isExpanded ? null : p.id)}
-                      className="p-1 rounded-md hover:bg-muted transition-colors"
-                    >
-                      <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                    </button>
                   </div>
                 </div>
+              );
+            })
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
-                {/* Détail dépliable */}
-                {isExpanded && (
-                  <div className="border-t border-[#c9a0dc]/15 mx-2 mb-2">
-                    <div className="px-4 py-4 space-y-5">
+function PreinscriptionCard({ p, expandedId, setExpandedId, onStatusChange, onDelete }: {
+  p: any;
+  expandedId: number | null;
+  setExpandedId: (id: number | null) => void;
+  onStatusChange: (status: PreinscriptionStatus) => void;
+  onDelete: () => void;
+}) {
+  const initials = `${p.firstName?.[0] ?? ""}${p.lastName?.[0] ?? ""}`.toUpperCase();
+  const isExpanded = expandedId === p.id;
+  return (
+    <div className="border border-[#c9a0dc]/20 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow">
+      {/* En-tête de la carte */}
+      <div className="flex items-center gap-4 px-5 py-4">
+        {/* Avatar initiales */}
+        <div className="w-11 h-11 rounded-full bg-[#c9a0dc]/15 border border-[#c9a0dc]/30 flex items-center justify-center shrink-0">
+          <span className="text-sm font-bold text-[#c9a0dc]">{initials}</span>
+        </div>
 
-                      {/* Section parent */}
-                      <div>
-                        <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                          <UserCheck className="h-3.5 w-3.5" /> Informations parent
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <DetailField icon={<MapPin className="h-3.5 w-3.5" />} label="Adresse" value={p.address} />
-                          <DetailField icon={<Users className="h-3.5 w-3.5" />} label="Situation familiale" value={p.familySituation === "autre" ? p.familySituationOther : p.familySituation} />
-                          <DetailField icon={<Briefcase className="h-3.5 w-3.5" />} label="Emploi" value={p.employment} />
-                          <DetailField icon={<UserCheck className="h-3.5 w-3.5" />} label="Liste d'attente autre MAM" value={p.onWaitingList === "oui" ? "Oui" : "Non"} />
-                        </div>
-                      </div>
+        {/* Infos principales */}
+        <button
+          className="flex-1 text-left min-w-0"
+          onClick={() => setExpandedId(isExpanded ? null : p.id)}
+        >
+          <div className="flex items-center gap-2">
+            <p className="font-semibold text-foreground">{p.firstName} {p.lastName}</p>
+            <span className="text-[#c9a0dc]/60 text-xs hidden sm:inline">·</span>
+            <p className="text-xs text-[#c9a0dc] font-medium hidden sm:inline">
+              Enfant : {p.childName}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <Mail className="h-3 w-3" />{p.email}
+            </span>
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <Phone className="h-3 w-3" />{p.phone}
+            </span>
+          </div>
+        </button>
 
-                      {/* Séparateur */}
-                      <div className="h-px bg-[#c9a0dc]/10" />
+        {/* Statut + actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          <StatusBadge status={p.status ?? "en_attente"} onSelect={onStatusChange} />
 
-                      {/* Section enfant */}
-                      <div>
-                        <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                          <Baby className="h-3.5 w-3.5" /> Informations enfant
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <DetailField icon={<Baby className="h-3.5 w-3.5" />} label="Prénom" value={p.childName} />
-                          <DetailField icon={<Calendar className="h-3.5 w-3.5" />} label="Date de naissance" value={p.childBirthdate} />
-                          <DetailField icon={<Users className="h-3.5 w-3.5" />} label="Fratrie" value={p.hasSiblings === "oui" ? "Oui" : "Non"} />
-                        </div>
-                      </div>
+          {/* Bouton supprimer */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="p-1.5 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Mettre à la corbeille ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  La demande de <strong>{p.firstName} {p.lastName}</strong> sera déplacée dans la corbeille.
+                  Elle sera conservée pendant 1 an avant d'être supprimée définitivement.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-red-500 hover:bg-red-600"
+                  onClick={onDelete}
+                >
+                  Mettre à la corbeille
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
-                      {/* Séparateur */}
-                      <div className="h-px bg-[#c9a0dc]/10" />
+          <button
+            onClick={() => setExpandedId(isExpanded ? null : p.id)}
+            className="p-1 rounded-md hover:bg-muted transition-colors"
+          >
+            <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+          </button>
+        </div>
+      </div>
 
-                      {/* Section planning */}
-                      <div>
-                        <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                          <Clock className="h-3.5 w-3.5" /> Planning souhaité
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <DetailField icon={<CalendarCheck className="h-3.5 w-3.5" />} label="Date de début" value={p.startDate} />
-                          <DetailField icon={<Clock className="h-3.5 w-3.5" />} label="Jours et horaires" value={p.scheduleDays} />
-                        </div>
-                      </div>
-
-                      {/* Attentes */}
-                      {p.expectations && (
-                        <>
-                          <div className="h-px bg-[#c9a0dc]/10" />
-                          <div>
-                            <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                              <MessageSquare className="h-3.5 w-3.5" /> Attentes & remarques
-                            </p>
-                            <p className="text-sm text-foreground/80 leading-relaxed bg-[#c9a0dc]/5 rounded-lg px-3 py-2.5 border border-[#c9a0dc]/10">
-                              {p.expectations}
-                            </p>
-                          </div>
-                        </>
-                      )}
-
-                      {/* Date de réception */}
-                      <p className="text-xs text-muted-foreground text-right pt-1">
-                        Reçue le {p.createdAt ? new Date(p.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "—"}
-                      </p>
-                    </div>
-                  </div>
-                )}
+      {/* Détail dépliable */}
+      {isExpanded && (
+        <div className="border-t border-[#c9a0dc]/15 mx-2 mb-2">
+          <div className="px-4 py-4 space-y-5">
+            {/* Section parent */}
+            <div>
+              <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <UserCheck className="h-3.5 w-3.5" /> Informations parent
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <DetailField icon={<MapPin className="h-3.5 w-3.5" />} label="Adresse" value={p.address} />
+                <DetailField icon={<Users className="h-3.5 w-3.5" />} label="Situation familiale" value={p.familySituation === "autre" ? p.familySituationOther : p.familySituation} />
+                <DetailField icon={<Briefcase className="h-3.5 w-3.5" />} label="Emploi" value={p.employment} />
+                <DetailField icon={<UserCheck className="h-3.5 w-3.5" />} label="Liste d'attente autre MAM" value={p.onWaitingList === "oui" ? "Oui" : "Non"} />
               </div>
-            );
-          })}
+            </div>
+
+            <div className="h-px bg-[#c9a0dc]/10" />
+
+            {/* Section enfant */}
+            <div>
+              <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Baby className="h-3.5 w-3.5" /> Informations enfant
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <DetailField icon={<Baby className="h-3.5 w-3.5" />} label="Prénom" value={p.childName} />
+                <DetailField icon={<Calendar className="h-3.5 w-3.5" />} label="Date de naissance" value={p.childBirthdate} />
+                <DetailField icon={<Users className="h-3.5 w-3.5" />} label="Fratrie" value={p.hasSiblings === "oui" ? "Oui" : "Non"} />
+              </div>
+            </div>
+
+            <div className="h-px bg-[#c9a0dc]/10" />
+
+            {/* Section planning */}
+            <div>
+              <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" /> Planning souhaité
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <DetailField icon={<CalendarCheck className="h-3.5 w-3.5" />} label="Date de début" value={p.startDate} />
+                <DetailField icon={<Clock className="h-3.5 w-3.5" />} label="Jours et horaires" value={p.scheduleDays} />
+              </div>
+            </div>
+
+            {p.expectations && (
+              <>
+                <div className="h-px bg-[#c9a0dc]/10" />
+                <div>
+                  <p className="text-xs font-semibold text-[#c9a0dc] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <MessageSquare className="h-3.5 w-3.5" /> Attentes & remarques
+                  </p>
+                  <p className="text-sm text-foreground/80 leading-relaxed bg-[#c9a0dc]/5 rounded-lg px-3 py-2.5 border border-[#c9a0dc]/10">
+                    {p.expectations}
+                  </p>
+                </div>
+              </>
+            )}
+
+            <p className="text-xs text-muted-foreground text-right pt-1">
+              Reçue le {p.createdAt ? new Date(p.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "—"}
+            </p>
+          </div>
         </div>
       )}
     </div>

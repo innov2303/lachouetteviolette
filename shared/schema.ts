@@ -38,6 +38,7 @@ export const preinscriptions = pgTable("preinscriptions", {
   expectations: text("expectations"),
   status: text("status").default("en_attente").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+  deletedAt: timestamp("deleted_at"),
 });
 
 export const insertPreinscriptionSchema = createInsertSchema(preinscriptions).omit({

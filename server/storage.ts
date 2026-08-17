@@ -1,13 +1,17 @@
 import { db } from "./db";
 import { messages, preinscriptions, users, siteContent, pageVisits, type InsertMessage, type Message, type InsertPreinscription, type Preinscription, type User, type InsertUser, type SiteContent, type PageVisit } from "@shared/schema";
-import { eq, gte, sql } from "drizzle-orm";
+import { eq, gte, isNull, isNotNull, sql } from "drizzle-orm";
 
 export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
   getMessages(): Promise<Message[]>;
   createPreinscription(data: InsertPreinscription): Promise<Preinscription>;
   getPreinscriptions(): Promise<Preinscription[]>;
+  getArchivedPreinscriptions(): Promise<Preinscription[]>;
   updatePreinscriptionStatus(id: number, status: string): Promise<Preinscription>;
+  softDeletePreinscription(id: number): Promise<Preinscription>;
+  restorePreinscription(id: number): Promise<Preinscription>;
+  permanentDeletePreinscription(id: number): Promise<void>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserById(id: number): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
@@ -35,7 +39,37 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPreinscriptions(): Promise<Preinscription[]> {
-    return await db.select().from(preinscriptions).orderBy(preinscriptions.createdAt);
+    return await db.select().from(preinscriptions)
+      .where(isNull(preinscriptions.deletedAt))
+      .orderBy(preinscriptions.createdAt);
+  }
+
+  async getArchivedPreinscriptions(): Promise<Preinscription[]> {
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    return await db.select().from(preinscriptions)
+      .where(isNotNull(preinscriptions.deletedAt))
+      .orderBy(preinscriptions.deletedAt);
+  }
+
+  async softDeletePreinscription(id: number): Promise<Preinscription> {
+    const [row] = await db.update(preinscriptions)
+      .set({ deletedAt: new Date() })
+      .where(eq(preinscriptions.id, id))
+      .returning();
+    return row;
+  }
+
+  async restorePreinscription(id: number): Promise<Preinscription> {
+    const [row] = await db.update(preinscriptions)
+      .set({ deletedAt: null })
+      .where(eq(preinscriptions.id, id))
+      .returning();
+    return row;
+  }
+
+  async permanentDeletePreinscription(id: number): Promise<void> {
+    await db.delete(preinscriptions).where(eq(preinscriptions.id, id));
   }
 
   async updatePreinscriptionStatus(id: number, status: string): Promise<Preinscription> {

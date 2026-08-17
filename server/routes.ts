@@ -156,6 +156,45 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/preinscriptions/archived", requireAuth, async (_req, res) => {
+    try {
+      const data = await storage.getArchivedPreinscriptions();
+      res.json(data);
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/preinscriptions/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const row = await storage.softDeletePreinscription(id);
+      res.json(row);
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.put("/api/preinscriptions/:id/restore", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const row = await storage.restorePreinscription(id);
+      res.json(row);
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/preinscriptions/:id/permanent", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.permanentDeletePreinscription(id);
+      res.json({ ok: true });
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.get("/api/messages", requireAuth, async (_req, res) => {
     try {
       const msgs = await storage.getMessages();
