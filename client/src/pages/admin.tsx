@@ -188,89 +188,90 @@ function PreinscriptionsEditor() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [view, setView] = useState<"actives" | "corbeille">("actives");
 
-  const { data: preinscriptions = [], isLoading, isError, refetch } = useQuery<any[]>({
+  // IDs masqués localement en attente de confirmation serveur
+  const [hiddenIds, setHiddenIds] = useState<Set<number>>(new Set());
+  const [hiddenArchiveIds, setHiddenArchiveIds] = useState<Set<number>>(new Set());
+
+  const { data: rawPreinscriptions = [], isLoading, isError, refetch } = useQuery<any[]>({
     queryKey: ["/api/preinscriptions"],
     refetchInterval: 30000,
     staleTime: 0,
   });
 
-  const { data: archived = [], isLoading: archiveLoading, refetch: refetchArchive } = useQuery<any[]>({
+  const { data: rawArchived = [], isLoading: archiveLoading, refetch: refetchArchive } = useQuery<any[]>({
     queryKey: ["/api/preinscriptions/archived"],
     enabled: view === "corbeille",
   });
 
+  // Filtrage local : on retire les IDs en cours de suppression
+  const preinscriptions = rawPreinscriptions.filter((p: any) => !hiddenIds.has(p.id));
+  const archived = rawArchived.filter((p: any) => !hiddenArchiveIds.has(p.id));
+
   const statusMutation = useMutation({
     mutationFn: ({ id, status }: { id: number; status: string }) =>
       apiRequest("PUT", `/api/preinscriptions/${id}/status`, { status }),
-    onMutate: async ({ id, status }) => {
-      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions"] });
-      const previous = queryClient.getQueryData(["/api/preinscriptions"]);
-      queryClient.setQueryData(["/api/preinscriptions"], (old: any[] | undefined) =>
-        (old ?? []).map((p: any) => p.id === id ? { ...p, status } : p)
-      );
-      return { previous };
-    },
-    onError: (_err, _vars, context: any) => {
-      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions"], context.previous);
-    },
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}`),
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions"] });
-      const previous = queryClient.getQueryData(["/api/preinscriptions"]);
-      queryClient.setQueryData(["/api/preinscriptions"], (old: any[] | undefined) =>
-        (old ?? []).filter((p: any) => p.id !== id)
-      );
-      return { previous };
+    onMutate: (id) => {
+      // Masquer immédiatement côté UI
+      setHiddenIds(prev => new Set(prev).add(id));
     },
-    onError: (_err, _id, context: any) => {
-      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions"], context.previous);
-    },
-    onSettled: () => {
+    onSuccess: () => {
+      // Le serveur confirme : laisser le prochain refetch nettoyer le cache
       queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
+    },
+    onError: (_err, id) => {
+      // Erreur : remettre l'item
+      setHiddenIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+    },
+    onSettled: (_data, _err, id) => {
+      // Nettoyer hiddenIds une fois le refetch terminé
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] }).then(() => {
+        setHiddenIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+      });
     },
   });
 
   const restoreMutation = useMutation({
     mutationFn: (id: number) => apiRequest("PUT", `/api/preinscriptions/${id}/restore`),
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions/archived"] });
-      const previous = queryClient.getQueryData(["/api/preinscriptions/archived"]);
-      queryClient.setQueryData(["/api/preinscriptions/archived"], (old: any[] | undefined) =>
-        (old ?? []).filter((p: any) => p.id !== id)
-      );
-      return { previous };
+    onMutate: (id) => {
+      setHiddenArchiveIds(prev => new Set(prev).add(id));
     },
-    onError: (_err, _id, context: any) => {
-      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions/archived"], context.previous);
-    },
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
+    },
+    onError: (_err, id) => {
+      setHiddenArchiveIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+    },
+    onSettled: (_data, _err, id) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] }).then(() => {
+        setHiddenArchiveIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+      });
     },
   });
 
   const permanentDeleteMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}/permanent`),
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions/archived"] });
-      const previous = queryClient.getQueryData(["/api/preinscriptions/archived"]);
-      queryClient.setQueryData(["/api/preinscriptions/archived"], (old: any[] | undefined) =>
-        (old ?? []).filter((p: any) => p.id !== id)
-      );
-      return { previous };
+    onMutate: (id) => {
+      setHiddenArchiveIds(prev => new Set(prev).add(id));
     },
-    onError: (_err, _id, context: any) => {
-      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions/archived"], context.previous);
-    },
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
+    },
+    onError: (_err, id) => {
+      setHiddenArchiveIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+    },
+    onSettled: (_data, _err, id) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] }).then(() => {
+        setHiddenArchiveIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+      });
     },
   });
 

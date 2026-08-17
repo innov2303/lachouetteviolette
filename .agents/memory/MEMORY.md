@@ -1,0 +1,2 @@
+- [React Query cache race condition](react-query-race.md) — invalidateQueries + setQueryData insuffisant quand refetchInterval est actif; utiliser hiddenIds local state comme filtre d'affichage
+- [Routes Express non chargées](express-routes-stale.md) — tsx ne redémarre pas toujours le serveur auto; redémarrer le workflow manuellement après ajout de routes
