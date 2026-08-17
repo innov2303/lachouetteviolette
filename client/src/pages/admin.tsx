@@ -36,6 +36,15 @@ export default function Admin() {
   const [activeTab, setActiveTab] = useState("availability");
   const content = useAllContent();
 
+  // Compteur en_attente pour le badge de la sidebar — rafraîchi toutes les 30s
+  const { data: preinscriptionsBadge = [] } = useQuery<any[]>({
+    queryKey: ["/api/preinscriptions"],
+    enabled: !!auth.data,
+    refetchInterval: 30000,
+    staleTime: 0,
+  });
+  const pendingCount = preinscriptionsBadge.filter((p: any) => p.status === "en_attente").length;
+
   if (auth.isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -93,7 +102,12 @@ export default function Admin() {
                 }`}
               >
                 <tab.icon className="h-4 w-4" />
-                {tab.label}
+                <span className="flex-1 text-left">{tab.label}</span>
+                {tab.id === "preinscriptions" && pendingCount > 0 && (
+                  <span className="text-xs bg-[#c9a0dc] text-white rounded-full px-1.5 py-0.5 min-w-[18px] text-center leading-tight">
+                    {pendingCount}
+                  </span>
+                )}
               </button>
             ))}
           </nav>
@@ -175,6 +189,8 @@ function PreinscriptionsEditor() {
 
   const { data: preinscriptions = [], isLoading, isError, refetch } = useQuery<any[]>({
     queryKey: ["/api/preinscriptions"],
+    refetchInterval: 30000,
+    staleTime: 0,
   });
 
   const { data: archived = [], isLoading: archiveLoading, refetch: refetchArchive } = useQuery<any[]>({
