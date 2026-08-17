@@ -8,13 +8,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X, ClipboardList, ChevronDown } from "lucide-react";
 import { SiFacebook, SiInstagram } from "react-icons/si";
 import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, EmailRecipient } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import owlAvatar from "@assets/owl-avatar-realistic.png";
 
 const sectionTabs = [
+  { id: "preinscriptions", label: "Pré-inscriptions", icon: ClipboardList },
   { id: "availability", label: "Place disponible", icon: CalendarCheck },
   { id: "gallery", label: "Notre Maison", icon: Image },
   { id: "team", label: "Equipe", icon: Users },
@@ -98,7 +99,9 @@ export default function Admin() {
         </aside>
 
         <main className="flex-1 p-8 max-w-4xl">
-          {activeTab === "emailRecipients" ? (
+          {activeTab === "preinscriptions" ? (
+            <PreinscriptionsEditor />
+          ) : activeTab === "emailRecipients" ? (
             <EmailRecipientsEditor />
           ) : activeTab === "communication" ? (
             <CommunicationEditor />
@@ -121,6 +124,155 @@ export default function Admin() {
           ) : null}
         </main>
       </div>
+    </div>
+  );
+}
+
+const STATUS_OPTIONS = [
+  { value: "en_attente",          label: "En attente",           color: "bg-yellow-100 text-yellow-800 border-yellow-200" },
+  { value: "proposition_en_cours", label: "Proposition en cours", color: "bg-blue-100 text-blue-800 border-blue-200" },
+  { value: "valide",              label: "Validé",               color: "bg-green-100 text-green-800 border-green-200" },
+  { value: "annule",              label: "Annulé",               color: "bg-gray-100 text-gray-500 border-gray-200" },
+] as const;
+
+type PreinscriptionStatus = typeof STATUS_OPTIONS[number]["value"];
+
+function StatusBadge({ status, onSelect }: { status: string; onSelect: (s: PreinscriptionStatus) => void }) {
+  const [open, setOpen] = useState(false);
+  const current = STATUS_OPTIONS.find(s => s.value === status) ?? STATUS_OPTIONS[0];
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border cursor-pointer ${current.color}`}
+      >
+        {current.label}
+        <ChevronDown className="h-3 w-3" />
+      </button>
+      {open && (
+        <div className="absolute z-20 top-full mt-1 left-0 bg-white border border-border rounded-lg shadow-lg py-1 min-w-[180px]">
+          {STATUS_OPTIONS.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => { onSelect(opt.value); setOpen(false); }}
+              className={`w-full text-left px-3 py-2 text-xs hover:bg-muted transition-colors flex items-center gap-2 ${opt.value === status ? "font-semibold" : ""}`}
+            >
+              <span className={`inline-block w-2 h-2 rounded-full border ${opt.color}`} />
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PreinscriptionsEditor() {
+  const queryClient = useQueryClient();
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+
+  const { data: preinscriptions = [], isLoading, isError, refetch } = useQuery<any[]>({
+    queryKey: ["/api/preinscriptions"],
+  });
+
+  const statusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: number; status: string }) =>
+      apiRequest("PUT", `/api/preinscriptions/${id}/status`, { status }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] }),
+  });
+
+  const counts = STATUS_OPTIONS.map(s => ({
+    ...s,
+    count: preinscriptions.filter((p: any) => p.status === s.value).length,
+  }));
+
+  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" /></div>;
+  if (isError) return (
+    <div className="flex flex-col items-center justify-center py-20 gap-3">
+      <p className="text-red-500 font-medium">Impossible de charger les pré-inscriptions</p>
+      <Button variant="outline" size="sm" onClick={() => refetch()}>Réessayer</Button>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader title="Pré-inscriptions" description="Consultez et gérez le statut des demandes de pré-inscription reçues." />
+
+      {/* Compteurs par statut */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {counts.map(s => (
+          <div key={s.value} className={`rounded-xl border px-4 py-3 ${s.color}`}>
+            <p className="text-2xl font-bold">{s.count}</p>
+            <p className="text-xs mt-0.5">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {preinscriptions.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">
+          <ClipboardList className="h-12 w-12 mx-auto mb-3 opacity-30" />
+          <p>Aucune pré-inscription reçue pour le moment.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {preinscriptions.map((p: any) => (
+            <div key={p.id} className="border border-border rounded-xl bg-white overflow-hidden">
+              {/* En-tête de la carte */}
+              <div className="flex items-center justify-between px-4 py-3 gap-3">
+                <button
+                  className="flex-1 flex items-start gap-3 text-left"
+                  onClick={() => setExpandedId(expandedId === p.id ? null : p.id)}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm">{p.firstName} {p.lastName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{p.email} · {p.phone}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Enfant : <span className="font-medium">{p.childName}</span> · Né·e le {p.childBirthdate} · Début : {p.startDate}
+                    </p>
+                  </div>
+                  <ChevronDown className={`h-4 w-4 text-muted-foreground shrink-0 mt-1 transition-transform ${expandedId === p.id ? "rotate-180" : ""}`} />
+                </button>
+                <StatusBadge
+                  status={p.status ?? "en_attente"}
+                  onSelect={(status) => statusMutation.mutate({ id: p.id, status })}
+                />
+              </div>
+
+              {/* Détail dépliable */}
+              {expandedId === p.id && (
+                <div className="border-t border-border px-4 py-3 bg-muted/30 space-y-3 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Detail label="Adresse" value={p.address} />
+                    <Detail label="Situation familiale" value={p.familySituation === "autre" ? p.familySituationOther : p.familySituation} />
+                    <Detail label="Emploi" value={p.employment} />
+                    <Detail label="Jours souhaités" value={p.scheduleDays} />
+                    <Detail label="Fratrie" value={p.hasSiblings === "oui" ? "Oui" : "Non"} />
+                    <Detail label="Liste d'attente autre MAM" value={p.onWaitingList === "oui" ? "Oui" : "Non"} />
+                  </div>
+                  {p.expectations && (
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium mb-1">Attentes</p>
+                      <p className="text-sm leading-relaxed">{p.expectations}</p>
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Reçue le {p.createdAt ? new Date(p.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "—"}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Detail({ label, value }: { label: string; value?: string | null }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground font-medium">{label}</p>
+      <p className="text-sm">{value || "—"}</p>
     </div>
   );
 }

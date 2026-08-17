@@ -143,6 +143,19 @@ export async function registerRoutes(
     }
   });
 
+  app.put("/api/preinscriptions/:id/status", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      const validStatuses = ["en_attente", "proposition_en_cours", "valide", "annule"];
+      if (!validStatuses.includes(status)) return res.status(400).json({ message: "Statut invalide" });
+      const row = await storage.updatePreinscriptionStatus(id, status);
+      res.json(row);
+    } catch {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.get("/api/messages", requireAuth, async (_req, res) => {
     try {
       const msgs = await storage.getMessages();

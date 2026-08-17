@@ -36,6 +36,7 @@ export const preinscriptions = pgTable("preinscriptions", {
   startDate: text("start_date").notNull(),
   scheduleDays: text("schedule_days").notNull(),
   expectations: text("expectations"),
+  status: text("status").default("en_attente").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

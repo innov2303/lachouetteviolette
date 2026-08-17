@@ -7,6 +7,7 @@ export interface IStorage {
   getMessages(): Promise<Message[]>;
   createPreinscription(data: InsertPreinscription): Promise<Preinscription>;
   getPreinscriptions(): Promise<Preinscription[]>;
+  updatePreinscriptionStatus(id: number, status: string): Promise<Preinscription>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserById(id: number): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
@@ -35,6 +36,11 @@ export class DatabaseStorage implements IStorage {
 
   async getPreinscriptions(): Promise<Preinscription[]> {
     return await db.select().from(preinscriptions).orderBy(preinscriptions.createdAt);
+  }
+
+  async updatePreinscriptionStatus(id: number, status: string): Promise<Preinscription> {
+    const [row] = await db.update(preinscriptions).set({ status }).where(eq(preinscriptions.id, id)).returning();
+    return row;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
