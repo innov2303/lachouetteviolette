@@ -301,7 +301,8 @@ export async function registerRoutes(
       ]);
       const total = byDay.reduce((acc, r) => acc + r.count, 0);
       res.json({ byDay, bySource, total, period, since: since.toISOString() });
-    } catch {
+    } catch (err) {
+      console.error("[analytics]", err);
       res.status(500).json({ message: "Internal server error" });
     }
   });

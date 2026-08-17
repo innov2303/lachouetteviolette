@@ -131,9 +131,9 @@ export class DatabaseStorage implements IStorage {
       .from(pageVisits)
       .where(and(
         gte(pageVisits.visitedAt, since),
-        sql`is_admin = false`,
-        sql`source NOT LIKE '%.replit.dev'`,
-        sql`source NOT LIKE '%.repl.co'`,
+        eq(pageVisits.isAdmin, false),
+        sql`${pageVisits.source} NOT LIKE '%.replit.dev'`,
+        sql`${pageVisits.source} NOT LIKE '%.repl.co'`,
         ne(pageVisits.source, "replit.com"),
       ))
       .groupBy(sql`to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`)
@@ -150,9 +150,9 @@ export class DatabaseStorage implements IStorage {
       .from(pageVisits)
       .where(and(
         gte(pageVisits.visitedAt, since),
-        sql`is_admin = false`,
-        sql`source NOT LIKE '%.replit.dev'`,
-        sql`source NOT LIKE '%.repl.co'`,
+        eq(pageVisits.isAdmin, false),
+        sql`${pageVisits.source} NOT LIKE '%.replit.dev'`,
+        sql`${pageVisits.source} NOT LIKE '%.repl.co'`,
         ne(pageVisits.source, "replit.com"),
       ))
       .groupBy(pageVisits.source)
