@@ -202,28 +202,44 @@ function PreinscriptionsEditor() {
   const statusMutation = useMutation({
     mutationFn: ({ id, status }: { id: number; status: string }) =>
       apiRequest("PUT", `/api/preinscriptions/${id}/status`, { status }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] }),
+    onSuccess: (_data, { id, status }) => {
+      queryClient.setQueryData(["/api/preinscriptions"], (old: any[] | undefined) =>
+        (old ?? []).map((p: any) => p.id === id ? { ...p, status } : p)
+      );
+      refetch();
+    },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
+    onSuccess: (_data, id) => {
+      queryClient.setQueryData(["/api/preinscriptions"], (old: any[] | undefined) =>
+        (old ?? []).filter((p: any) => p.id !== id)
+      );
+      refetch();
+      if (view === "corbeille") refetchArchive();
     },
   });
 
   const restoreMutation = useMutation({
     mutationFn: (id: number) => apiRequest("PUT", `/api/preinscriptions/${id}/restore`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
+    onSuccess: (_data, id) => {
+      queryClient.setQueryData(["/api/preinscriptions/archived"], (old: any[] | undefined) =>
+        (old ?? []).filter((p: any) => p.id !== id)
+      );
+      refetch();
+      refetchArchive();
     },
   });
 
   const permanentDeleteMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}/permanent`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] }),
+    onSuccess: (_data, id) => {
+      queryClient.setQueryData(["/api/preinscriptions/archived"], (old: any[] | undefined) =>
+        (old ?? []).filter((p: any) => p.id !== id)
+      );
+      refetchArchive();
+    },
   });
 
   const counts = STATUS_OPTIONS.map(s => ({
