@@ -45,17 +45,18 @@ export default function Admin() {
   });
   const pendingCount = preinscriptionsBadge.filter((p: any) => p.status === "en_attente").length;
 
-  if (auth.isLoading) {
+  useEffect(() => {
+    if (!auth.isLoading && !auth.data) {
+      setLocation("/admin/login");
+    }
+  }, [auth.isLoading, auth.data]);
+
+  if (auth.isLoading || !auth.data) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-[#c9a0dc]" />
       </div>
     );
-  }
-
-  if (!auth.data) {
-    setLocation("/admin/login");
-    return null;
   }
 
   const handleLogout = () => {
