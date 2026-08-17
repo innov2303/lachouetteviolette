@@ -202,43 +202,75 @@ function PreinscriptionsEditor() {
   const statusMutation = useMutation({
     mutationFn: ({ id, status }: { id: number; status: string }) =>
       apiRequest("PUT", `/api/preinscriptions/${id}/status`, { status }),
-    onSuccess: (_data, { id, status }) => {
+    onMutate: async ({ id, status }) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions"] });
+      const previous = queryClient.getQueryData(["/api/preinscriptions"]);
       queryClient.setQueryData(["/api/preinscriptions"], (old: any[] | undefined) =>
         (old ?? []).map((p: any) => p.id === id ? { ...p, status } : p)
       );
-      refetch();
+      return { previous };
+    },
+    onError: (_err, _vars, context: any) => {
+      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions"], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}`),
-    onSuccess: (_data, id) => {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions"] });
+      const previous = queryClient.getQueryData(["/api/preinscriptions"]);
       queryClient.setQueryData(["/api/preinscriptions"], (old: any[] | undefined) =>
         (old ?? []).filter((p: any) => p.id !== id)
       );
-      refetch();
-      if (view === "corbeille") refetchArchive();
+      return { previous };
+    },
+    onError: (_err, _id, context: any) => {
+      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions"], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
     },
   });
 
   const restoreMutation = useMutation({
     mutationFn: (id: number) => apiRequest("PUT", `/api/preinscriptions/${id}/restore`),
-    onSuccess: (_data, id) => {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions/archived"] });
+      const previous = queryClient.getQueryData(["/api/preinscriptions/archived"]);
       queryClient.setQueryData(["/api/preinscriptions/archived"], (old: any[] | undefined) =>
         (old ?? []).filter((p: any) => p.id !== id)
       );
-      refetch();
-      refetchArchive();
+      return { previous };
+    },
+    onError: (_err, _id, context: any) => {
+      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions/archived"], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
     },
   });
 
   const permanentDeleteMutation = useMutation({
     mutationFn: (id: number) => apiRequest("DELETE", `/api/preinscriptions/${id}/permanent`),
-    onSuccess: (_data, id) => {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/preinscriptions/archived"] });
+      const previous = queryClient.getQueryData(["/api/preinscriptions/archived"]);
       queryClient.setQueryData(["/api/preinscriptions/archived"], (old: any[] | undefined) =>
         (old ?? []).filter((p: any) => p.id !== id)
       );
-      refetchArchive();
+      return { previous };
+    },
+    onError: (_err, _id, context: any) => {
+      if (context?.previous) queryClient.setQueryData(["/api/preinscriptions/archived"], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/preinscriptions/archived"] });
     },
   });
 
