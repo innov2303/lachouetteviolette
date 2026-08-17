@@ -10,6 +10,13 @@ const DEFAULT_RECIPIENTS: EmailRecipient[] = [
   { id: "jessica", label: "Jessica", email: "jessicabonnel31@gmail.com", active: true, isBcc: true },
 ];
 
+function formatDateFR(dateStr: string): string {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr + "T12:00:00");
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+}
+
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -150,13 +157,13 @@ export async function sendPreinscriptionEmail(data: {
       ${sectionTitle("Informations de l'enfant")}
       ${fieldsTable(
         fieldRow("Pr&eacute;nom", data.childName) +
-        fieldRow("Date de naissance", data.childBirthdate) +
+        fieldRow("Date de naissance", formatDateFR(data.childBirthdate)) +
         fieldRow("Fr&egrave;res et s&oelig;urs", data.hasSiblings ? 'Oui' : 'Non') +
         fieldRow("Liste d'attente cr&egrave;che", data.onWaitingList ? 'Oui' : 'Non')
       )}
       ${sectionTitle("Accueil souhait&eacute;")}
       ${fieldsTable(
-        fieldRow("Date de d&eacute;but", data.startDate) +
+        fieldRow("Date de d&eacute;but", formatDateFR(data.startDate)) +
         fieldRow("Jours et horaires", data.scheduleDays)
       )}
       ${data.expectations ? `
