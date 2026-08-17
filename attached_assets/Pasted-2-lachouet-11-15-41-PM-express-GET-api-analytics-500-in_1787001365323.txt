@@ -1,0 +1,59 @@
+2|lachouet | 11:15:41 PM [express] GET /api/analytics 500 in 10ms :: {"message":"Internal server error"}
+2|lachouet | 11:15:42 PM [express] GET /api/analytics 500 in 16ms :: {"message":"Internal server error"}
+2|lachouet | 11:15:43 PM [express] GET /api/analytics 500 in 13ms :: {"message":"Internal server error"}
+2|lachouet | 11:15:44 PM [express] GET /api/analytics 500 in 14ms :: {"message":"Internal server error"}
+2|lachouet | 11:15:44 PM [express] GET /api/analytics 500 in 15ms :: {"message":"Internal server error"}
+2|lachouet | 11:15:45 PM [express] GET /api/analytics 500 in 13ms :: {"message":"Internal server error"}
+2|lachouet | 11:15:45 PM [express] GET /api/analytics 500 in 14ms :: {"message":"Internal server error"}
+
+/root/.pm2/logs/lachouetteviolette-error.log last 50 lines:
+2|lachouet |     internalPosition: undefined,
+2|lachouet |     internalQuery: undefined,
+2|lachouet |     where: undefined,
+2|lachouet |     schema: undefined,
+2|lachouet |     table: undefined,
+2|lachouet |     column: undefined,
+2|lachouet |     dataType: undefined,
+2|lachouet |     constraint: undefined,
+2|lachouet |     file: 'aclchk.c',
+2|lachouet |     line: '2843',
+2|lachouet |     routine: 'aclcheck_error'
+2|lachouet |   }
+2|lachouet | }
+2|lachouet | [analytics] t [Error]: Failed query: select to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD'), cast(count(*) as int) from "page_visits" where ("page_visits"."visited_at" >= $1 and "page_visits"."is_admin" = $2 and "page_visits"."source" NOT LIKE '%.replit.dev' and "page_visits"."source" NOT LIKE '%.repl.co' and "page_visits"."source" <> $3) group by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD') order by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')
+2|lachouet | params: 2026-08-16T21:15:45.448Z,false,replit.com
+2|lachouet |     at Fb.queryWithCache (/var/www/lachouetteviolette/dist/index.cjs:66:37219)
+2|lachouet |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2|lachouet |     at async /var/www/lachouetteviolette/dist/index.cjs:145:74470
+2|lachouet |     ... 2 lines matching cause stack trace ...
+2|lachouet |     at async /var/www/lachouetteviolette/dist/index.cjs:213:7575 {
+2|lachouet |   query: `select to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD'), cast(count(*) as int) from "page_visits" where ("page_visits"."visited_at" >= $1 and "page_visits"."is_admin" = $2 and "page_visits"."source" NOT LIKE '%.replit.dev' and "page_visits"."source" NOT LIKE '%.repl.co' and "page_visits"."source" <> $3) group by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD') order by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`,
+2|lachouet |   params: [ '2026-08-16T21:15:45.448Z', false, 'replit.com' ],
+2|lachouet |   cause: error: permission denied for table page_visits
+2|lachouet |       at /var/www/lachouetteviolette/dist/index.cjs:59:16950
+2|lachouet |       at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2|lachouet |       at async /var/www/lachouetteviolette/dist/index.cjs:145:74679
+2|lachouet |       at async Fb.queryWithCache (/var/www/lachouetteviolette/dist/index.cjs:66:37194)
+2|lachouet |       at async /var/www/lachouetteviolette/dist/index.cjs:145:74470
+2|lachouet |       at async zb.getVisitsByDay (/var/www/lachouetteviolette/dist/index.cjs:145:79458)
+2|lachouet |       at async Promise.all (index 0)
+2|lachouet |       at async /var/www/lachouetteviolette/dist/index.cjs:213:7575 {
+2|lachouet |     length: 99,
+2|lachouet |     severity: 'ERROR',
+2|lachouet |     code: '42501',
+2|lachouet |     detail: undefined,
+2|lachouet |     hint: undefined,
+2|lachouet |     position: undefined,
+2|lachouet |     internalPosition: undefined,
+2|lachouet |     internalQuery: undefined,
+2|lachouet |     where: undefined,
+2|lachouet |     schema: undefined,
+2|lachouet |     table: undefined,
+2|lachouet |     column: undefined,
+2|lachouet |     dataType: undefined,
+2|lachouet |     constraint: undefined,
+2|lachouet |     file: 'aclchk.c',
+2|lachouet |     line: '2843',
+2|lachouet |     routine: 'aclcheck_error'
+2|lachouet |   }
+2|lachouet | }
