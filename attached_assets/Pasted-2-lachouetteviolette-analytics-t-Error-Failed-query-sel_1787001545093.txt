@@ -1,0 +1,37 @@
+2|lachouetteviolette  | [analytics] t [Error]: Failed query: select to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD'), cast(count(*) as int) from "page_visits" where ("page_visits"."visited_at" >= $1 and "page_visits"."is_admin" = $2 and "page_visits"."source" NOT LIKE '%.replit.dev' and "page_visits"."source" NOT LIKE '%.repl.co' and "page_visits"."source" <> $3) group by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD') order by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')
+2|lachouetteviolette  | params: 2026-08-16T21:18:55.906Z,false,replit.com
+2|lachouetteviolette  |     at Fb.queryWithCache (/var/www/lachouetteviolette/dist/index.cjs:66:37219)
+2|lachouetteviolette  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2|lachouetteviolette  |     at async /var/www/lachouetteviolette/dist/index.cjs:145:74470
+2|lachouetteviolette  |     ... 2 lines matching cause stack trace ...
+2|lachouetteviolette  |     at async /var/www/lachouetteviolette/dist/index.cjs:213:7575 {
+2|lachouetteviolette  |   query: `select to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD'), cast(count(*) as int) from "page_visits" where ("page_visits"."visited_at" >= $1 and "page_visits"."is_admin" = $2 and "page_visits"."source" NOT LIKE '%.replit.dev' and "page_visits"."source" NOT LIKE '%.repl.co' and "page_visits"."source" <> $3) group by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD') order by to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`,
+2|lachouetteviolette  |   params: [ '2026-08-16T21:18:55.906Z', false, 'replit.com' ],
+2|lachouetteviolette  |   cause: error: permission denied for table page_visits
+2|lachouetteviolette  |       at /var/www/lachouetteviolette/dist/index.cjs:59:16950
+2|lachouetteviolette  |       at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2|lachouetteviolette  |       at async /var/www/lachouetteviolette/dist/index.cjs:145:74679
+2|lachouetteviolette  |       at async Fb.queryWithCache (/var/www/lachouetteviolette/dist/index.cjs:66:37194)
+2|lachouetteviolette  |       at async /var/www/lachouetteviolette/dist/index.cjs:145:74470
+2|lachouetteviolette  |       at async zb.getVisitsByDay (/var/www/lachouetteviolette/dist/index.cjs:145:79458)
+2|lachouetteviolette  |       at async Promise.all (index 0)
+2|lachouetteviolette  |       at async /var/www/lachouetteviolette/dist/index.cjs:213:7575 {
+2|lachouetteviolette  |     length: 99,
+2|lachouetteviolette  |     severity: 'ERROR',
+2|lachouetteviolette  |     code: '42501',
+2|lachouetteviolette  |     detail: undefined,
+2|lachouetteviolette  |     hint: undefined,
+2|lachouetteviolette  |     position: undefined,
+2|lachouetteviolette  |     internalPosition: undefined,
+2|lachouetteviolette  |     internalQuery: undefined,
+2|lachouetteviolette  |     where: undefined,
+2|lachouetteviolette  |     schema: undefined,
+2|lachouetteviolette  |     table: undefined,
+2|lachouetteviolette  |     column: undefined,
+2|lachouetteviolette  |     dataType: undefined,
+2|lachouetteviolette  |     constraint: undefined,
+2|lachouetteviolette  |     file: 'aclchk.c',
+2|lachouetteviolette  |     line: '2843',
+2|lachouetteviolette  |     routine: 'aclcheck_error'
+2|lachouetteviolette  |   }
+2|lachouetteviolette  | }
