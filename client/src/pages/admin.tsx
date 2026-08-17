@@ -216,7 +216,7 @@ function PreinscriptionsEditor() {
       ) : (
         <div className="space-y-3">
           {preinscriptions.map((p: any) => (
-            <div key={p.id} className="border border-border rounded-xl bg-white overflow-hidden">
+            <div key={p.id} className="border border-border rounded-xl bg-white">
               {/* En-tête de la carte */}
               <div className="flex items-center justify-between px-4 py-3 gap-3">
                 <button
