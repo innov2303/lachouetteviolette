@@ -1,6 +1,6 @@
 import { db } from "./db";
 import { messages, preinscriptions, users, siteContent, pageVisits, type InsertMessage, type Message, type InsertPreinscription, type Preinscription, type User, type InsertUser, type SiteContent, type PageVisit } from "@shared/schema";
-import { eq, gte, isNull, isNotNull, sql } from "drizzle-orm";
+import { eq, gte, isNull, isNotNull, sql, and, ne } from "drizzle-orm";
 
 export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
@@ -129,7 +129,13 @@ export class DatabaseStorage implements IStorage {
         count: sql<number>`cast(count(*) as int)`,
       })
       .from(pageVisits)
-      .where(gte(pageVisits.visitedAt, since))
+      .where(and(
+        gte(pageVisits.visitedAt, since),
+        sql`is_admin = false`,
+        sql`source NOT LIKE '%.replit.dev'`,
+        sql`source NOT LIKE '%.repl.co'`,
+        ne(pageVisits.source, "replit.com"),
+      ))
       .groupBy(sql`to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`)
       .orderBy(sql`to_char(visited_at AT TIME ZONE 'Europe/Paris', 'YYYY-MM-DD')`);
     return rows;
@@ -142,7 +148,13 @@ export class DatabaseStorage implements IStorage {
         count: sql<number>`cast(count(*) as int)`,
       })
       .from(pageVisits)
-      .where(gte(pageVisits.visitedAt, since))
+      .where(and(
+        gte(pageVisits.visitedAt, since),
+        sql`is_admin = false`,
+        sql`source NOT LIKE '%.replit.dev'`,
+        sql`source NOT LIKE '%.repl.co'`,
+        ne(pageVisits.source, "replit.com"),
+      ))
       .groupBy(pageVisits.source)
       .orderBy(sql`count(*) desc`);
     return rows;

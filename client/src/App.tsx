@@ -13,6 +13,15 @@ function PageTracker() {
   const [location] = useLocation();
   useEffect(() => {
     if (location.startsWith("/admin")) return;
+    // Ne pas tracker les visites en environnement local/dev
+    const host = window.location.hostname;
+    const isLocal =
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host.endsWith(".replit.dev") ||
+      host.endsWith(".janeway.replit.dev") ||
+      host.endsWith(".repl.co");
+    if (isLocal) return;
     const source = document.referrer || "direct";
     fetch("/api/analytics/visit", {
       method: "POST",
