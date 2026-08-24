@@ -429,9 +429,76 @@ function PreinscriptionDialog({ open, onOpenChange }: { open: boolean; onOpenCha
   );
 }
 
+function ContactChoiceDialog({
+  open,
+  onOpenChange,
+  onContact,
+  onPreinscription,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  onContact: () => void;
+  onPreinscription: () => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl" data-testid="dialog-contact-choice">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3 text-xl">
+            <div className="w-10 h-10 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+              <MessageCircle size={18} />
+            </div>
+            Comment pouvons-nous vous aider ?
+          </DialogTitle>
+          <DialogDescription>
+            Choisissez le motif de votre demande pour être orienté vers le bon formulaire.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid grid-cols-1 gap-4 pt-2">
+          <button
+            type="button"
+            onClick={onContact}
+            data-testid="button-choice-contact"
+            className="flex items-center gap-4 text-left rounded-xl border-2 border-[#c9a0dc] bg-[#c9a0dc]/5 px-5 py-4 text-foreground transition-all duration-300 hover:bg-[#c9a0dc] hover:text-white group"
+          >
+            <span className="w-11 h-11 rounded-xl bg-[#c9a0dc]/15 text-[#c9a0dc] group-hover:bg-white/20 group-hover:text-white flex items-center justify-center shrink-0">
+              <MessageCircle size={20} />
+            </span>
+            <span>
+              <span className="block font-semibold">Contactez-nous</span>
+              <span className="block text-sm text-muted-foreground group-hover:text-white/80 mt-1">
+                Vous souhaitez avoir plus d'informations sur la MAM et son fonctionnement ?
+              </span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onPreinscription}
+            data-testid="button-choice-preinscription"
+            className="flex items-center gap-4 text-left rounded-xl border border-border bg-card px-5 py-4 text-foreground transition-all duration-300 hover:border-[#c9a0dc] hover:bg-[#c9a0dc]/5 group"
+          >
+            <span className="w-11 h-11 rounded-xl bg-[#c9a0dc]/10 text-[#c9a0dc] flex items-center justify-center shrink-0">
+              <ClipboardList size={20} />
+            </span>
+            <span>
+              <span className="block font-semibold">Pré-inscription</span>
+              <span className="block text-sm text-muted-foreground mt-1">
+                Vous souhaitez faire une demande de pré-inscription pour votre enfant ?
+              </span>
+            </span>
+          </button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function Contact() {
   const { data } = useSectionContent<ContactContent>("contact");
   const { data: socialLinks } = useSectionContent<SocialLinksContent>("socialLinks");
+  const [contactChoiceOpen, setContactChoiceOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [preinscriptionOpen, setPreinscriptionOpen] = useState(false);
 
@@ -540,25 +607,15 @@ export default function Contact() {
             viewport={{ once: true }}
             className="lg:col-span-3 flex flex-col gap-6"
           >
-            <div className="grid grid-cols-2 gap-4">
+            <div>
               <button
                 type="button"
-                onClick={() => setContactOpen(true)}
+                onClick={() => setContactChoiceOpen(true)}
                 data-testid="button-open-contact"
-                className="flex items-center justify-center gap-2 bg-[#c9a0dc] hover:bg-[#b88fd0] text-white rounded-xl px-6 py-3 font-semibold transition-colors duration-300 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 bg-[#c9a0dc] hover:bg-[#b88fd0] text-white rounded-xl px-6 py-3 font-semibold transition-colors duration-300 cursor-pointer"
               >
                 <MessageCircle size={18} />
                 Nous contacter
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setPreinscriptionOpen(true)}
-                data-testid="button-open-preinscription"
-                className="flex items-center justify-center gap-2 border-2 border-[#c9a0dc] text-[#c9a0dc] hover:bg-[#c9a0dc] hover:text-white rounded-xl px-6 py-3 font-semibold transition-colors duration-300 cursor-pointer"
-              >
-                <ClipboardList size={18} />
-                Pre-inscription
               </button>
             </div>
 
@@ -606,6 +663,18 @@ export default function Contact() {
         </div>
       </div>
 
+      <ContactChoiceDialog
+        open={contactChoiceOpen}
+        onOpenChange={setContactChoiceOpen}
+        onContact={() => {
+          setContactChoiceOpen(false);
+          setContactOpen(true);
+        }}
+        onPreinscription={() => {
+          setContactChoiceOpen(false);
+          setPreinscriptionOpen(true);
+        }}
+      />
       <ContactDialog open={contactOpen} onOpenChange={setContactOpen} />
       <PreinscriptionDialog open={preinscriptionOpen} onOpenChange={setPreinscriptionOpen} />
     </section>
