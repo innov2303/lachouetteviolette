@@ -1063,13 +1063,17 @@ function ActivitiesEditor({ data }: { data?: ActivityContent }) {
                     {uploadingIndex === index ? "Envoi en cours..." : activity.image ? "Remplacer la photo" : "Ajouter une photo"}
                     <input
                       type="file"
-                      accept="image/*"
+                      accept=".jpg,.jpeg,.png,.gif,.webp"
                       className="hidden"
                       disabled={uploadingIndex !== null}
                       onChange={(event) => uploadActivityImage(index, event)}
                       data-testid={`input-upload-activity-image-${index}`}
                     />
                   </label>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    Format paysage conseillé : 4:3 (par exemple 1 200 × 900 px). La photo est recadrée automatiquement pour remplir le cadre.
+                    Formats acceptés : JPG, JPEG, PNG, GIF ou WebP. Taille maximale : 10 Mo.
+                  </p>
                   <Input
                     value={activity.imageAlt}
                     onChange={(event) => updateActivity(index, "imageAlt", event.target.value)}
