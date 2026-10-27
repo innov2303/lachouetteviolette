@@ -1209,6 +1209,10 @@ function TeamEditor({ data }: { data: TeamContent }) {
                       data-testid={`input-member-photo-${i}`}
                     />
                   </label>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    Format carré conseillé (1:1), 600 × 600 px minimum. Gardez le visage centré : la photo sera recadrée en cercle.
+                    Formats acceptés : JPG, JPEG, PNG, GIF ou WebP. Taille maximale : 10 Mo.
+                  </p>
                 </div>
                 <Textarea placeholder="Biographie" value={member.bio} onChange={(e) => updateMember(i, "bio", e.target.value)} data-testid={`input-member-bio-${i}`} />
               </div>
