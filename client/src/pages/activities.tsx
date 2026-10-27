@@ -14,6 +14,13 @@ const EXAMPLE_ACTIVITIES: ActivityContent["activities"] = [
     image: "/uploads/1772395021351-3kp2e3.jpg",
     imageAlt: "Activité créative et sensorielle à la MAM",
   },
+  {
+    title: "Jeux d’eau et exploration",
+    description:
+      "Les enfants expérimentent l’eau, les mouvements et les sensations à travers le jeu. Un moment de découverte partagé, adapté à leur curiosité et à leur rythme.",
+    image: "/uploads/1772394951765-083ra1.jpg",
+    imageAlt: "Jeux d’eau et exploration sensorielle à la MAM",
+  },
 ];
 
 export default function Activities() {
@@ -61,7 +68,7 @@ export default function Activities() {
           )}
 
           {activities.length > 0 ? (
-            <div className="mx-auto grid max-w-6xl grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 md:gap-7">
               {activities.map((activity, index) => (
                 <motion.article
                   key={`${activity.title}-${index}`}
@@ -69,8 +76,16 @@ export default function Activities() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.24) }}
-                  className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg"
+                  className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow hover:shadow-lg"
                 >
+                  <div className="flex-1 p-3 sm:p-5 md:p-6">
+                    <h2 className="mb-2 font-display text-base font-semibold text-foreground sm:mb-3 sm:text-xl md:text-2xl">
+                      {activity.title}
+                    </h2>
+                    <p className="whitespace-pre-line text-xs leading-relaxed text-muted-foreground sm:text-sm md:text-base">
+                      {activity.description}
+                    </p>
+                  </div>
                   {activity.image ? (
                     <div className="aspect-[4/3] overflow-hidden bg-[#c9a0dc]/10">
                       <img
@@ -85,14 +100,6 @@ export default function Activities() {
                       <Sparkles className="h-10 w-10" aria-hidden="true" />
                     </div>
                   )}
-                  <div className="p-6">
-                    <h2 className="mb-3 font-display text-2xl font-semibold text-foreground">
-                      {activity.title}
-                    </h2>
-                    <p className="whitespace-pre-line leading-relaxed text-muted-foreground">
-                      {activity.description}
-                    </p>
-                  </div>
                 </motion.article>
               ))}
             </div>
