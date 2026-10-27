@@ -38,9 +38,9 @@ export default function Footer() {
                 { name: "Accueil", href: "/" },
                 { name: "Notre Maison", href: "/#gallery" },
                 { name: "L'Equipe", href: "/#team" },
-                { name: "Nos activités", href: "/activites" },
                 { name: "Notre pedagogie", href: "/#project" },
                 { name: "Familiarisation", href: "/#familiarisation" },
+                { name: "Nos activités", href: "/activites" },
                 { name: "Contact", href: "/#contact" },
               ].map((link) => (
                 <li key={link.name}>
