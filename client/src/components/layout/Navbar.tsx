@@ -3,12 +3,13 @@ import { Menu, X } from "lucide-react";
 import logoImg from "@assets/La_chouette_violette_1772195969012.png";
 
 const navLinks = [
-  { name: "Accueil", href: "#" },
-  { name: "Notre Maison", href: "#gallery" },
-  { name: "L'Equipe", href: "#team" },
-  { name: "Notre pedagogie", href: "#project" },
-  { name: "Familiarisation", href: "#familiarisation" },
-  { name: "Contact", href: "#contact" },
+  { name: "Accueil", href: "/" },
+  { name: "Notre Maison", href: "/#gallery" },
+  { name: "L'Equipe", href: "/#team" },
+  { name: "Nos activités", href: "/activites" },
+  { name: "Notre pedagogie", href: "/#project" },
+  { name: "Familiarisation", href: "/#familiarisation" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -21,7 +22,7 @@ export default function Navbar() {
         className="sticky top-0 z-50 bg-white border-b border-border py-2"
       >
         <div className="container mx-auto px-6 flex items-center">
-          <a href="#" data-testid="nav-logo" className="flex-shrink-0 mr-8">
+          <a href="/" data-testid="nav-logo" className="flex-shrink-0 mr-8">
             <img src={logoImg} alt="La chouette violette" className="h-12 w-auto" />
           </a>
 

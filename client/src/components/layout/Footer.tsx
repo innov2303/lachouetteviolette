@@ -35,12 +35,13 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2">
               {[
-                { name: "Accueil", href: "#" },
-                { name: "Notre Maison", href: "#gallery" },
-                { name: "L'Equipe", href: "#team" },
-                { name: "Notre pedagogie", href: "#project" },
-                { name: "Familiarisation", href: "#familiarisation" },
-                { name: "Contact", href: "#contact" },
+                { name: "Accueil", href: "/" },
+                { name: "Notre Maison", href: "/#gallery" },
+                { name: "L'Equipe", href: "/#team" },
+                { name: "Nos activités", href: "/activites" },
+                { name: "Notre pedagogie", href: "/#project" },
+                { name: "Familiarisation", href: "/#familiarisation" },
+                { name: "Contact", href: "/#contact" },
               ].map((link) => (
                 <li key={link.name}>
                   <a

@@ -8,10 +8,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X, ClipboardList, ChevronDown, Phone, MapPin, Briefcase, Baby, Calendar, Clock, MessageSquare, UserCheck, RotateCcw, AlertTriangle } from "lucide-react";
+import { Loader2, LogOut, Save, Home, Image, Users, BookOpen, Mail, Plus, Trash2, CalendarCheck, ToggleLeft, ToggleRight, Share2, Heart, Megaphone, Download, BarChart2, TrendingUp, Globe, Users2, Send, Eye, EyeOff, Pencil, Check, X, ClipboardList, ChevronDown, Phone, MapPin, Briefcase, Baby, Calendar, Clock, MessageSquare, UserCheck, RotateCcw, AlertTriangle, Sparkles } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { SiFacebook, SiInstagram } from "react-icons/si";
-import type { HeroContent, GalleryContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, EmailRecipient } from "@shared/schema";
+import type { HeroContent, GalleryContent, ActivityContent, TeamContent, ProjectContent, ContactContent, AvailabilityContent, SocialLinksContent, EmailRecipient } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import owlAvatar from "@assets/owl-avatar-realistic.png";
 
@@ -19,6 +19,7 @@ const sectionTabs = [
   { id: "preinscriptions", label: "Pré-inscriptions", icon: ClipboardList },
   { id: "availability", label: "Place disponible", icon: CalendarCheck },
   { id: "gallery", label: "Notre Maison", icon: Image },
+  { id: "activities", label: "Nos activités", icon: Sparkles },
   { id: "team", label: "Equipe", icon: Users },
   { id: "project", label: "Pedagogie", icon: BookOpen },
   { id: "familiarisation", label: "Familiarisation", icon: Heart },
@@ -131,6 +132,7 @@ export default function Admin() {
             <>
               {activeTab === "availability" && <AvailabilityEditor data={(content.data as Record<string, unknown>).availability as AvailabilityContent} />}
               {activeTab === "gallery" && <GalleryEditor data={(content.data as Record<string, unknown>).gallery as GalleryContent} />}
+              {activeTab === "activities" && <ActivitiesEditor data={(content.data as Record<string, unknown>).activities as ActivityContent | undefined} />}
               {activeTab === "team" && <TeamEditor data={(content.data as Record<string, unknown>).team as TeamContent} />}
               {activeTab === "project" && <ProjectEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
               {activeTab === "familiarisation" && <FamiliarisationEditor data={(content.data as Record<string, unknown>).project as ProjectContent} />}
@@ -882,6 +884,212 @@ function GalleryEditor({ data }: { data: GalleryContent }) {
 
         <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-gallery" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
           {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+          Enregistrer
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function ActivitiesEditor({ data }: { data?: ActivityContent }) {
+  const [form, setForm] = useState<ActivityContent>(() => data ?? {
+    pageTitle: "Les activités de la Chouette Violette",
+    pageDescription: "",
+    activities: [],
+  });
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const update = useUpdateContent("activities");
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    update.mutate(form, {
+      onSuccess: () => toast({ title: "Page des activités mise à jour" }),
+      onError: () => toast({ title: "Erreur lors de l'enregistrement", variant: "destructive" }),
+    });
+  };
+
+  const updateActivity = (index: number, field: keyof ActivityContent["activities"][number], value: string) => {
+    setForm((current) => ({
+      ...current,
+      activities: current.activities.map((activity, i) =>
+        i === index ? { ...activity, [field]: value } : activity
+      ),
+    }));
+  };
+
+  const addActivity = () => {
+    setForm((current) => ({
+      ...current,
+      activities: [...current.activities, { title: "", description: "", image: "", imageAlt: "" }],
+    }));
+  };
+
+  const removeActivity = (index: number) => {
+    setForm((current) => ({
+      ...current,
+      activities: current.activities.filter((_, i) => i !== index),
+    }));
+  };
+
+  const uploadActivityImage = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingIndex(index);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Upload échoué");
+      const { url } = await response.json();
+      setForm((current) => ({
+        ...current,
+        activities: current.activities.map((activity, i) =>
+          i === index
+            ? { ...activity, image: url, imageAlt: activity.imageAlt || file.name.replace(/\.[^/.]+$/, "") }
+            : activity
+        ),
+      }));
+      toast({ title: "Photo ajoutée" });
+    } catch {
+      toast({ title: "Erreur lors de l'envoi de la photo", variant: "destructive" });
+    } finally {
+      setUploadingIndex(null);
+      event.target.value = "";
+    }
+  };
+
+  return (
+    <div>
+      <SectionHeader
+        title="Page Nos activités"
+        description="Gérez le titre de la page et les activités présentées aux familles."
+      />
+      <div className="space-y-6">
+        <div className="space-y-4 rounded-lg border bg-card p-4">
+          <div>
+            <FieldLabel>Titre de la page</FieldLabel>
+            <Input
+              value={form.pageTitle}
+              onChange={(event) => setForm((current) => ({ ...current, pageTitle: event.target.value }))}
+              data-testid="input-activities-page-title"
+            />
+          </div>
+          <div>
+            <FieldLabel>Texte d’introduction (facultatif)</FieldLabel>
+            <Textarea
+              value={form.pageDescription}
+              onChange={(event) => setForm((current) => ({ ...current, pageDescription: event.target.value }))}
+              data-testid="input-activities-page-description"
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <FieldLabel>Activités présentées</FieldLabel>
+            <Button type="button" variant="outline" size="sm" onClick={addActivity} data-testid="button-add-activity">
+              <Plus className="mr-1 h-4 w-4" /> Ajouter une activité
+            </Button>
+          </div>
+
+          {form.activities.length === 0 && (
+            <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              Aucune activité pour le moment. Ajoutez-en une pour la présenter sur le site.
+            </p>
+          )}
+
+          <div className="space-y-4">
+            {form.activities.map((activity, index) => (
+              <div key={index} className="space-y-4 rounded-lg border bg-muted/30 p-4" data-testid={`admin-activity-${index}`}>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium">Activité {index + 1}</h3>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeActivity(index)}
+                    className="text-destructive hover:text-destructive"
+                    data-testid={`button-remove-activity-${index}`}
+                  >
+                    <Trash2 className="mr-1 h-4 w-4" /> Supprimer
+                  </Button>
+                </div>
+                <div>
+                  <FieldLabel>Titre de l’activité</FieldLabel>
+                  <Input
+                    value={activity.title}
+                    onChange={(event) => updateActivity(index, "title", event.target.value)}
+                    placeholder="Ex. Atelier peinture"
+                    data-testid={`input-activity-title-${index}`}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Description</FieldLabel>
+                  <Textarea
+                    value={activity.description}
+                    onChange={(event) => updateActivity(index, "description", event.target.value)}
+                    placeholder="Décrivez cette activité..."
+                    className="min-h-[110px]"
+                    data-testid={`input-activity-description-${index}`}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <FieldLabel>Photo</FieldLabel>
+                  {activity.image && (
+                    <div className="relative max-w-sm overflow-hidden rounded-lg border bg-background">
+                      <img src={activity.image} alt={activity.imageAlt || activity.title} className="aspect-[4/3] w-full object-cover" />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          updateActivity(index, "image", "");
+                          updateActivity(index, "imageAlt", "");
+                        }}
+                        className="absolute right-2 top-2"
+                        data-testid={`button-remove-activity-image-${index}`}
+                      >
+                        <Trash2 className="mr-1 h-4 w-4" /> Retirer
+                      </Button>
+                    </div>
+                  )}
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted">
+                    <Image className="h-4 w-4" />
+                    {uploadingIndex === index ? "Envoi en cours..." : activity.image ? "Remplacer la photo" : "Ajouter une photo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploadingIndex !== null}
+                      onChange={(event) => uploadActivityImage(index, event)}
+                      data-testid={`input-upload-activity-image-${index}`}
+                    />
+                  </label>
+                  <Input
+                    value={activity.imageAlt}
+                    onChange={(event) => updateActivity(index, "imageAlt", event.target.value)}
+                    placeholder="Texte alternatif de la photo"
+                    aria-label={`Texte alternatif de la photo de l’activité ${index + 1}`}
+                    data-testid={`input-activity-image-alt-${index}`}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Button
+          onClick={handleSave}
+          disabled={update.isPending || uploadingIndex !== null}
+          data-testid="button-save-activities"
+          className="bg-[#c9a0dc] text-white hover:bg-[#b88fd0]"
+        >
+          {update.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
           Enregistrer
         </Button>
       </div>

@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import AdminLogin from "@/pages/admin-login";
 import Admin from "@/pages/admin";
+import Activities from "@/pages/activities";
 
 function PageTracker() {
   const [location] = useLocation();
@@ -36,6 +37,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/activites" component={Activities} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />

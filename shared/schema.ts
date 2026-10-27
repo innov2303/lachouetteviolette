@@ -102,6 +102,17 @@ export const galleryContentSchema = z.object({
   })),
 });
 
+export const activityContentSchema = z.object({
+  pageTitle: z.string(),
+  pageDescription: z.string(),
+  activities: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+    image: z.string(),
+    imageAlt: z.string(),
+  })),
+});
+
 export const teamContentSchema = z.object({
   sectionLabel: z.string(),
   title: z.string(),
@@ -196,6 +207,7 @@ export type AvailabilityContent = z.infer<typeof availabilityContentSchema>;
 export type SocialLinksContent = z.infer<typeof socialLinksContentSchema>;
 export type HeroContent = z.infer<typeof heroContentSchema>;
 export type GalleryContent = z.infer<typeof galleryContentSchema>;
+export type ActivityContent = z.infer<typeof activityContentSchema>;
 export type TeamContent = z.infer<typeof teamContentSchema>;
 export type ProjectContent = z.infer<typeof projectContentSchema>;
 export type ContactContent = z.infer<typeof contactContentSchema>;
