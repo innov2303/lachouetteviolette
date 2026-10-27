@@ -1099,6 +1099,7 @@ function ActivitiesEditor({ data }: { data?: ActivityContent }) {
 
 function TeamEditor({ data }: { data: TeamContent }) {
   const [form, setForm] = useState(data);
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
   const update = useUpdateContent("team");
   const { toast } = useToast();
 
@@ -1113,6 +1114,36 @@ function TeamEditor({ data }: { data: TeamContent }) {
     const members = [...form.members];
     members[index] = { ...members[index], [field]: value };
     setForm({ ...form, members });
+  };
+
+  const uploadMemberPhoto = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingIndex(index);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Upload échoué");
+      const { url } = await response.json();
+      setForm((current) => ({
+        ...current,
+        members: current.members.map((member, memberIndex) =>
+          memberIndex === index ? { ...member, image: url } : member
+        ),
+      }));
+      toast({ title: "Photo ajoutée" });
+    } catch {
+      toast({ title: "Erreur lors de l'envoi de la photo", variant: "destructive" });
+    } finally {
+      setUploadingIndex(null);
+      event.target.value = "";
+    }
   };
 
   const addMember = () => setForm({ ...form, members: [...form.members, { name: "", role: "", bio: "", image: "" }] });
@@ -1130,7 +1161,7 @@ function TeamEditor({ data }: { data: TeamContent }) {
         <div>
           <div className="flex items-center justify-between mb-3">
             <FieldLabel>Membres de l'equipe</FieldLabel>
-            <Button variant="outline" size="sm" onClick={addMember} data-testid="button-add-member">
+            <Button variant="outline" size="sm" onClick={addMember} disabled={uploadingIndex !== null} data-testid="button-add-member">
               <Plus className="h-4 w-4 mr-1" /> Ajouter
             </Button>
           </div>
@@ -1139,20 +1170,53 @@ function TeamEditor({ data }: { data: TeamContent }) {
               <div key={i} className="p-4 border rounded-md bg-muted/50 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-foreground">Membre {i + 1}</span>
-                  <Button variant="ghost" size="sm" onClick={() => removeMember(i)} className="text-destructive" data-testid={`button-remove-member-${i}`}>
+                  <Button variant="ghost" size="sm" onClick={() => removeMember(i)} disabled={uploadingIndex !== null} className="text-destructive" data-testid={`button-remove-member-${i}`}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
                 <Input placeholder="Nom" value={member.name} onChange={(e) => updateMember(i, "name", e.target.value)} data-testid={`input-member-name-${i}`} />
                 <Input placeholder="Role" value={member.role} onChange={(e) => updateMember(i, "role", e.target.value)} data-testid={`input-member-role-${i}`} />
+                <div className="space-y-3 rounded-md border bg-background p-3">
+                  {member.image?.startsWith("/uploads/") ? (
+                    <div className="flex items-center gap-3">
+                      <img src={member.image} alt={member.name || `Membre ${i + 1}`} className="h-20 w-20 rounded-full object-cover" />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => updateMember(i, "image", "")}
+                        disabled={uploadingIndex !== null}
+                        className="text-destructive"
+                        data-testid={`button-remove-member-photo-${i}`}
+                      >
+                        <Trash2 className="mr-1 h-4 w-4" /> Retirer la photo
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Aucune photo importée : l’avatar chouette par défaut sera affiché.
+                    </p>
+                  )}
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted">
+                    <Image className="h-4 w-4" />
+                    {uploadingIndex === i ? "Envoi en cours..." : member.image?.startsWith("/uploads/") ? "Remplacer la photo" : "Ajouter une photo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploadingIndex !== null}
+                      onChange={(event) => uploadMemberPhoto(i, event)}
+                      data-testid={`input-member-photo-${i}`}
+                    />
+                  </label>
+                </div>
                 <Textarea placeholder="Biographie" value={member.bio} onChange={(e) => updateMember(i, "bio", e.target.value)} data-testid={`input-member-bio-${i}`} />
-                <Input placeholder="URL de la photo" value={member.image} onChange={(e) => updateMember(i, "image", e.target.value)} data-testid={`input-member-image-${i}`} />
               </div>
             ))}
           </div>
         </div>
 
-        <Button onClick={handleSave} disabled={update.isPending} data-testid="button-save-team" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
+        <Button onClick={handleSave} disabled={update.isPending || uploadingIndex !== null} data-testid="button-save-team" className="bg-[#c9a0dc] hover:bg-[#b88fd0] text-white">
           {update.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
           Enregistrer
         </Button>
