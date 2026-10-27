@@ -30,7 +30,7 @@ async function main() {
 
   const result = await client.query("SELECT id FROM users WHERE username = $1", [username]);
   if (result.rows.length === 0) {
-    console.error(`Erreur: l'utilisateur "${username}" n'existe pas.`);
+    console.error("Erreur: utilisateur introuvable.");
     await client.end();
     process.exit(1);
   }
@@ -38,7 +38,7 @@ async function main() {
   const hashed = await hashPassword(newPassword);
   await client.query("UPDATE users SET password = $1 WHERE username = $2", [hashed, username]);
 
-  console.log(`Mot de passe de "${username}" mis à jour avec succès.`);
+  console.log("Mot de passe mis à jour avec succès.");
   await client.end();
 }
 

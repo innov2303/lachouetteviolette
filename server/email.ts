@@ -13,8 +13,26 @@ const DEFAULT_RECIPIENTS: EmailRecipient[] = [
 function formatDateFR(dateStr: string): string {
   if (!dateStr) return "—";
   const d = new Date(dateStr + "T12:00:00");
-  if (isNaN(d.getTime())) return dateStr;
+  if (isNaN(d.getTime())) return escapeHtml(dateStr);
   return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character]!);
+}
+
+function escapeHtmlWithBreaks(value: string): string {
+  return escapeHtml(value).replace(/\r\n?|\n/g, "<br>");
+}
+
+function safeEmailHeader(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim().slice(0, 180);
 }
 
 function getResendClient() {
@@ -103,21 +121,19 @@ export async function sendContactEmail(data: {
     const active = list.filter((r) => r.active);
     const content = `
       ${fieldsTable(
-        fieldRow("Nom", data.name) +
-        fieldRow("Email", `<a href="mailto:${data.email}" style="color: ${BRAND_COLOR}; text-decoration: none;">${data.email}</a>`) +
-        (data.phone ? fieldRow("T&eacute;l&eacute;phone", data.phone) : '')
+        fieldRow("Nom", escapeHtml(data.name)) +
+        fieldRow("Email", `<a href="mailto:${escapeHtml(data.email)}" style="color: ${BRAND_COLOR}; text-decoration: none;">${escapeHtml(data.email)}</a>`) +
+        (data.phone ? fieldRow("T&eacute;l&eacute;phone", escapeHtml(data.phone)) : '')
       )}
       ${sectionTitle("Message")}
       <div style="background-color: #faf8fc; border-left: 3px solid ${BRAND_COLOR}; padding: 16px 20px; border-radius: 0 8px 8px 0; color: #444; font-size: 14px; line-height: 1.7;">
-        ${data.message.replace(/\n/g, '<br>')}
+        ${escapeHtmlWithBreaks(data.message)}
       </div>
     `;
-    const subject = `Nouveau message de contact - ${data.name}`;
+    const subject = `Nouveau message de contact - ${safeEmailHeader(data.name)}`;
     const html = emailLayout("Nouveau message de contact", content);
     for (const recipient of active) {
-      console.log(`Sending contact email to: ${recipient.email}`);
-      const result = await client.emails.send({ from: `${SENDER_NAME} <${FROM_EMAIL}>`, to: recipient.email, subject, html });
-      console.log(`Contact email result for ${recipient.email}:`, JSON.stringify(result));
+      await client.emails.send({ from: `${SENDER_NAME} <${FROM_EMAIL}>`, to: recipient.email, subject, html });
     }
   } catch (err) {
     console.error('Failed to send contact email:', err);
@@ -146,17 +162,17 @@ export async function sendPreinscriptionEmail(data: {
     const content = `
       ${sectionTitle("Informations du parent")}
       ${fieldsTable(
-        fieldRow("Nom", data.lastName) +
-        fieldRow("Pr&eacute;nom", data.firstName) +
-        fieldRow("Adresse", data.address.replace(/\n/g, '<br>')) +
-        fieldRow("Email", `<a href="mailto:${data.email}" style="color: ${BRAND_COLOR}; text-decoration: none;">${data.email}</a>`) +
-        fieldRow("T&eacute;l&eacute;phone", data.phone) +
-        fieldRow("Situation familiale", data.familySituation + (data.familySituationOther ? ` (${data.familySituationOther})` : '')) +
-        fieldRow("Emploi", data.employment)
+        fieldRow("Nom", escapeHtml(data.lastName)) +
+        fieldRow("Pr&eacute;nom", escapeHtml(data.firstName)) +
+        fieldRow("Adresse", escapeHtmlWithBreaks(data.address)) +
+        fieldRow("Email", `<a href="mailto:${escapeHtml(data.email)}" style="color: ${BRAND_COLOR}; text-decoration: none;">${escapeHtml(data.email)}</a>`) +
+        fieldRow("T&eacute;l&eacute;phone", escapeHtml(data.phone)) +
+        fieldRow("Situation familiale", escapeHtml(data.familySituation + (data.familySituationOther ? ` (${data.familySituationOther})` : ''))) +
+        fieldRow("Emploi", escapeHtml(data.employment))
       )}
       ${sectionTitle("Informations de l'enfant")}
       ${fieldsTable(
-        fieldRow("Pr&eacute;nom", data.childName) +
+        fieldRow("Pr&eacute;nom", escapeHtml(data.childName)) +
         fieldRow("Date de naissance", formatDateFR(data.childBirthdate)) +
         fieldRow("Fr&egrave;res et s&oelig;urs", data.hasSiblings ? 'Oui' : 'Non') +
         fieldRow("Liste d'attente cr&egrave;che", data.onWaitingList ? 'Oui' : 'Non')
@@ -164,24 +180,22 @@ export async function sendPreinscriptionEmail(data: {
       ${sectionTitle("Accueil souhait&eacute;")}
       ${fieldsTable(
         fieldRow("Date de d&eacute;but", formatDateFR(data.startDate)) +
-        fieldRow("Jours et horaires", data.scheduleDays)
+        fieldRow("Jours et horaires", escapeHtml(data.scheduleDays))
       )}
       ${data.expectations ? `
         ${sectionTitle("Attentes")}
         <div style="background-color: #faf8fc; border-left: 3px solid ${BRAND_COLOR}; padding: 16px 20px; border-radius: 0 8px 8px 0; color: #444; font-size: 14px; line-height: 1.7;">
-          ${data.expectations.replace(/\n/g, '<br>')}
+          ${escapeHtmlWithBreaks(data.expectations)}
         </div>
       ` : ''}
     `;
 
-    const subject = `Nouvelle pr\u00e9-inscription - ${data.firstName} ${data.lastName}`;
+    const subject = `Nouvelle pr\u00e9-inscription - ${safeEmailHeader(`${data.firstName} ${data.lastName}`)}`;
     const html = emailLayout("Nouvelle demande de pr\u00e9-inscription", content);
     const list = (recipients && recipients.length > 0) ? recipients : DEFAULT_RECIPIENTS;
     const active = list.filter((r) => r.active);
     for (const recipient of active) {
-      console.log(`Sending preinscription email to: ${recipient.email}`);
-      const result = await client.emails.send({ from: `${SENDER_NAME} <${FROM_EMAIL}>`, to: recipient.email, subject, html });
-      console.log(`Preinscription email result for ${recipient.email}:`, JSON.stringify(result));
+      await client.emails.send({ from: `${SENDER_NAME} <${FROM_EMAIL}>`, to: recipient.email, subject, html });
     }
   } catch (err) {
     console.error('Failed to send preinscription email:', err);
@@ -197,8 +211,8 @@ export async function sendTestEmail(recipientEmail: string, recipientLabel: stri
         <strong>La Chouette Violette</strong>.
       </p>
       ${fieldsTable(
-        fieldRow("Destinataire", recipientLabel) +
-        fieldRow("Email", recipientEmail) +
+        fieldRow("Destinataire", escapeHtml(recipientLabel)) +
+        fieldRow("Email", escapeHtml(recipientEmail)) +
         fieldRow("Statut", '<span style="color: #22c55e; font-weight: 600;">✓ Email re&ccedil;u avec succ&egrave;s</span>')
       )}
       <p style="color: #888; font-size: 13px; margin: 16px 0 0;">
@@ -208,10 +222,10 @@ export async function sendTestEmail(recipientEmail: string, recipientLabel: stri
     const result = await client.emails.send({
       from: `${SENDER_NAME} <${FROM_EMAIL}>`,
       to: recipientEmail,
-      subject: `[Test] Email La Chouette Violette - ${recipientLabel}`,
+      subject: `[Test] Email La Chouette Violette - ${safeEmailHeader(recipientLabel)}`,
       html: emailLayout("Email de test", content),
     });
-    console.log('Test email result:', JSON.stringify(result));
+    console.log("Test email sent successfully.");
     return { ok: true };
   } catch (err) {
     console.error('Failed to send test email:', err);
