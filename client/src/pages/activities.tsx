@@ -41,12 +41,12 @@ export default function Activities() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="mx-auto mb-14 max-w-3xl text-center"
+            className="mx-auto mb-14 max-w-6xl text-center"
           >
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#c9a0dc]">
               Nos activités
             </p>
-            <h1 className="mb-5 font-display text-4xl font-bold leading-tight text-foreground md:text-5xl">
+            <h1 className="mb-5 font-display text-4xl font-bold leading-tight text-foreground md:text-5xl xl:whitespace-nowrap">
               {data?.pageTitle || DEFAULT_PAGE_TITLE}
             </h1>
             <div className="mb-6 flex items-center justify-center gap-3">
