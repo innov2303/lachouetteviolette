@@ -6,11 +6,24 @@ import { useAllContent } from "@/hooks/use-content";
 import type { ActivityContent } from "@shared/schema";
 
 const DEFAULT_PAGE_TITLE = "Les activités de la Chouette Violette";
+const EXAMPLE_ACTIVITIES: ActivityContent["activities"] = [
+  {
+    title: "Peinture aux doigts",
+    description:
+      "Les enfants découvrent les couleurs et les textures en laissant libre cours à leur créativité. Une activité sensorielle qui encourage l’expression et la motricité fine, chacun à son rythme.",
+    image: "/uploads/1772395021351-3kp2e3.jpg",
+    imageAlt: "Activité créative et sensorielle à la MAM",
+  },
+];
 
 export default function Activities() {
   const { data: allContent } = useAllContent();
   const data = (allContent as Record<string, unknown> | undefined)?.activities as ActivityContent | undefined;
-  const activities = data?.activities ?? [];
+  const isExamplePreview = new URLSearchParams(window.location.search).get("exemple") === "1";
+  const savedActivities = data?.activities ?? [];
+  const activities = isExamplePreview && savedActivities.length === 0
+    ? EXAMPLE_ACTIVITIES
+    : savedActivities;
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,6 +53,12 @@ export default function Activities() {
               </p>
             )}
           </motion.header>
+
+          {isExamplePreview && savedActivities.length === 0 && (
+            <p className="mx-auto mb-6 w-fit rounded-full bg-[#c9a0dc]/10 px-4 py-2 text-sm font-medium text-[#8f64a7]">
+              Exemple de présentation — non enregistré
+            </p>
+          )}
 
           {activities.length > 0 ? (
             <div className="mx-auto grid max-w-6xl grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
